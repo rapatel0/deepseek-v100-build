@@ -1,0 +1,91 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deepseek-v4-flash
+  namespace: deepseek
+  labels:
+    app: deepseek-v4-flash
+spec:
+  replicas: 1                      # Single replica — model is huge.
+  strategy:
+    type: Recreate                 # Avoid 2x VRAM pressure during rollouts.
+  selector:
+    matchLabels:
+      app: deepseek-v4-flash
+  template:
+    metadata:
+      labels:
+        app: deepseek-v4-flash
+    spec:
+      # Set this to the node with 4× V100 32GB.
+      nodeSelector:
+        kubernetes.io/hostname: gpu-01
+      # microk8s GPU operator usually exposes the GPU runtime as the default
+      # via NVIDIA Container Toolkit; override here only if the cluster uses
+      # nvidia.runtimeClassName.
+      # runtimeClassName: nvidia
+      terminationGracePeriodSeconds: 30
+      containers:
+        - name: llama-server
+          image: localhost:32000/deepseek-v4-flash:cuda-sm70
+          imagePullPolicy: IfNotPresent
+          args:
+            - "--host"
+            - "0.0.0.0"
+            - "--port"
+            - "8080"
+            - "-m"
+            - "/models/DeepSeek-V4-Flash-IQ2XXS-w2Q2K-AProjQ8-SExpQ8-OutQ8-chat-v2.gguf"
+            - "-c"
+            - "8192"
+            - "-t"
+            - "40"   # physical cores; gpu-01 has 80 logical = 40 physical w/ HT
+            - "-ngl"
+            - "999"
+            - "--split-mode"
+            - "layer"
+            - "-fa"
+            - "--temp"
+            - "1.0"
+            - "--top-p"
+            - "1.0"
+            - "--alias"
+            - "deepseek-v4-flash"
+          env:
+            - name: NVIDIA_VISIBLE_DEVICES
+              value: "all"
+            - name: NVIDIA_DRIVER_CAPABILITIES
+              value: "compute,utility"
+          ports:
+            - name: http
+              containerPort: 8080
+          resources:
+            requests:
+              cpu: "16"
+              memory: "32Gi"
+              nvidia.com/gpu: "4"
+            limits:
+              memory: "64Gi"
+              nvidia.com/gpu: "4"
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 90
+            periodSeconds: 15
+            failureThreshold: 30    # CUDA init + GGUF mmap can take minutes.
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 600
+            periodSeconds: 30
+            failureThreshold: 5
+          volumeMounts:
+            - name: models
+              mountPath: /models
+              readOnly: true
+      volumes:
+        - name: models
+          persistentVolumeClaim:
+            claimName: deepseek-models

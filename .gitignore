@@ -1,0 +1,10 @@
+.env
+*.gguf
+*.o
+models/
+build/
+__pycache__/
+*.pyc
+.venv/
+.claude/
+logs/

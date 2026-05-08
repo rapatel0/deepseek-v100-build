@@ -1,0 +1,50 @@
+services:
+  deepseek:
+    image: ${IMAGE:-local/deepseek-v4-flash:cuda-sm70}
+    container_name: deepseek-v4-flash
+    restart: unless-stopped
+    ports:
+      - "${PORT:-8080}:8080"
+    volumes:
+      - ${MODEL_DIR:?set MODEL_DIR in .env}:/models:ro
+    # Requires NVIDIA Container Toolkit on the host.
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: ${GPU_COUNT:-4}
+              capabilities: [gpu]
+        limits:
+          memory: 240G
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=all
+      - NVIDIA_DRIVER_CAPABILITIES=compute,utility
+    command:
+      - "--host"
+      - "0.0.0.0"
+      - "--port"
+      - "8080"
+      - "-m"
+      - "/models/${GGUF_FILE:?set GGUF_FILE in .env}"
+      - "-c"
+      - "${CTX_SIZE:-8192}"
+      - "-t"
+      - "${LLAMA_THREADS:-32}"
+      - "-ngl"
+      - "999"            # offload everything we can to GPU
+      - "--split-mode"
+      - "layer"          # default; layers spread across all visible GPUs
+      - "-fa"             # flash attention
+      - "--temp"
+      - "1.0"
+      - "--top-p"
+      - "1.0"
+      - "--alias"
+      - "deepseek-v4-flash"
+    healthcheck:
+      test: ["CMD-SHELL", "exec 3<>/dev/tcp/127.0.0.1/8080 && echo -e 'GET /health HTTP/1.0\\r\\n\\r\\n' >&3 && head -1 <&3 | grep -q 200"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 180s   # CUDA init + 86 GB GGUF load can take a couple minutes

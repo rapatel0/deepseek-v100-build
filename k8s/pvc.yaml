@@ -1,0 +1,40 @@
+# The GGUF is 86.7 GB and effectively immutable.
+# We bind-mount a hostPath via a PV pinned to the EPYC node so we don't
+# move the model around the cluster. Storage class is microk8s-friendly.
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: deepseek-models
+  labels:
+    app: deepseek-v4-flash
+spec:
+  capacity:
+    storage: 200Gi
+  accessModes:
+    - ReadOnlyMany
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: local-models
+  local:
+    path: /srv/models/deepseek-v4-flash
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+        - matchExpressions:
+            - key: kubernetes.io/hostname
+              operator: In
+              values:
+                - gpu-01   # 4× V100 32GB, 264 GB RAM, 80 CPUs (verified via kubectl)
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: deepseek-models
+  namespace: deepseek
+spec:
+  accessModes:
+    - ReadOnlyMany
+  resources:
+    requests:
+      storage: 200Gi
+  storageClassName: local-models
+  volumeName: deepseek-models

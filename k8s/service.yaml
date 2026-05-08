@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: deepseek-v4-flash
+  namespace: deepseek
+  labels:
+    app: deepseek-v4-flash
+spec:
+  type: ClusterIP
+  selector:
+    app: deepseek-v4-flash
+  ports:
+    - name: http
+      port: 8080
+      targetPort: 8080
