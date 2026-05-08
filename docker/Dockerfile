@@ -41,14 +41,18 @@ RUN git clone --depth 1 --branch "${FORK_REF}" "${FORK_REPO}" llama.cpp
 # existing ggml-cuda CMakeLists), then patch ggml-cuda.cu to dispatch them.
 COPY cuda-patches/ggml-cuda/dsv4-hc.cu  /src/llama.cpp/ggml/src/ggml-cuda/
 COPY cuda-patches/ggml-cuda/dsv4-hc.cuh /src/llama.cpp/ggml/src/ggml-cuda/
+COPY cuda-patches/ggml-cuda/concat.cu   /src/llama.cpp/ggml/src/ggml-cuda/concat.cu
+COPY cuda-patches/ggml-cuda/concat.cuh  /src/llama.cpp/ggml/src/ggml-cuda/concat.cuh
 COPY cuda-patches/0001-wire-dsv4-hc-cuda.patch /tmp/0001.patch
-COPY cuda-patches/0002-concat-supports-op-truth.patch /tmp/0002.patch
+COPY cuda-patches/0002-concat-f16-bf16.patch /tmp/0002.patch
+COPY cuda-patches/tests/concat_bitcompare.cu /tmp/concat_bitcompare.cu
 
 WORKDIR /src/llama.cpp
 RUN git apply --verbose /tmp/0001.patch \
     && git apply --verbose /tmp/0002.patch \
     && grep -q "ggml_cuda_op_dsv4_hc_split_sinkhorn" ggml/src/ggml-cuda/ggml-cuda.cu \
     && grep -q "GGML_OP_DSV4_HC_SPLIT_SINKHORN" ggml/src/ggml-cuda/ggml-cuda.cu \
+    && grep -q "GGML_TYPE_BF16" ggml/src/ggml-cuda/concat.cu \
     && grep -q "GGML_OP_CONCAT" ggml/src/ggml-cuda/ggml-cuda.cu \
     && echo "patches applied OK"
 
@@ -87,6 +91,8 @@ RUN set -e; \
       || { echo "ERROR: dsv4_hc_* CUDA symbols missing from $SO" >&2; exit 1; }; \
     echo "dsv4_hc CUDA symbols present"
 
+RUN nvcc -std=c++17 -O2 -arch=sm_70 /tmp/concat_bitcompare.cu -o /tmp/concat-bitcompare
+
 # ---- runtime stage ----
 FROM nvidia/cuda:${CUDA_VERSION}-runtime-ubuntu${UBUNTU_VERSION}
 
@@ -101,6 +107,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 COPY --from=build /src/llama.cpp/build/bin/llama-server /usr/local/bin/llama-server
 COPY --from=build /src/llama.cpp/build/bin/llama-cli    /usr/local/bin/llama-cli
 COPY --from=build /src/llama.cpp/build/bin/*.so         /usr/local/lib/
+COPY --from=build /tmp/concat-bitcompare                /usr/local/bin/concat-bitcompare
 
 RUN ldconfig
 

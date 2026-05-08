@@ -16,16 +16,19 @@ made V100s sit idle even with `-DGGML_CUDA=ON`.
 cuda-patches/
 ├── ggml-cuda/
 │   ├── dsv4-hc.cuh                # forward-decl header (auto-globbed by ggml CMake)
-│   └── dsv4-hc.cu                 # kernels + ggml_cuda_op_dsv4_hc_* dispatch fns
+│   ├── dsv4-hc.cu                 # kernels + ggml_cuda_op_dsv4_hc_* dispatch fns
+│   ├── concat.cuh                 # replacement CONCAT declaration
+│   └── concat.cu                  # F32/F16/BF16 storage-copy CONCAT kernels
 ├── 0001-wire-dsv4-hc-cuda.patch   # adds HC case blocks to ggml-cuda.cu
-└── 0002-concat-supports-op-truth.patch # v2: keeps non-F32 CONCAT on CPU
+└── 0002-concat-f16-bf16.patch     # advertises typed CONCAT support
 ```
 
 ## How it gets applied
 
 The Dockerfile clones the antirez fork, copies `ggml-cuda/*.cu*` into
 `ggml/src/ggml-cuda/` (CMake auto-globs `*.cu` and `*.cuh`, so no CMake edit
-needed), then `git apply`s the numbered patches in order.
+needed), replaces upstream `concat.cu/.cuh`, then `git apply`s the numbered
+patches in order.
 
 ## sm_70 (Volta / V100) design choices
 

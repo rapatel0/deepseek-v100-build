@@ -1,0 +1,24 @@
+From: deepseek-v4-flash homelab deploy
+Subject: [PATCH] ggml-cuda: allow CUDA CONCAT for F32/F16/BF16
+
+The Docker build copies a replacement ggml-cuda/concat.cu that supports
+F32/F16/BF16 storage copies. Report the same type coverage in supports_op so
+DSv4 non-F32 concats stay on CUDA instead of falling back to CPU.
+---
+diff --git a/ggml/src/ggml-cuda/ggml-cuda.cu b/ggml/src/ggml-cuda/ggml-cuda.cu
+--- a/ggml/src/ggml-cuda/ggml-cuda.cu
++++ b/ggml/src/ggml-cuda/ggml-cuda.cu
+@@ -5043,8 +5043,11 @@
+                 return op->type == GGML_TYPE_F32 && (op->src[0]->ne[2]*op->src[0]->ne[3]) <= (1 << 15);
+         case GGML_OP_CONCAT:
+             {
+-                ggml_type src0_type = op->src[0]->type;
+-                return src0_type != GGML_TYPE_I32 && src0_type != GGML_TYPE_I16;
++                return op->type == op->src[0]->type
++                    && op->type == op->src[1]->type
++                    && (op->type == GGML_TYPE_F32
++                     || op->type == GGML_TYPE_F16
++                     || op->type == GGML_TYPE_BF16);
+             } break;
+         case GGML_OP_CONV_TRANSPOSE_1D:
+             {
