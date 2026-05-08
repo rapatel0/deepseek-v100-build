@@ -1,0 +1,150 @@
+diff --git a/ggml/include/ggml-cuda.h b/ggml/include/ggml-cuda.h
+index 5436c7e..31713ab 100644
+--- a/ggml/include/ggml-cuda.h
++++ b/ggml/include/ggml-cuda.h
+@@ -40,6 +40,8 @@ GGML_BACKEND_API int  ggml_backend_cuda_get_device_count(void);
+ GGML_BACKEND_API void ggml_backend_cuda_get_device_description(int device, char * description, size_t description_size);
+ GGML_BACKEND_API void ggml_backend_cuda_get_device_memory(int device, size_t * free, size_t * total);
+ 
++GGML_BACKEND_API void ggml_backend_cuda_get_graph_metrics(uint64_t * launches, uint64_t * eager, uint64_t * captures, uint64_t * recaptures);
++
+ GGML_BACKEND_API bool ggml_backend_cuda_register_host_buffer(void * buffer, size_t size);
+ GGML_BACKEND_API void ggml_backend_cuda_unregister_host_buffer(void * buffer);
+ 
+diff --git a/ggml/src/ggml-cuda/ggml-cuda.cu b/ggml/src/ggml-cuda/ggml-cuda.cu
+index 1c2c3b4..9348dc8 100644
+--- a/ggml/src/ggml-cuda/ggml-cuda.cu
++++ b/ggml/src/ggml-cuda/ggml-cuda.cu
+@@ -85,6 +85,26 @@
+ 
+ static_assert(sizeof(half) == sizeof(ggml_fp16_t), "wrong fp16 size");
+ 
++static std::atomic<uint64_t> g_cuda_graph_launches{0};
++static std::atomic<uint64_t> g_cuda_graph_eager{0};
++static std::atomic<uint64_t> g_cuda_graph_captures{0};
++static std::atomic<uint64_t> g_cuda_graph_recaptures{0};
++
++void ggml_backend_cuda_get_graph_metrics(uint64_t * launches, uint64_t * eager, uint64_t * captures, uint64_t * recaptures) {
++    if (launches) {
++        *launches = g_cuda_graph_launches.load(std::memory_order_relaxed);
++    }
++    if (eager) {
++        *eager = g_cuda_graph_eager.load(std::memory_order_relaxed);
++    }
++    if (captures) {
++        *captures = g_cuda_graph_captures.load(std::memory_order_relaxed);
++    }
++    if (recaptures) {
++        *recaptures = g_cuda_graph_recaptures.load(std::memory_order_relaxed);
++    }
++}
++
+ [[noreturn]]
+ void ggml_cuda_error(const char * stmt, const char * func, const char * file, int line, const char * msg) {
+     int id = -1; // in case cudaGetDevice fails
+@@ -4202,14 +4222,7 @@ static void ggml_cuda_graph_evaluate_and_capture(ggml_backend_cuda_context * cud
+ static bool ggml_cuda_graph_set_enabled(ggml_backend_cuda_context * cuda_ctx, const void * graph_key) {
+     ggml_cuda_graph * graph = cuda_ctx->cuda_graph(graph_key);
+ 
+-    if (graph->graph == nullptr) {
+-        if (ggml_cuda_info().devices[cuda_ctx->device].cc < GGML_CUDA_CC_AMPERE) {
+-            if (!graph->disable_due_to_gpu_arch) {
+-                GGML_LOG_DEBUG("%s: disabling CUDA graphs due to GPU architecture\n", __func__);
+-            }
+-            graph->disable_due_to_gpu_arch = true;
+-        }
+-    }
++    GGML_UNUSED(graph);
+ 
+     return graph->is_enabled();
+ }
+@@ -4266,11 +4279,22 @@ static enum ggml_status ggml_backend_cuda_graph_compute(ggml_backend_t backend,
+             ggml_cuda_lock_counter.fetch_add(1, std::memory_order_relaxed);
+         }
+ 
++        ggml_cuda_graph * graph = cuda_ctx->cuda_graph(graph_key);
++        if (graph->instance != nullptr) {
++            g_cuda_graph_recaptures.fetch_add(1, std::memory_order_relaxed);
++        }
++        g_cuda_graph_captures.fetch_add(1, std::memory_order_relaxed);
+         CUDA_CHECK(cudaStreamBeginCapture(cuda_ctx->stream(), cudaStreamCaptureModeRelaxed));
++    } else if (!use_cuda_graph) {
++        g_cuda_graph_eager.fetch_add(1, std::memory_order_relaxed);
+     }
+ 
+     ggml_cuda_graph_evaluate_and_capture(cuda_ctx, cgraph, use_cuda_graph, cuda_graph_update_required, graph_key);
+ 
++    if (use_cuda_graph) {
++        g_cuda_graph_launches.fetch_add(1, std::memory_order_relaxed);
++    }
++
+     return GGML_STATUS_SUCCESS;
+ }
+ 
+diff --git a/tools/server/server-context.cpp b/tools/server/server-context.cpp
+index 1183f18..e523041 100644
+--- a/tools/server/server-context.cpp
++++ b/tools/server/server-context.cpp
+@@ -23,6 +23,8 @@
+ #include <filesystem>
+ #include <utility>
+ 
++extern "C" void ggml_backend_cuda_get_graph_metrics(uint64_t * launches, uint64_t * eager, uint64_t * captures, uint64_t * recaptures) __attribute__((weak));
++
+ // fix problem with std::min and std::max
+ #if defined(_WIN32)
+ #define WIN32_LEAN_AND_MEAN
+@@ -3468,6 +3470,15 @@ void server_routes::init_routes() {
+         auto res_task = dynamic_cast<server_task_result_metrics*>(result.get());
+         GGML_ASSERT(res_task != nullptr);
+ 
++        uint64_t cuda_graph_launches   = 0;
++        uint64_t cuda_graph_eager      = 0;
++        uint64_t cuda_graph_captures   = 0;
++        uint64_t cuda_graph_recaptures = 0;
++        if (ggml_backend_cuda_get_graph_metrics) {
++            ggml_backend_cuda_get_graph_metrics(&cuda_graph_launches, &cuda_graph_eager, &cuda_graph_captures, &cuda_graph_recaptures);
++        }
++        const float cuda_graph_denominator = std::max((float) (cuda_graph_launches + cuda_graph_eager), 1.f);
++
+         // metrics definition: https://prometheus.io/docs/practices/naming/#metric-names
+         json all_metrics_def = json {
+             {"counter", {{
+@@ -3498,6 +3509,22 @@ void server_routes::init_routes() {
+                     {"name",  "n_busy_slots_per_decode"},
+                     {"help",  "Average number of busy slots per llama_decode() call"},
+                     {"value",  (float) res_task->n_busy_slots_total / std::max((float) res_task->n_decode_total, 1.f)}
++            }, {
++                    {"name",  "cuda_graph_launches_total"},
++                    {"help",  "Number of CUDA graph launches."},
++                    {"value",  cuda_graph_launches}
++            }, {
++                    {"name",  "cuda_graph_eager_total"},
++                    {"help",  "Number of CUDA graph eager fallback evaluations."},
++                    {"value",  cuda_graph_eager}
++            }, {
++                    {"name",  "cuda_graph_captures_total"},
++                    {"help",  "Number of CUDA graph captures."},
++                    {"value",  cuda_graph_captures}
++            }, {
++                    {"name",  "cuda_graph_recaptures_total"},
++                    {"help",  "Number of CUDA graph recaptures after an executable graph already existed."},
++                    {"value",  cuda_graph_recaptures}
+             }}},
+             {"gauge", {{
+                     {"name",  "prompt_tokens_seconds"},
+@@ -3515,6 +3542,14 @@ void server_routes::init_routes() {
+                     {"name",  "requests_deferred"},
+                     {"help",  "Number of requests deferred."},
+                     {"value",  (uint64_t) res_task->n_tasks_deferred}
++            }, {
++                    {"name",  "cuda_graph_hit_rate"},
++                    {"help",  "CUDA graph launches divided by graph launches plus eager fallback evaluations."},
++                    {"value",  (float) cuda_graph_launches / cuda_graph_denominator}
++            }, {
++                    {"name",  "recapture_count_per_window"},
++                    {"help",  "CUDA graph recaptures observed since process start; callers can diff this over a measurement window."},
++                    {"value",  cuda_graph_recaptures}
+             }}}
+         };
+ 
