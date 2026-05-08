@@ -96,6 +96,10 @@ RUN nvcc -std=c++17 -O2 -arch=sm_70 /tmp/concat_bitcompare.cu -o /tmp/concat-bit
 # ---- runtime stage ----
 FROM nvidia/cuda:${CUDA_VERSION}-runtime-ubuntu${UBUNTU_VERSION}
 
+ARG BUILD_SOURCE_VERSION=unknown
+
+LABEL homelab.deepseek.build-source-version="${BUILD_SOURCE_VERSION}"
+
 RUN apt-get update && apt-get install -y --no-install-recommends \
         libgomp1 \
         libcurl4 \
