@@ -1,14 +1,9 @@
 From: deepseek-v4-flash homelab deploy
-Subject: [PATCH] ggml-cuda: wire DSv4 HC ops + tighten CONCAT supports_op
+Subject: [PATCH] ggml-cuda: wire DSv4 HC ops
 
-1. Add case blocks for the three custom DeepSeek V4 HyperConnection ops
-   and the include for the new dsv4-hc.cuh header. Implementations live
-   in ggml-cuda/dsv4-hc.cu (auto-globbed by the existing CMakeLists).
-
-2. Tighten supports_op for GGML_OP_CONCAT. The CUDA concat kernel
-   asserts F32 for src0/src1/dst, but supports_op was historically too
-   permissive (only excluded I32/I16). DSv4's graph builds a non-F32
-   concat which then aborts at runtime. Force CPU fallback for non-F32.
+Add case blocks for the three custom DeepSeek V4 HyperConnection ops
+and the include for the new dsv4-hc.cuh header. Implementations live
+in ggml-cuda/dsv4-hc.cu (auto-globbed by the existing CMakeLists).
 
 Hunks are anchored on stable upstream context (RMS_NORM_BACK, REPEAT_BACK,
 RMS_NORM, L2_NORM cases) so they survive most upstream churn.
@@ -40,22 +35,6 @@ diff --git a/ggml/src/ggml-cuda/ggml-cuda.cu b/ggml/src/ggml-cuda/ggml-cuda.cu
          case GGML_OP_MUL_MAT:
              ggml_cuda_mul_mat(ctx, dst->src[0], dst->src[1], dst);
              break;
-@@ -5043,8 +5053,13 @@
-                 return op->type == GGML_TYPE_F32 && (op->src[0]->ne[2]*op->src[0]->ne[3]) <= (1 << 15);
-         case GGML_OP_CONCAT:
-             {
--                ggml_type src0_type = op->src[0]->type;
--                return src0_type != GGML_TYPE_I32 && src0_type != GGML_TYPE_I16;
-+                // The CUDA concat kernel asserts F32 for src0/src1/dst.
-+                // supports_op was historically too permissive; DSv4 hits
-+                // this path with non-F32. Report the truth so the scheduler
-+                // falls back to CPU for non-F32 concats.
-+                return op->type        == GGML_TYPE_F32
-+                    && op->src[0]->type == GGML_TYPE_F32
-+                    && op->src[1]->type == GGML_TYPE_F32;
-             } break;
-         case GGML_OP_CONV_TRANSPOSE_1D:
-             {
 @@ -5062,6 +5076,12 @@
          case GGML_OP_RMS_NORM:
          case GGML_OP_L2_NORM:

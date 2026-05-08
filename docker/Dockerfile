@@ -42,12 +42,15 @@ RUN git clone --depth 1 --branch "${FORK_REF}" "${FORK_REPO}" llama.cpp
 COPY cuda-patches/ggml-cuda/dsv4-hc.cu  /src/llama.cpp/ggml/src/ggml-cuda/
 COPY cuda-patches/ggml-cuda/dsv4-hc.cuh /src/llama.cpp/ggml/src/ggml-cuda/
 COPY cuda-patches/0001-wire-dsv4-hc-cuda.patch /tmp/0001.patch
+COPY cuda-patches/0002-concat-supports-op-truth.patch /tmp/0002.patch
 
 WORKDIR /src/llama.cpp
 RUN git apply --verbose /tmp/0001.patch \
+    && git apply --verbose /tmp/0002.patch \
     && grep -q "ggml_cuda_op_dsv4_hc_split_sinkhorn" ggml/src/ggml-cuda/ggml-cuda.cu \
     && grep -q "GGML_OP_DSV4_HC_SPLIT_SINKHORN" ggml/src/ggml-cuda/ggml-cuda.cu \
-    && echo "patch applied OK"
+    && grep -q "GGML_OP_CONCAT" ggml/src/ggml-cuda/ggml-cuda.cu \
+    && echo "patches applied OK"
 
 # --no-as-needed -lcuda forces libggml-cuda.so to declare libcuda.so as
 # a NEEDED dep, which it otherwise doesn't (this snapshot of the fork

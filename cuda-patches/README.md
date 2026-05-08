@@ -17,15 +17,15 @@ cuda-patches/
 ├── ggml-cuda/
 │   ├── dsv4-hc.cuh                # forward-decl header (auto-globbed by ggml CMake)
 │   └── dsv4-hc.cu                 # kernels + ggml_cuda_op_dsv4_hc_* dispatch fns
-└── 0001-wire-dsv4-hc-cuda.patch   # adds case blocks to ggml-cuda.cu + supports_op
+├── 0001-wire-dsv4-hc-cuda.patch   # adds HC case blocks to ggml-cuda.cu
+└── 0002-concat-supports-op-truth.patch # v2: keeps non-F32 CONCAT on CPU
 ```
 
 ## How it gets applied
 
 The Dockerfile clones the antirez fork, copies `ggml-cuda/*.cu*` into
 `ggml/src/ggml-cuda/` (CMake auto-globs `*.cu` and `*.cuh`, so no CMake edit
-needed), then `git apply`s `0001-wire-dsv4-hc-cuda.patch` to splice case blocks
-into `ggml-cuda.cu`.
+needed), then `git apply`s the numbered patches in order.
 
 ## sm_70 (Volta / V100) design choices
 
