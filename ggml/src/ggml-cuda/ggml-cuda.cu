@@ -2653,6 +2653,20 @@ static void ggml_cuda_mul_mat_id(ggml_backend_cuda_context & ctx, ggml_tensor * 
     // know how to read our packed format.
     const bool is_turbomind = ggml_backend_buft_is_cuda_turbomind(src0->buffer->buft);
 
+    // SPRINT-024 P2.1: when src0 is on CUDA_TURBOMIND and the type is one we
+    // own, dispatch the entire MoE through one grouped turbomind call per
+    // MoE linear (instead of N_active_experts per-expert calls in the
+    // fallback below). Bisection fallback via GGML_TM_DISABLE_GROUPED=1.
+    if (is_turbomind
+        && (src0->type == GGML_TYPE_F8_E4M3_B128 || src0->type == GGML_TYPE_MXFP4)
+        && src1->type == GGML_TYPE_F32 && dst->type == GGML_TYPE_F32) {
+        const char * disable = getenv("GGML_TM_DISABLE_GROUPED");
+        if (!disable || disable[0] != '1') {
+            ggml_cuda_mul_mat_grouped_turbomind(ctx, src0, src1, ids, dst);
+            return;
+        }
+    }
+
     // [TAG_MUL_MAT_ID_CUDA_GRAPHS]
     if (!is_turbomind && src1->type == GGML_TYPE_F32 && dst->type == GGML_TYPE_F32) {
         static_assert(MMVQ_MAX_BATCH_SIZE == MMVF_MAX_BATCH_SIZE);

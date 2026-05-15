@@ -8,6 +8,7 @@
 #include "ggml-cuda-turbomind.cuh"
 #include "common.cuh"
 #include "convert.cuh"
+#include "getrows.cuh"
 #include "ggml-impl.h"
 #include "ggml-cuda.h"
 #include "ggml-backend-impl.h"
@@ -42,19 +43,23 @@ typedef int  (*pfn_pack_weight)(const void *, int, int, int, int,
                                 void *, void *, int *, void *);
 typedef int  (*pfn_mul_mat)(const void *, const void *, const void *,
                             int, int, int, int, int, int, void *, void *);
+typedef int  (*pfn_mul_mat_grouped)(const void *, const int *, const int *, int,
+                                    const void * const *, const void * const *,
+                                    int, int, int, int, int, void *, void *);
 
 struct TmLib {
-    std::mutex          mtx;
-    bool                tried_load = false;
-    bool                loaded     = false;
-    int                 init_device = -1;
-    void              * handle      = nullptr;
-    pfn_api_version     api_version = nullptr;
-    pfn_init            init        = nullptr;
-    pfn_shutdown        shutdown    = nullptr;
-    pfn_packed_bytes    packed_bytes = nullptr;
-    pfn_pack_weight     pack_weight = nullptr;
-    pfn_mul_mat         mul_mat     = nullptr;
+    std::mutex            mtx;
+    bool                  tried_load = false;
+    bool                  loaded     = false;
+    int                   init_device = -1;
+    void                * handle      = nullptr;
+    pfn_api_version       api_version = nullptr;
+    pfn_init              init        = nullptr;
+    pfn_shutdown          shutdown    = nullptr;
+    pfn_packed_bytes      packed_bytes    = nullptr;
+    pfn_pack_weight       pack_weight     = nullptr;
+    pfn_mul_mat           mul_mat         = nullptr;
+    pfn_mul_mat_grouped   mul_mat_grouped = nullptr;
 };
 
 TmLib & g_tm() {
@@ -87,8 +92,9 @@ bool tm_ensure_loaded(int device) {
     t.shutdown     = (pfn_shutdown)     dlsym(t.handle, "ggml_turbomind_shutdown");
     t.packed_bytes = (pfn_packed_bytes) dlsym(t.handle, "ggml_turbomind_packed_bytes");
     t.pack_weight  = (pfn_pack_weight)  dlsym(t.handle, "ggml_turbomind_pack_weight_expert");
-    t.mul_mat      = (pfn_mul_mat)      dlsym(t.handle, "ggml_turbomind_mul_mat");
-    if (!t.init || !t.shutdown || !t.packed_bytes || !t.pack_weight || !t.mul_mat) {
+    t.mul_mat         = (pfn_mul_mat)         dlsym(t.handle, "ggml_turbomind_mul_mat");
+    t.mul_mat_grouped = (pfn_mul_mat_grouped) dlsym(t.handle, "ggml_turbomind_mul_mat_grouped");
+    if (!t.init || !t.shutdown || !t.packed_bytes || !t.pack_weight || !t.mul_mat || !t.mul_mat_grouped) {
         GGML_LOG_ERROR("%s: libggml-turbomind.so missing required symbols\n", __func__);
         return false;
     }
@@ -151,6 +157,9 @@ static void ggml_backend_cuda_tm_buffer_free_buffer(ggml_backend_buffer_t buffer
         if (p) cudaFree(p);
     }
     for (auto * e : ctx->extra_allocs) {
+        // SPRINT-024 P1.3 — also free per-grouped pointer-table caches.
+        if (e->weight_ptrs_dev) cudaFree(e->weight_ptrs_dev);
+        if (e->scale_ptrs_dev)  cudaFree(e->scale_ptrs_dev);
         delete e;
     }
     if (ctx->dev_ptr) {
@@ -262,6 +271,10 @@ static void ggml_backend_cuda_tm_buffer_set_tensor(
     extra->scales_per_expert = scale_bytes;
     extra->group_size        = group_size;
     extra->n_experts         = n_experts;
+    extra->weight_ptrs_dev   = nullptr;  // lazily filled on first grouped dispatch
+    extra->scale_ptrs_dev    = nullptr;
+    extra->packed_b_ld       = 0;
+    extra->packed_v_ld       = 0;
     tensor->extra            = extra;
 
     if (d_scales) ctx->scale_allocs.push_back(d_scales);
@@ -508,4 +521,247 @@ void ggml_cuda_mul_mat_turbomind(ggml_backend_cuda_context & ctx,
     // FP16 -> FP32 for D.
     auto fp16_to_fp32 = ggml_get_to_fp32_cuda(GGML_TYPE_F16);
     fp16_to_fp32(D_fp16.ptr, (float *) dst->data, (int64_t) M * N, stream);
+}
+
+// ===========================================================================
+// SPRINT-024 P1.5 — Grouped MoE dispatch helper.
+// Replaces per-expert slicing in ggml_cuda_mul_mat_id when src0 is on a
+// CUDA_TURBOMIND buffer. One ggml_turbomind_mul_mat_grouped launch per
+// MoE-linear amortizes per-expert launch cost.
+// ===========================================================================
+
+// Local mirror of turbomind's StridedPtr (matrix_ptr.h:9-13). MUST be 16 B
+// aligned because the kernel reads it via __ldg((const uint4*)...).
+struct alignas(16) tm_strided_ptr {
+    void * ptr;
+    int    stride;
+};
+static_assert(sizeof(tm_strided_ptr) == 16, "tm_strided_ptr must be 16 bytes");
+
+// Compute the packed leading dimension a turbomind dispatch needs.
+// Mirrors the formula in ggml/vendor/turbomind/api.cc (single-expert path
+// reconstruction) + memory turbomind_packed_b_ld_factor.md.
+//
+// For sm70 HMMA_884 OPERAND_B Pack_M=1 (the only sm70 packed config we ship):
+//   packed_b_ld = K * 32
+// For OPERAND_V on sm70 (post-swap, no Pack_M expansion):
+//   packed_v_ld = N
+static inline int tm_packed_b_ld(ggml_type, int /*N*/, int K) {
+    // Pack_M = 1 in the sm70 registry; col-multiplication factor = 32.
+    return K * 32;
+}
+static inline int tm_packed_v_ld(ggml_type, int N, int /*K*/) {
+    return N;
+}
+
+// Lazily populate extra->weight_ptrs_dev / scale_ptrs_dev once per tensor.
+// Returns true on success, false on alloc / copy error.
+static bool tm_ensure_grouped_ptr_tables(
+        ggml_turbomind_tensor_extra * extra,
+        const ggml_tensor * src0,
+        cudaStream_t stream)
+{
+    if (extra->weight_ptrs_dev) {
+        // Already cached. Sanity: scales must be there too (unless type has
+        // no scales — currently never the case for our supported types).
+        return true;
+    }
+
+    const int n_experts  = extra->n_experts;
+    const int K          = (int) src0->ne[0];
+    const int N          = (int) src0->ne[1];
+    const int packed_b   = tm_packed_b_ld(src0->type, N, K);
+    const int packed_v   = tm_packed_v_ld(src0->type, N, K);
+
+    std::vector<tm_strided_ptr> h_w(n_experts);
+    std::vector<tm_strided_ptr> h_s(n_experts);
+    for (int e = 0; e < n_experts; ++e) {
+        h_w[e].ptr    = (char *) src0->data + (size_t) e * src0->nb[2];
+        h_w[e].stride = packed_b;
+        if (extra->scales_dev) {
+            h_s[e].ptr    = (char *) extra->scales_dev + (size_t) e * extra->scales_per_expert;
+            h_s[e].stride = packed_v;
+        } else {
+            h_s[e].ptr    = nullptr;
+            h_s[e].stride = 0;
+        }
+    }
+
+    void * d_w = nullptr;
+    void * d_s = nullptr;
+    if (cudaMalloc(&d_w, sizeof(tm_strided_ptr) * n_experts) != cudaSuccess) {
+        return false;
+    }
+    if (extra->scales_dev) {
+        if (cudaMalloc(&d_s, sizeof(tm_strided_ptr) * n_experts) != cudaSuccess) {
+            cudaFree(d_w);
+            return false;
+        }
+    }
+    CUDA_CHECK(cudaMemcpyAsync(d_w, h_w.data(), sizeof(tm_strided_ptr) * n_experts,
+                               cudaMemcpyHostToDevice, stream));
+    if (d_s) {
+        CUDA_CHECK(cudaMemcpyAsync(d_s, h_s.data(), sizeof(tm_strided_ptr) * n_experts,
+                                   cudaMemcpyHostToDevice, stream));
+    }
+    CUDA_CHECK(cudaStreamSynchronize(stream));
+
+    extra->weight_ptrs_dev = d_w;
+    extra->scale_ptrs_dev  = d_s;
+    extra->packed_b_ld     = packed_b;
+    extra->packed_v_ld     = packed_v;
+    return true;
+}
+
+void ggml_cuda_mul_mat_grouped_turbomind(ggml_backend_cuda_context & ctx,
+                                          const ggml_tensor * src0,
+                                          const ggml_tensor * src1,
+                                          const ggml_tensor * ids,
+                                          ggml_tensor * dst)
+{
+    GGML_ASSERT(src0->type == GGML_TYPE_F8_E4M3_B128 || src0->type == GGML_TYPE_MXFP4);
+    GGML_ASSERT(src1->type == GGML_TYPE_F32);
+    GGML_ASSERT(dst->type  == GGML_TYPE_F32);
+    GGML_ASSERT(src0->extra != nullptr && "tensor missing turbomind extra");
+
+    auto * extra = (ggml_turbomind_tensor_extra *) src0->extra;
+    const int n_experts     = extra->n_experts;
+    const int K             = (int) src0->ne[0];
+    const int N             = (int) src0->ne[1];
+    const int tm_type       = ggml_type_to_tm_dtype(src0->type);
+    const int group_size    = extra->group_size;
+    const int k_pack        = extra->k_pack;
+
+    cudaStream_t stream = ctx.stream();
+
+    // ---- mirror ggml_cuda_mul_mat_id's routing build (it's the source of
+    // truth for the ids layout). We need: ids_to_sorted, ids_from_sorted,
+    // tokens_per_expert.
+    const int64_t ne12 = src1->ne[2];   // tokens
+    const int64_t ne10 = src1->ne[0];   // = K
+    const int64_t ne0  = dst->ne[0];    // = N
+    const int64_t n_expert_used = ids->ne[0];
+    const int64_t ne_get_rows   = ne12 * n_expert_used;
+
+    GGML_ASSERT(ne10 == K);
+    GGML_ASSERT(ne0  == N);
+
+    std::vector<char> ids_host(ggml_nbytes(ids));
+    CUDA_CHECK(cudaMemcpyAsync(ids_host.data(), ids->data, ggml_nbytes(ids),
+                               cudaMemcpyDeviceToHost, stream));
+    CUDA_CHECK(cudaStreamSynchronize(stream));
+
+    std::vector<int32_t> ids_to_sorted_host;
+    ids_to_sorted_host.reserve(ne_get_rows);
+    std::vector<int32_t> ids_from_sorted_host(ne_get_rows);
+    std::vector<int32_t> tokens_per_expert(n_experts, 0);
+    std::vector<int32_t> expert_offsets_host(n_experts + 1, 0);
+
+    for (int64_t i02 = 0; i02 < n_experts; ++i02) {
+        for (int64_t i12 = 0; i12 < ne12; ++i12) {
+            for (int64_t iex = 0; iex < n_expert_used; ++iex) {
+                const int32_t expert_to_use = *(const int32_t *)(ids_host.data()
+                    + i12 * ids->nb[1] + iex * ids->nb[0]);
+                GGML_ASSERT(expert_to_use >= 0 && expert_to_use < n_experts);
+                if (expert_to_use == (int32_t) i02) {
+                    ids_from_sorted_host[i12 * n_expert_used + iex] =
+                        (int32_t) ids_to_sorted_host.size();
+                    ids_to_sorted_host.push_back(
+                        (int32_t)(i12 * src1->ne[1] + iex % src1->ne[1]));
+                    tokens_per_expert[i02]++;
+                    break;
+                }
+            }
+        }
+    }
+    for (int i = 0; i < n_experts; ++i) {
+        expert_offsets_host[i + 1] = expert_offsets_host[i] + tokens_per_expert[i];
+    }
+    const int total_routes = expert_offsets_host[n_experts];
+    GGML_ASSERT((int64_t) ids_to_sorted_host.size() == ne_get_rows);
+    GGML_ASSERT(total_routes == (int) ne_get_rows);
+
+    // ---- upload routing metadata to the pool ----
+    ggml_cuda_pool_alloc<int32_t> ids_to_sorted_dev(ctx.pool(), total_routes);
+    ggml_cuda_pool_alloc<int32_t> ids_from_sorted_dev(ctx.pool(), total_routes);
+    ggml_cuda_pool_alloc<int32_t> expert_offsets_dev(ctx.pool(), n_experts + 1);
+    CUDA_CHECK(cudaMemcpyAsync(ids_to_sorted_dev.ptr, ids_to_sorted_host.data(),
+                               sizeof(int32_t) * total_routes,
+                               cudaMemcpyHostToDevice, stream));
+    CUDA_CHECK(cudaMemcpyAsync(ids_from_sorted_dev.ptr, ids_from_sorted_host.data(),
+                               sizeof(int32_t) * total_routes,
+                               cudaMemcpyHostToDevice, stream));
+    CUDA_CHECK(cudaMemcpyAsync(expert_offsets_dev.ptr, expert_offsets_host.data(),
+                               sizeof(int32_t) * (n_experts + 1),
+                               cudaMemcpyHostToDevice, stream));
+
+    // ---- gather + cast src1 -> A_fp16 in one shot via get_rows_cuda ----
+    ggml_cuda_pool_alloc<half> A_fp16(ctx.pool(), (size_t) total_routes * K);
+    get_rows_cuda(src1->data, src1->type, ids_to_sorted_dev.ptr,
+                  A_fp16.ptr, GGML_TYPE_F16,
+                  ne10, src1->nb[1], src1->nb[2], src1->nb[3],
+                  total_routes, 1, 1,
+                  sizeof(int32_t), (size_t) total_routes * sizeof(int32_t),
+                  (size_t) total_routes * sizeof(int32_t),
+                  ne10 * sizeof(half), (size_t) total_routes * ne10 * sizeof(half),
+                  (size_t) total_routes * ne10 * sizeof(half),
+                  stream);
+    CUDA_CHECK(cudaGetLastError());
+
+    // ---- ensure cached pointer tables exist ----
+    if (!tm_ensure_grouped_ptr_tables(extra, src0, stream)) {
+        GGML_LOG_ERROR("%s: tm_ensure_grouped_ptr_tables failed\n", __func__);
+        return;
+    }
+
+    // ---- output FP16 scratch ----
+    ggml_cuda_pool_alloc<half> D_fp16(ctx.pool(), (size_t) total_routes * N);
+
+    if (!g_tm().mul_mat_grouped) {
+        GGML_LOG_ERROR("%s: mul_mat_grouped not loaded\n", __func__);
+        return;
+    }
+    int rc = g_tm().mul_mat_grouped(
+        A_fp16.ptr,
+        /*token_indices=*/nullptr,
+        expert_offsets_dev.ptr,
+        n_experts,
+        (const void * const *) extra->weight_ptrs_dev,
+        (const void * const *) extra->scale_ptrs_dev,
+        tm_type, N, K, group_size, k_pack,
+        D_fp16.ptr,
+        stream);
+    if (rc != 0) {
+        GGML_LOG_ERROR("%s: ggml_turbomind_mul_mat_grouped rc=%d\n", __func__, rc);
+        return;
+    }
+
+    // ---- D_fp16 [total_routes, N] -> dst FP32 via inverse scatter ----
+    // get_rows_cuda copies rows; we need to scatter to dst positions given
+    // by ids_from_sorted. dst is [N, n_tokens, n_expert_used] FP32 row-major.
+    // The scatter pattern matches what ggml_cuda_mul_mat_id does at line 2795.
+    get_rows_cuda(D_fp16.ptr, GGML_TYPE_F16, ids_from_sorted_dev.ptr,
+                  dst->data, dst->type,
+                  N, N * sizeof(half),
+                  (size_t) total_routes * N * sizeof(half),
+                  (size_t) total_routes * N * sizeof(half),
+                  total_routes, 1, 1,
+                  sizeof(int32_t), (size_t) total_routes * sizeof(int32_t),
+                  (size_t) total_routes * sizeof(int32_t),
+                  dst->nb[1], dst->nb[2], dst->nb[3],
+                  stream);
+    CUDA_CHECK(cudaGetLastError());
+
+    if (const char * v = getenv("GGML_TM_VERBOSE")) {
+        if (v[0] == '1') {
+            static int n_calls = 0;
+            if (n_calls++ < 4) {
+                fprintf(stderr, "[ggml-cuda-turbomind] GROUPED dispatch: "
+                        "n_experts=%d n_tokens=%lld n_expert_used=%lld "
+                        "total_routes=%d N=%d K=%d gs=%d\n",
+                        n_experts, (long long) ne12, (long long) n_expert_used,
+                        total_routes, N, K, group_size);
+            }
+        }
+    }
 }

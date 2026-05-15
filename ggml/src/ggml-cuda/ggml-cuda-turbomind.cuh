@@ -39,6 +39,16 @@ struct ggml_turbomind_tensor_extra {
     size_t scales_per_expert;    // step between experts in scales_dev
     int    group_size;
     int    n_experts;
+
+    // SPRINT-024 P1.3 — cached for grouped MoE dispatch.
+    // Populated lazily on first grouped call (not in set_tensor: at upload
+    // time we don't yet know the tensor's final ggml_type, only the buft
+    // does. Resolved + cached the first time the grouped dispatch sees this
+    // tensor). Freed in free_buffer.
+    void * weight_ptrs_dev;      // device StridedPtr[n_experts]
+    void * scale_ptrs_dev;       // device StridedPtr[n_experts]
+    int    packed_b_ld;          // converter-derived B leading dim
+    int    packed_v_ld;          // converter-derived V leading dim
 };
 
 // Buft for a specific CUDA device. The buft holds device-local state
@@ -66,4 +76,18 @@ void ggml_cuda_mul_mat_turbomind(ggml_backend_cuda_context & ctx,
                                  const struct ggml_tensor * src0,
                                  const struct ggml_tensor * src1,
                                  struct ggml_tensor * dst);
+
+// SPRINT-024 P1.5 — grouped MoE dispatch. Replaces the per-expert slicing
+// path in ggml_cuda_mul_mat_id when src0 is on a CUDA_TURBOMIND buffer.
+// One ggml_turbomind_mul_mat_grouped launch per MoE-linear, amortizing
+// the per-expert launch cost across the active experts for the layer.
+//
+// Layout: src0 = expert weights [K, N, n_experts]; src1 = activations
+// [K, n_tokens] (FP32 row-major); ids = routing [n_expert_used, n_tokens]
+// (int32); dst = output [N, n_tokens, n_expert_used] (FP32 row-major).
+void ggml_cuda_mul_mat_grouped_turbomind(ggml_backend_cuda_context & ctx,
+                                          const struct ggml_tensor * src0,
+                                          const struct ggml_tensor * src1,
+                                          const struct ggml_tensor * ids,
+                                          struct ggml_tensor * dst);
 #endif
