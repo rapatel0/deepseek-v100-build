@@ -249,6 +249,18 @@ static void parse_tensor_buffer_overrides(const std::string & value, std::vector
         if (buft) {
             buft_list[ggml_backend_buft_name(buft)] = buft;
         }
+        // Also enumerate device's extra bufts (e.g. CUDA_TURBOMIND, CPU
+        // weight-repack types) so they're addressable from -ot.
+        auto * reg = ggml_backend_dev_backend_reg(dev);
+        if (reg) {
+            auto get_extras = (ggml_backend_dev_get_extra_bufts_t)
+                ggml_backend_reg_get_proc_address(reg, "ggml_backend_dev_get_extra_bufts");
+            if (get_extras) {
+                for (ggml_backend_buffer_type_t * p = get_extras(dev); p && *p; ++p) {
+                    buft_list[ggml_backend_buft_name(*p)] = *p;
+                }
+            }
+        }
     }
 
     for (const auto & override : string_split<std::string>(value, ',')) {
