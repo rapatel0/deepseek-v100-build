@@ -25,11 +25,20 @@
 extern "C" {
 #endif
 
+// For MoE expert-weight tensors (ne[2] = num_experts), set_tensor packs each
+// expert independently into the same tensor->data buffer using stride
+// src0->nb[2] (the per-expert byte stride from the original GGML layout —
+// the packed format is ≤ GGML format for our types, so it fits in that
+// slot). Scales are allocated as one contiguous buffer of size
+// num_experts * scales_per_expert; per-expert offset = i02 *
+// scales_per_expert. For a non-MoE tensor (ne[2]==1) this degenerates.
 struct ggml_turbomind_tensor_extra {
     int    k_pack;
     void * scales_dev;
-    size_t scales_bytes;
+    size_t scales_bytes;         // total across all experts
+    size_t scales_per_expert;    // step between experts in scales_dev
     int    group_size;
+    int    n_experts;
 };
 
 // Buft for a specific CUDA device. The buft holds device-local state
@@ -47,4 +56,14 @@ bool ggml_backend_buft_is_cuda_turbomind(ggml_backend_buffer_type_t buft);
 
 #ifdef __cplusplus
 }
+
+// ---------------------------------------------------------------------------
+// P4 dispatch helper. Called from ggml_cuda_mul_mat when src0 is in a
+// CUDA_TURBOMIND buffer. src1 must be FP32; dst must be FP32. Internally
+// converts to/from FP16 around ggml_turbomind_mul_mat.
+struct ggml_backend_cuda_context;
+void ggml_cuda_mul_mat_turbomind(ggml_backend_cuda_context & ctx,
+                                 const struct ggml_tensor * src0,
+                                 const struct ggml_tensor * src1,
+                                 struct ggml_tensor * dst);
 #endif

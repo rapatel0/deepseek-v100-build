@@ -2541,6 +2541,15 @@ static bool ggml_cuda_should_fuse_split_mul_mat_vec_q(const ggml_tensor * tensor
 }
 
 static void ggml_cuda_mul_mat(ggml_backend_cuda_context & ctx, const ggml_tensor * src0, const ggml_tensor * src1, ggml_tensor * dst) {
+    // SPRINT-023 P4: if src0 is on the CUDA_TURBOMIND buft and is one of the
+    // packed quant types we own, dispatch through libggml-turbomind.so.
+    if (ggml_backend_buft_is_cuda_turbomind(src0->buffer->buft)
+        && (src0->type == GGML_TYPE_F8_E4M3_B128 || src0->type == GGML_TYPE_MXFP4)
+        && src1->type == GGML_TYPE_F32 && dst->type == GGML_TYPE_F32) {
+        ggml_cuda_mul_mat_turbomind(ctx, src0, src1, dst);
+        return;
+    }
+
     const bool split = ggml_backend_buft_is_cuda_split(src0->buffer->buft);
 
     // If src0 is a temporary compute buffer it may have some padding that needs to be cleared for mul_mat_vec_q or mul_mat_q.
@@ -2639,8 +2648,13 @@ static void ggml_cuda_mul_mat_id(ggml_backend_cuda_context & ctx, ggml_tensor * 
 
     const int cc = ggml_cuda_info().devices[ggml_cuda_get_device()].cc;
 
+    // SPRINT-023 P4: turbomind tensors fall through to the per-expert
+    // slicing path below; the fast mmvq / mmq / mmf entry points don't
+    // know how to read our packed format.
+    const bool is_turbomind = ggml_backend_buft_is_cuda_turbomind(src0->buffer->buft);
+
     // [TAG_MUL_MAT_ID_CUDA_GRAPHS]
-    if (src1->type == GGML_TYPE_F32 && dst->type == GGML_TYPE_F32) {
+    if (!is_turbomind && src1->type == GGML_TYPE_F32 && dst->type == GGML_TYPE_F32) {
         static_assert(MMVQ_MAX_BATCH_SIZE == MMVF_MAX_BATCH_SIZE);
         if (ne2 <= MMVQ_MAX_BATCH_SIZE) {
             if (ggml_is_quantized(src0->type)) {
