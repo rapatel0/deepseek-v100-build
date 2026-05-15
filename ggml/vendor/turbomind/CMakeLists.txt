@@ -193,4 +193,12 @@ if(GGML_TURBOMIND_TEST)
     )
     target_link_libraries(test_ggml_turbomind_correctness PRIVATE CUDA::cudart ${CMAKE_DL_LIBS})
     add_dependencies(test_ggml_turbomind_correctness ggml-turbomind)
+
+    # SPRINT-024 P0.3 + P0.4 — grouped C ABI smoke + sync-memcpy microbench.
+    add_executable(test_ggml_turbomind_grouped test_grouped.cpp)
+    target_include_directories(test_ggml_turbomind_grouped PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}/include
+    )
+    target_link_libraries(test_ggml_turbomind_grouped PRIVATE CUDA::cudart ${CMAKE_DL_LIBS})
+    add_dependencies(test_ggml_turbomind_grouped ggml-turbomind)
 endif()
