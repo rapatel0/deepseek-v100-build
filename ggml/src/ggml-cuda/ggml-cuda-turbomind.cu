@@ -51,7 +51,11 @@ struct TmLib {
     std::mutex            mtx;
     bool                  tried_load = false;
     bool                  loaded     = false;
-    int                   init_device = -1;
+    // SPRINT-025 P2: previously a single init_device int that the loader
+    // tracked. After the per-device api.cc refactor each cuda_device has
+    // its own State entry inside the .so, so the loader only needs to
+    // remember which devices it has already called init() for.
+    bool                  per_device_inited[32] = {};
     void                * handle      = nullptr;
     pfn_api_version       api_version = nullptr;
     pfn_init              init        = nullptr;
@@ -67,43 +71,44 @@ TmLib & g_tm() {
     return t;
 }
 
-// Lazy load. Safe to call from multiple threads; loads at most once.
+// SPRINT-025 P2: lazy load + idempotent per-device init. The .so dlopen
+// happens once per process. ggml_turbomind_init(device) is called once
+// per cuda_device — subsequent dispatches on the same device skip init.
+// No shutdown-on-hop; each device retains its own workspace inside the .so.
 bool tm_ensure_loaded(int device) {
     TmLib & t = g_tm();
     std::lock_guard<std::mutex> lk(t.mtx);
-    if (t.tried_load) {
-        if (!t.loaded) return false;
-        if (t.init_device != device) {
-            // Re-init on different device.
-            t.shutdown();
-            if (t.init(device) != 0) return false;
-            t.init_device = device;
+    if (!t.tried_load) {
+        t.tried_load = true;
+        t.handle = dlopen("libggml-turbomind.so", RTLD_NOW | RTLD_LOCAL);
+        if (!t.handle) {
+            GGML_LOG_ERROR("%s: dlopen(libggml-turbomind.so) failed: %s\n", __func__, dlerror());
+            return false;
         }
-        return true;
+        t.api_version     = (pfn_api_version)     dlsym(t.handle, "ggml_turbomind_api_version");
+        t.init            = (pfn_init)            dlsym(t.handle, "ggml_turbomind_init");
+        t.shutdown        = (pfn_shutdown)        dlsym(t.handle, "ggml_turbomind_shutdown");
+        t.packed_bytes    = (pfn_packed_bytes)    dlsym(t.handle, "ggml_turbomind_packed_bytes");
+        t.pack_weight     = (pfn_pack_weight)     dlsym(t.handle, "ggml_turbomind_pack_weight_expert");
+        t.mul_mat         = (pfn_mul_mat)         dlsym(t.handle, "ggml_turbomind_mul_mat");
+        t.mul_mat_grouped = (pfn_mul_mat_grouped) dlsym(t.handle, "ggml_turbomind_mul_mat_grouped");
+        if (!t.init || !t.shutdown || !t.packed_bytes || !t.pack_weight || !t.mul_mat || !t.mul_mat_grouped) {
+            GGML_LOG_ERROR("%s: libggml-turbomind.so missing required symbols\n", __func__);
+            return false;
+        }
+        t.loaded = true;
     }
-    t.tried_load = true;
-    t.handle = dlopen("libggml-turbomind.so", RTLD_NOW | RTLD_LOCAL);
-    if (!t.handle) {
-        GGML_LOG_ERROR("%s: dlopen(libggml-turbomind.so) failed: %s\n", __func__, dlerror());
+    if (!t.loaded) return false;
+    if (device < 0 || device >= 32) {
+        GGML_LOG_ERROR("%s: cuda_device=%d out of range [0,32)\n", __func__, device);
         return false;
     }
-    t.api_version  = (pfn_api_version)  dlsym(t.handle, "ggml_turbomind_api_version");
-    t.init         = (pfn_init)         dlsym(t.handle, "ggml_turbomind_init");
-    t.shutdown     = (pfn_shutdown)     dlsym(t.handle, "ggml_turbomind_shutdown");
-    t.packed_bytes = (pfn_packed_bytes) dlsym(t.handle, "ggml_turbomind_packed_bytes");
-    t.pack_weight  = (pfn_pack_weight)  dlsym(t.handle, "ggml_turbomind_pack_weight_expert");
-    t.mul_mat         = (pfn_mul_mat)         dlsym(t.handle, "ggml_turbomind_mul_mat");
-    t.mul_mat_grouped = (pfn_mul_mat_grouped) dlsym(t.handle, "ggml_turbomind_mul_mat_grouped");
-    if (!t.init || !t.shutdown || !t.packed_bytes || !t.pack_weight || !t.mul_mat || !t.mul_mat_grouped) {
-        GGML_LOG_ERROR("%s: libggml-turbomind.so missing required symbols\n", __func__);
-        return false;
-    }
+    if (t.per_device_inited[device]) return true;
     if (t.init(device) != 0) {
         GGML_LOG_ERROR("%s: ggml_turbomind_init(%d) failed\n", __func__, device);
         return false;
     }
-    t.init_device = device;
-    t.loaded = true;
+    t.per_device_inited[device] = true;
     return true;
 }
 

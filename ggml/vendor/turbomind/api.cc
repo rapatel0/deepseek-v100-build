@@ -51,9 +51,19 @@ namespace tmg = turbomind::gemm;
 #define GGML_TM_EXPORT __attribute__((visibility("default")))
 
 // ============================================================================
-// Module-level state
+// Module-level state — SPRINT-025 P2: PER-DEVICE state[cuda_device].
+//
+// Prior to SPRINT-025 a single global `g_state` held workspace pointers for
+// one device at a time, and ggml_turbomind_init(cuda_device) called
+// cudaFree(...) on the previous device's pointers when the cuda_device
+// changed. That serialized cross-device dispatch and could free pointers
+// concurrent dispatches were still using. Now each device has its own
+// State entry, indexed by cuda_device ordinal. Idempotent init per device.
+// No C ABI change; the entry points still take an int cuda_device.
 // ============================================================================
 namespace {
+
+constexpr int TM_MAX_DEVICES = 32;
 
 struct State {
     bool                 initialized = false;
@@ -66,7 +76,17 @@ struct State {
     std::mutex           mtx;
 };
 
-State g_state;
+// Default-constructed array of per-device State entries. Indexed by cuda
+// device ordinal. The std::mutex inside each State is independently held
+// per device.
+State g_states[TM_MAX_DEVICES];
+
+// Resolve a device ordinal to its State entry. Range-checks; returns
+// nullptr if cuda_device is out of bounds.
+inline State * get_state(int cuda_device) {
+    if (cuda_device < 0 || cuda_device >= TM_MAX_DEVICES) return nullptr;
+    return &g_states[cuda_device];
+}
 
 inline turbomind::DataType to_tm_wdtype(int ggml_type) {
     switch (ggml_type) {
@@ -118,52 +138,54 @@ extern "C" GGML_TM_EXPORT int ggml_turbomind_api_version(void) {
 // ============================================================================
 // API: lifecycle
 // ============================================================================
+// SPRINT-025 P2: per-device idempotent init. No tear-down on "different
+// device" — each device has its own State entry.
 extern "C" GGML_TM_EXPORT int ggml_turbomind_init(int cuda_device) {
-    std::lock_guard<std::mutex> lk(g_state.mtx);
-    if (g_state.initialized && g_state.device == cuda_device) return 0;
-    if (g_state.initialized) {
-        // Re-init on different device — tear down first.
-        // Reset fields individually (std::mutex is non-movable).
-        delete g_state.gemm;
-        g_state.gemm = nullptr;
-        cudaFree(g_state.d_barriers); g_state.d_barriers = nullptr;
-        cudaFree(g_state.d_partials); g_state.d_partials = nullptr;
-        cudaFree(g_state.d_flags);    g_state.d_flags    = nullptr;
-        g_state.partials_size = 0;
-        g_state.initialized   = false;
-        g_state.device        = -1;
+    State * s = get_state(cuda_device);
+    if (!s) {
+        fprintf(stderr, "[ggml-turbomind] cuda_device=%d out of range [0,%d)\n",
+                cuda_device, TM_MAX_DEVICES);
+        return 3;
     }
+    std::lock_guard<std::mutex> lk(s->mtx);
+    if (s->initialized) return 0;  // idempotent per device
     cudaError_t err = cudaSetDevice(cuda_device);
     if (err != cudaSuccess) {
         fprintf(stderr, "[ggml-turbomind] cudaSetDevice(%d) failed: %s\n",
                 cuda_device, cudaGetErrorString(err));
         return 1;
     }
-    g_state.gemm = new tmg::Gemm();
-    // Allocate scratch buffers used by all dispatched kernels.
-    g_state.partials_size = (size_t) 4096 * 4096 * sizeof(float) * 4;
-    if (cudaMalloc(&g_state.d_barriers, tmg::Gemm::kBarriersSize) != cudaSuccess ||
-        cudaMalloc(&g_state.d_partials, g_state.partials_size)    != cudaSuccess ||
-        cudaMalloc(&g_state.d_flags,    sizeof(int) * 1024)       != cudaSuccess) {
-        fprintf(stderr, "[ggml-turbomind] failed to allocate workspace buffers\n");
+    s->gemm = new tmg::Gemm();
+    s->partials_size = (size_t) 4096 * 4096 * sizeof(float) * 4;
+    if (cudaMalloc(&s->d_barriers, tmg::Gemm::kBarriersSize) != cudaSuccess ||
+        cudaMalloc(&s->d_partials, s->partials_size)         != cudaSuccess ||
+        cudaMalloc(&s->d_flags,    sizeof(int) * 1024)       != cudaSuccess) {
+        fprintf(stderr, "[ggml-turbomind] failed to allocate workspace on dev %d\n",
+                cuda_device);
         return 2;
     }
-    g_state.device      = cuda_device;
-    g_state.initialized = true;
+    s->device      = cuda_device;
+    s->initialized = true;
     return 0;
 }
 
+// SPRINT-025 P2: tear down ALL device entries. The C ABI has no
+// per-device shutdown variant; on dlclose we walk all initialized devices.
 extern "C" GGML_TM_EXPORT void ggml_turbomind_shutdown(void) {
-    std::lock_guard<std::mutex> lk(g_state.mtx);
-    if (!g_state.initialized) return;
-    delete g_state.gemm;
-    g_state.gemm = nullptr;
-    cudaFree(g_state.d_barriers); g_state.d_barriers = nullptr;
-    cudaFree(g_state.d_partials); g_state.d_partials = nullptr;
-    cudaFree(g_state.d_flags);    g_state.d_flags    = nullptr;
-    g_state.partials_size = 0;
-    g_state.initialized   = false;
-    g_state.device        = -1;
+    for (int d = 0; d < TM_MAX_DEVICES; ++d) {
+        State * s = &g_states[d];
+        std::lock_guard<std::mutex> lk(s->mtx);
+        if (!s->initialized) continue;
+        cudaSetDevice(s->device);
+        delete s->gemm;
+        s->gemm = nullptr;
+        cudaFree(s->d_barriers); s->d_barriers = nullptr;
+        cudaFree(s->d_partials); s->d_partials = nullptr;
+        cudaFree(s->d_flags);    s->d_flags    = nullptr;
+        s->partials_size = 0;
+        s->initialized   = false;
+        s->device        = -1;
+    }
 }
 
 // ============================================================================
@@ -219,7 +241,12 @@ extern "C" GGML_TM_EXPORT int ggml_turbomind_pack_weight_expert(
     int*          k_pack_out,
     void*         stream_v)
 {
-    if (!g_state.initialized) return 100;
+    // SPRINT-025 P2: resolve State by current CUDA device (caller already
+    // called cudaSetDevice). Each device has its own State entry.
+    int cur_dev = -1;
+    cudaGetDevice(&cur_dev);
+    State * s = get_state(cur_dev);
+    if (!s || !s->initialized) return 100;
     if (!src || !weight_out)  return 1;
     if (!k_pack_out)          return 2;
     cudaStream_t stream = (cudaStream_t) stream_v;
@@ -424,18 +451,21 @@ extern "C" GGML_TM_EXPORT int ggml_turbomind_mul_mat(
     void*       D,
     void*       stream_v)
 {
-    if (!g_state.initialized) return 100;
+    int cur_dev = -1;
+    cudaGetDevice(&cur_dev);
+    State * s = get_state(cur_dev);
+    if (!s || !s->initialized) return 100;
     if (!A || !B_packed || !D) return 1;
     cudaStream_t stream = (cudaStream_t) stream_v;
 
     tmg::Workspace workspace{};
-    workspace.barriers        = g_state.d_barriers;
+    workspace.barriers        = s->d_barriers;
     workspace.barriers_size   = tmg::Gemm::kBarriersSize;
-    workspace.partials        = g_state.d_partials;
-    workspace.partials_size   = g_state.partials_size;
+    workspace.partials        = s->d_partials;
+    workspace.partials_size   = s->partials_size;
     workspace.tensormaps      = nullptr;
     workspace.tensormaps_size = 0;
-    workspace.flags           = g_state.d_flags;
+    workspace.flags           = s->d_flags;
 
     tmg::Operation op{};
     op.dispatch  = tmg::DispatchPolicy::kDefault;
@@ -553,7 +583,7 @@ extern "C" GGML_TM_EXPORT int ggml_turbomind_mul_mat(
     Cdesc = Ddesc;
     tmg::MatrixLayout Udesc{};
 
-    int rc = g_state.gemm->Run(
+    int rc = s->gemm->Run(
         op, 1.0f, A, Adesc, nullptr, Udesc,
         B_packed, Bdesc, V_packed, Vdesc, 0.0f, nullptr, Cdesc,
         D, Ddesc, workspace, stream);
@@ -578,19 +608,22 @@ extern "C" GGML_TM_EXPORT int ggml_turbomind_mul_mat_grouped(
     void*              D,
     void*              stream_v)
 {
-    if (!g_state.initialized)                return 100;
+    int cur_dev = -1;
+    cudaGetDevice(&cur_dev);
+    State * s = get_state(cur_dev);
+    if (!s || !s->initialized)               return 100;
     if (!A || !expert_offsets || !weights_packed || !D) return 1;
     if (num_experts <= 0)                    return 2;
     cudaStream_t stream = (cudaStream_t) stream_v;
 
     tmg::Workspace workspace{};
-    workspace.barriers        = g_state.d_barriers;
+    workspace.barriers        = s->d_barriers;
     workspace.barriers_size   = tmg::Gemm::kBarriersSize;
-    workspace.partials        = g_state.d_partials;
-    workspace.partials_size   = g_state.partials_size;
+    workspace.partials        = s->d_partials;
+    workspace.partials_size   = s->partials_size;
     workspace.tensormaps      = nullptr;
     workspace.tensormaps_size = 0;
-    workspace.flags           = g_state.d_flags;
+    workspace.flags           = s->d_flags;
 
     tmg::Operation op{};
     op.dispatch  = tmg::DispatchPolicy::kDefault;
@@ -692,7 +725,7 @@ extern "C" GGML_TM_EXPORT int ggml_turbomind_mul_mat_grouped(
     tmg::MatrixLayout Cdesc = Ddesc;
     tmg::MatrixLayout Udesc{};
 
-    int rc = g_state.gemm->Run(
+    int rc = s->gemm->Run(
         op, 1.0f, A, Adesc, nullptr, Udesc,
         weights_packed, Bdesc, scales_packed, Vdesc, 0.0f, nullptr, Cdesc,
         D, Ddesc, workspace, stream);
