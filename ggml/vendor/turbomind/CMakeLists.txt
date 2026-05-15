@@ -151,6 +151,7 @@ endforeach()
 # need gpt_kernels.cu for invokeTransposeAxis01 (used during weight packing).
 add_library(ggml-turbomind SHARED
     api.cc
+    ggml-turbomind-deinterleave.cu
     ${LMDEPLOY_SRC}/turbomind/kernels/gpt_kernels.cu
 )
 
@@ -183,7 +184,13 @@ if(GGML_TURBOMIND_TEST)
         ${CMAKE_CURRENT_SOURCE_DIR}/include
     )
     target_link_libraries(test_ggml_turbomind PRIVATE CUDA::cudart ${CMAKE_DL_LIBS})
-    # Depend on the library being built but don't link against it — the test
-    # opens it via dlopen at runtime, simulating how libggml-cuda.so will.
     add_dependencies(test_ggml_turbomind ggml-turbomind)
+
+    # SPRINT-023 P2.3 — round-trip correctness gate.
+    add_executable(test_ggml_turbomind_correctness test_correctness.cpp)
+    target_include_directories(test_ggml_turbomind_correctness PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}/include
+    )
+    target_link_libraries(test_ggml_turbomind_correctness PRIVATE CUDA::cudart ${CMAKE_DL_LIBS})
+    add_dependencies(test_ggml_turbomind_correctness ggml-turbomind)
 endif()

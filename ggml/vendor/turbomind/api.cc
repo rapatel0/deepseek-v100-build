@@ -34,6 +34,7 @@
 #include <vector>
 #include <mutex>
 
+#include "ggml-turbomind-deinterleave.h"
 #include "src/turbomind/kernels/gemm/gemm.h"
 #include "src/turbomind/kernels/gemm/types.h"
 #include "src/turbomind/kernels/gemm/desc.h"
@@ -78,9 +79,11 @@ inline turbomind::DataType to_tm_wdtype(int ggml_type) {
 }
 
 inline turbomind::DataType to_tm_sdtype(int ggml_type) {
-    // Mirrors core/data_format.cc::ResolveLinearWeightFormat scale dtypes.
+    // Output scale dtype produced by conv_s for each weight type on sm70.
+    // Per convert_v3.cu: F8_E4M3 uses Cvt<uint16_t, uint16_t> for scales,
+    // MXFP4 uses Cvt<uint8_t, uint8_t>.
     switch (ggml_type) {
-        case GGML_TM_DTYPE_F8_E4M3_B128: return turbomind::kFloat;  // FP32 scale
+        case GGML_TM_DTYPE_F8_E4M3_B128: return turbomind::kHalf;   // 2-byte FP16
         case GGML_TM_DTYPE_MXFP4:        return turbomind::kUint8;  // E8M0 byte
         case GGML_TM_DTYPE_U4_G:         return turbomind::kHalf;
         default:                         return turbomind::kHalf;
@@ -222,13 +225,67 @@ extern "C" GGML_TM_EXPORT int ggml_turbomind_pack_weight_expert(
     cudaStream_t stream = (cudaStream_t) stream_v;
 
     if (ggml_type == GGML_TM_DTYPE_FP16) {
-        // FP16 path: no packing; turbomind dispatches to cuBLAS. Caller
-        // should not hit this in production (FP16 isn't a quant type), but
-        // we support it for completeness.
+        // FP16 path: no packing; turbomind dispatches to cuBLAS.
         cudaMemcpyAsync(weight_out, src, (size_t)N * K * sizeof(__half),
                         cudaMemcpyDeviceToDevice, stream);
         *k_pack_out = 0;
         return 0;
+    }
+
+    // The GGML source is in interleaved block layout:
+    //   F8_E4M3_B128: [uint8 scale, uint8 qs[128]] per block
+    //   MXFP4:        [uint8 scale, uint8 qs[16]] per block
+    //
+    // Turbomind's Convert API wants the weight bytes and scales as TWO
+    // SEPARATE flat buffers. P2.1 introduced deinterleave kernels for that.
+    //
+    // After deinterleave we follow the same dance as
+    // tools/tc-grid/turbomind_minimal/gemm_bench_packed.cu (the proven-working
+    // sm70 packed-weight invocation pattern).
+
+    // ---- Step 0: deinterleave GGML blocks straight into uint16 [K, N] tmp ----
+    //
+    // This replaces the bench's "raw bytes → extend_to_u16" two-step. We
+    // produce the u16 tmp directly because two-fp4-per-byte packing is hard
+    // to do row-major in [K, N] across N strides.
+    const int    bits      = bits_per_weight(ggml_type);
+    const int    n_scales  = N * (K / group_size);
+    const int    output_dim = N;
+    const int    input_dim  = K;
+    const size_t n_elem    = (size_t)output_dim * input_dim;
+
+    uint16_t* tmp = nullptr;
+    if (cudaMalloc(&tmp, n_elem * sizeof(uint16_t)) != cudaSuccess) return 8;
+
+    const size_t scale_byte_size_per_value =
+        (ggml_type == GGML_TM_DTYPE_F8_E4M3_B128) ? 2 : 1;
+    void* raw_scales = nullptr;
+    if (scales_out) {
+        if (cudaMalloc(&raw_scales, (size_t)n_scales * scale_byte_size_per_value) != cudaSuccess) {
+            cudaFree(tmp);
+            return 9;
+        }
+    }
+
+    cudaError_t derr = cudaSuccess;
+    if (ggml_type == GGML_TM_DTYPE_F8_E4M3_B128) {
+        derr = ggml_turbomind::launch_deinterleave_f8_e4m3_b128(
+            src, tmp, raw_scales, N, K, stream);
+    } else if (ggml_type == GGML_TM_DTYPE_MXFP4) {
+        derr = ggml_turbomind::launch_deinterleave_mxfp4(
+            src, tmp, raw_scales, N, K, stream);
+    } else {
+        fprintf(stderr, "[ggml-turbomind] unsupported ggml_type=%d\n", ggml_type);
+        cudaFree(tmp);
+        if (raw_scales) cudaFree(raw_scales);
+        return 10;
+    }
+    if (derr != cudaSuccess) {
+        fprintf(stderr, "[ggml-turbomind] deinterleave launch failed: %s\n",
+                cudaGetErrorString(derr));
+        cudaFree(tmp);
+        if (raw_scales) cudaFree(raw_scales);
+        return 11;
     }
 
     // ---- Get converters (B-weight + V-scales) for this (dtype, sm) ----
@@ -243,32 +300,18 @@ extern "C" GGML_TM_EXPORT int ggml_turbomind_pack_weight_expert(
     if (!conv_w) {
         fprintf(stderr, "[ggml-turbomind] no weight converter for type=%d on sm70\n",
                 ggml_type);
+        cudaFree(tmp);
+        if (raw_scales) cudaFree(raw_scales);
         return 3;
     }
 
-    const int bits       = bits_per_weight(ggml_type);
-    const int output_dim = N;
-    const int input_dim  = K;
-    const size_t n_elem  = (size_t)output_dim * input_dim;
-
-    // ---- Step 1: extend src to u16 tmp ----
-    uint16_t* tmp = nullptr;
-    if (cudaMalloc(&tmp, n_elem * sizeof(uint16_t)) != cudaSuccess) return 4;
-
-    if (bits == 4) {
-        turbomind::extend_to_u16(tmp, (const turbomind::uint4_t*)src, n_elem, stream);
-    } else if (bits == 8) {
-        turbomind::extend_to_u16(tmp, (const uint8_t*)src, n_elem, stream);
-    } else {
-        cudaFree(tmp);
-        return 5;
-    }
-
-    // ---- Step 2: transpose if conv expects row-major source ----
+    // tmp is [K, N] u16 row-major. Transpose to [N, K] u16 row-major before
+    // passing to conv_w — matches lmdeploy/models/linear_weight.cc convention.
     if (conv_w->order == tmg::kRowMajor) {
         uint16_t* trans = nullptr;
         if (cudaMalloc(&trans, n_elem * sizeof(uint16_t)) != cudaSuccess) {
             cudaFree(tmp);
+            if (raw_scales) cudaFree(raw_scales);
             return 6;
         }
         turbomind::invokeTransposeAxis01(trans, tmp, input_dim, output_dim, 1, stream);
@@ -276,7 +319,7 @@ extern "C" GGML_TM_EXPORT int ggml_turbomind_pack_weight_expert(
         tmp = trans;
     }
 
-    // ---- Step 3: build w_desc + kd (matches linear_weight.cc dance) ----
+    // ---- Step 3: build w_desc + kd ----
     tmg::MatrixLayout w_desc{
         turbomind::kHalf,
         conv_w->order,
@@ -295,41 +338,70 @@ extern "C" GGML_TM_EXPORT int ggml_turbomind_pack_weight_expert(
                           : turbomind::data_type_v<uint8_t>;
     kd.pack = conv_w->pack;
 
-    // Pre-zero output buffer.
-    const size_t raw_bytes = turbomind::byte_size(to_tm_wdtype(ggml_type), n_elem);
-    cudaMemsetAsync(weight_out, 0, raw_bytes, stream);
+    const size_t raw_bytes_out = turbomind::byte_size(to_tm_wdtype(ggml_type), n_elem);
+    cudaMemsetAsync(weight_out, 0, raw_bytes_out, stream);
 
     int rc = conv_w->Convert(tmp, w_desc, weight_out, kd, stream);
     cudaFree(tmp);
     if (rc != 0) {
         fprintf(stderr, "[ggml-turbomind] conv_w->Convert rc=%d\n", rc);
+        if (raw_scales) cudaFree(raw_scales);
         return 7;
     }
 
-    kd.type = to_tm_wdtype(ggml_type);  // restore final type
-    kd.num = 1;
+    kd.type = to_tm_wdtype(ggml_type);
+    kd.num  = 1;
     *k_pack_out = encode_pack(kd.pack);
 
+    // ---- Step 3.5: adjust UE8M0 scales for half-precision dispatch ----
+    // MXFP4 scales are stored as raw E8M0 bytes. The sm70 transform pipeline
+    // reads them directly as FP16 exponent fields, so we need to re-bias from
+    // E8M0 bias=127 to FP16 bias=15. See linear_weight.cc:241.
+    if (ggml_type == GGML_TM_DTYPE_MXFP4 && raw_scales) {
+        turbomind::AdjustUe8m0ScaleForHalf((uint8_t*)raw_scales, n_scales, stream);
+    }
+
     // ---- Step 4: scales path ----
-    if (conv_s && scales_out) {
-        // For sub-byte / fp8 quant, the source scales are stored in the
-        // GGML block alongside the weight values. The caller is expected
-        // to have packed them somewhere — but for the initial smoke-test
-        // implementation we'll require scales as a separate buffer the
-        // caller pre-extracts. The C ABI accepts both via the `src`
-        // pointer if the caller passes a struct... but for now we expect
-        // the scales to be EXTRACTED from `src` already and the caller
-        // passes a pointer to them via scales_out's INITIAL CONTENT.
-        //
-        // SIMPLIFICATION for P1: this path requires the caller to extract
-        // scales separately. For the dlopen test we'll skip this path and
-        // just zero scales_out. Real integration in P2 will spec the
-        // src tensor layout precisely.
-        cudaMemsetAsync(scales_out, 0,
-            turbomind::byte_size(to_tm_sdtype(ggml_type), N * (K / group_size)),
-            stream);
-        // Note: caller must call ggml_turbomind_pack_scales() (TODO P2) to
-        // actually populate scales_out. For now this is a stub.
+    if (conv_s && scales_out && raw_scales) {
+        // Source scale type matches what the deinterleave produced.
+        // F8: FP16 (kUint16 to Convert per linear_weight.cc convention)
+        // MXFP4: uint8 (E8M0 byte)
+        turbomind::DataType src_scale_type =
+            (ggml_type == GGML_TM_DTYPE_F8_E4M3_B128)
+                ? turbomind::kUint16
+                : turbomind::kUint8;
+
+        tmg::MatrixLayout s_desc{
+            src_scale_type,
+            conv_s->order,
+            output_dim,                   // rows
+            input_dim / group_size,       // cols
+            output_dim,
+        };
+        const bool s_is_A = tmg::get_operand_tag(conv_s->pack) == tmg::OPERAND_U;
+        if (!s_is_A) {
+            std::swap(s_desc.rows, s_desc.cols);
+            s_desc.order = ~s_desc.order;
+        }
+
+        tmg::MatrixLayout qd = s_desc;
+        qd.pack = conv_s->pack;
+
+        const size_t scale_out_bytes =
+            turbomind::byte_size(to_tm_sdtype(ggml_type), n_scales);
+        cudaMemsetAsync(scales_out, 0, scale_out_bytes, stream);
+
+        int src_rc = conv_s->Convert(raw_scales, s_desc, scales_out, qd, stream);
+        cudaFree(raw_scales);
+        if (src_rc != 0) {
+            fprintf(stderr, "[ggml-turbomind] conv_s->Convert rc=%d\n", src_rc);
+            return 12;
+        }
+        qd.num = 1;
+        // Encode v_pack in upper 12 bits of k_pack_out so mul_mat can recover.
+        *k_pack_out = encode_pack(kd.pack) | (encode_pack(qd.pack) << 12);
+    } else if (raw_scales) {
+        cudaFree(raw_scales);
     }
 
     cudaStreamSynchronize(stream);
@@ -379,41 +451,105 @@ extern "C" GGML_TM_EXPORT int ggml_turbomind_mul_mat(
     tmg::MatrixLayout Adesc{turbomind::kHalf, tmg::Order::kRowMajor,
                             M, K, K, 0, 1, nullptr, nullptr};
 
-    // Bdesc: reconstruct from k_pack_value.
-    // For non-FP16 quant, B is in column-major with the encoded pack.
+    // Bdesc / Vdesc: orders must match what GetConverters() returned during
+    // pack — which the registered turbomind kernels were built around. The
+    // pack stage built w_desc/s_desc with conv_*->order then flipped order
+    // when the operand tag is B (or V). Replicate that here.
     tmg::MatrixLayout Bdesc;
+    tmg::MatrixLayout Vdesc{};
     if (ggml_type == GGML_TM_DTYPE_FP16) {
         Bdesc = tmg::MatrixLayout{turbomind::kHalf, tmg::Order::kRowMajor,
                                   K, N, N, 0, 1, nullptr, nullptr};
     } else {
-        Bdesc.type   = to_tm_wdtype(ggml_type);
-        Bdesc.order  = tmg::Order::kColMajor;
-        Bdesc.rows   = K;
-        Bdesc.cols   = N;
-        Bdesc.ld     = K;
-        Bdesc.pack   = decode_pack(k_pack_value);
-        Bdesc.num    = 1;
+        auto convs = tmg::GetConverters(
+            /*data_type=*/turbomind::kHalf,
+            /*weight_type=*/to_tm_wdtype(ggml_type),
+            /*input_type=*/turbomind::kHalf,
+            /*grouped=*/false,
+            /*sm=*/70);
+        const tmg::LayoutConverter* conv_w = convs[0];
+        const tmg::LayoutConverter* conv_s = convs[1];
+        if (!conv_w) {
+            fprintf(stderr, "[ggml-turbomind] mul_mat: no conv_w for type=%d\n", ggml_type);
+            return 3;
+        }
+
+        // B layout — start with conv_w->order, then apply OPERAND_B swap
+        // (same as pack stage).
+        // Build w_desc the same way pack_weight_expert did, then apply the
+        // Packing_v2 transform to get the ld of the PACKED output (= K*32 for
+        // sm70 HMMA_884 OPERAND_B Pack_M=1, not the bare K of the unpacked form).
+        tmg::MatrixLayout w_desc{
+            turbomind::kHalf,
+            conv_w->order,
+            N,
+            K,
+            (conv_w->order == tmg::kRowMajor) ? K : N,
+        };
+        if (tmg::get_operand_tag(conv_w->pack) != tmg::OPERAND_A) {
+            std::swap(w_desc.rows, w_desc.cols);
+            w_desc.order = ~w_desc.order;
+        }
+        // Replicate convert_v3.cu's Ddesc.ld update:
+        //   trans Sdesc, then ld = mk2cs<order>(Packing_v2::apply({rows,cols})).x
+        // For OPERAND_B sm70 HMMA_884 Pack_M=1, Packing_v2::apply({m,k})={m/32, k*32}.
+        const bool b_trans = tmg::get_operand_tag(conv_w->pack) == tmg::OPERAND_B
+                          || tmg::get_operand_tag(conv_w->pack) == tmg::OPERAND_V;
+        const int b_pack_num = (int)(conv_w->pack & 0xF);
+        int b_packed_ld;
+        {
+            int rows_t = b_trans ? w_desc.cols : w_desc.rows;
+            int cols_t = b_trans ? w_desc.rows : w_desc.cols;
+            // For HMMA_884 OPERAND_B Pack_M=num: apply({rows, cols}) = {rows/(32*num), cols*32*num}.
+            int packed_rows = rows_t / (32 * b_pack_num);
+            int packed_cols = cols_t * 32 * b_pack_num;
+            b_packed_ld = (conv_w->order == tmg::kRowMajor) ? packed_cols : packed_rows;
+            (void)packed_rows; (void)packed_cols;
+        }
+
+        Bdesc.type    = to_tm_wdtype(ggml_type);
+        Bdesc.order   = w_desc.order;
+        Bdesc.rows    = w_desc.rows;
+        Bdesc.cols    = w_desc.cols;
+        Bdesc.ld      = b_packed_ld;
+        Bdesc.pack    = decode_pack(k_pack_value & 0xFFFu);
+        Bdesc.num     = 1;
         Bdesc.offsets = nullptr;
-        Bdesc.idxs   = nullptr;
+        Bdesc.idxs    = nullptr;
+
+        if (V_packed && conv_s) {
+            uint32_t v_pack_raw = ((uint32_t)k_pack_value >> 12) & 0xFFFu;
+            if (v_pack_raw == 0) {
+                v_pack_raw = ((uint32_t)k_pack_value & 0xF0Fu) | (uint32_t)tmg::OPERAND_V;
+            }
+            // For OPERAND_V sm70 HMMA_884 there's no PackingImpl specialization,
+            // so apply returns mk unchanged. ld = original ld after swap.
+            tmg::MatrixLayout s_desc{
+                to_tm_sdtype(ggml_type),
+                conv_s->order,
+                N,
+                K / group_size,
+                N,  // ld pre-swap
+            };
+            if (tmg::get_operand_tag(conv_s->pack) != tmg::OPERAND_U) {
+                std::swap(s_desc.rows, s_desc.cols);
+                s_desc.order = ~s_desc.order;
+            }
+            Vdesc.type    = s_desc.type;
+            Vdesc.order   = s_desc.order;
+            Vdesc.rows    = s_desc.rows;
+            Vdesc.cols    = s_desc.cols;
+            Vdesc.ld      = s_desc.ld;
+            Vdesc.pack    = (tmg::Pack)v_pack_raw;
+            Vdesc.num     = 1;
+        }
     }
 
-    tmg::MatrixLayout Vdesc{};
-    if (V_packed) {
-        Vdesc.type   = to_tm_sdtype(ggml_type);
-        Vdesc.order  = tmg::Order::kColMajor;
-        Vdesc.rows   = K / group_size;
-        Vdesc.cols   = N;
-        Vdesc.ld     = K / group_size;
-        Vdesc.pack   = decode_pack(k_pack_value & 0xFFF0F0u) | tmg::OPERAND_V;
-        // ^ approximation; real Pack reconstruction needs the V converter
-        //   metadata too. For dispatcher correctness we may need a
-        //   separate v_pack value — flagged as P2 follow-up.
-        Vdesc.num    = 1;
-    }
-
+    // D: row-major [M, N]. Matches the proven sm70 invocation in
+    // tools/tc-grid/turbomind_minimal/gemm_bench_packed.cu.
     tmg::MatrixLayout Cdesc, Ddesc;
-    Ddesc = tmg::MatrixLayout{turbomind::kHalf, tmg::Order::kColMajor,
-                              M, N, M, 0, 1, nullptr, nullptr};
+    Ddesc = tmg::MatrixLayout{turbomind::kHalf, tmg::Order::kRowMajor,
+                              M, N, N, 0, 1, nullptr, nullptr};
     Cdesc = Ddesc;
     tmg::MatrixLayout Udesc{};
 
@@ -484,31 +620,63 @@ extern "C" GGML_TM_EXPORT int ggml_turbomind_mul_mat_grouped(
     Adesc.offsets = const_cast<int*>(expert_offsets);
     Adesc.idxs    = const_cast<int*>(token_indices);
 
-    // Bdesc: per-expert strided pointers. num=num_experts, ld=0 (signal that
-    // the offsets are pointer-array, not row offset).
-    // Following turbomind convention: when num>1 and Bdesc.ld=0, weights are
-    // passed as a device array of per-expert pointers (B parameter is the
-    // device pointer array itself, not a single tensor).
+    // Bdesc / Vdesc: derive orders from the converter that was used to pack
+    // these tensors (same flow as ggml_turbomind_mul_mat).
     tmg::MatrixLayout Bdesc{};
-    Bdesc.type    = to_tm_wdtype(ggml_type);
-    Bdesc.order   = tmg::Order::kColMajor;
-    Bdesc.rows    = K;
-    Bdesc.cols    = N;
-    Bdesc.ld      = 0;   // signal per-expert pointers
-    Bdesc.pack    = decode_pack(k_pack_value);
-    Bdesc.num     = num_experts;
-    Bdesc.offsets = nullptr;
-    Bdesc.idxs    = nullptr;
-
     tmg::MatrixLayout Vdesc{};
-    if (scales_packed) {
-        Vdesc.type    = to_tm_sdtype(ggml_type);
-        Vdesc.order   = tmg::Order::kColMajor;
-        Vdesc.rows    = K / group_size;
-        Vdesc.cols    = N;
-        Vdesc.ld      = 0;
-        Vdesc.pack    = decode_pack(k_pack_value & 0xFFF0F0u) | tmg::OPERAND_V;
-        Vdesc.num     = num_experts;
+    if (ggml_type != GGML_TM_DTYPE_FP16) {
+        auto convs = tmg::GetConverters(
+            /*data_type=*/turbomind::kHalf,
+            /*weight_type=*/to_tm_wdtype(ggml_type),
+            /*input_type=*/turbomind::kHalf,
+            /*grouped=*/false,  // matches pack_weight_expert
+            /*sm=*/70);
+        const tmg::LayoutConverter* conv_w = convs[0];
+        const tmg::LayoutConverter* conv_s = convs[1];
+        if (!conv_w) {
+            fprintf(stderr, "[ggml-turbomind] mul_mat_grouped: no conv_w for type=%d\n", ggml_type);
+            return 3;
+        }
+
+        Bdesc.type    = to_tm_wdtype(ggml_type);
+        Bdesc.order   = conv_w->order;
+        Bdesc.rows    = N;
+        Bdesc.cols    = K;
+        Bdesc.ld      = 0;  // per-expert pointer array
+        Bdesc.pack    = decode_pack(k_pack_value & 0xFFFu);
+        Bdesc.num     = num_experts;
+        Bdesc.offsets = nullptr;
+        Bdesc.idxs    = nullptr;
+        if (tmg::get_operand_tag(conv_w->pack) != tmg::OPERAND_A) {
+            std::swap(Bdesc.rows, Bdesc.cols);
+            Bdesc.order = ~Bdesc.order;
+        }
+
+        if (scales_packed && conv_s) {
+            uint32_t v_pack_raw = ((uint32_t)k_pack_value >> 12) & 0xFFFu;
+            if (v_pack_raw == 0) {
+                v_pack_raw = ((uint32_t)k_pack_value & 0xF0Fu) | (uint32_t)tmg::OPERAND_V;
+            }
+            Vdesc.type    = to_tm_sdtype(ggml_type);
+            Vdesc.order   = conv_s->order;
+            Vdesc.rows    = N;
+            Vdesc.cols    = K / group_size;
+            Vdesc.ld      = 0;
+            Vdesc.pack    = (tmg::Pack)v_pack_raw;
+            Vdesc.num     = num_experts;
+            if (tmg::get_operand_tag(conv_s->pack) != tmg::OPERAND_U) {
+                std::swap(Vdesc.rows, Vdesc.cols);
+                Vdesc.order = ~Vdesc.order;
+            }
+        }
+    } else {
+        Bdesc.type    = turbomind::kHalf;
+        Bdesc.order   = tmg::Order::kRowMajor;
+        Bdesc.rows    = K;
+        Bdesc.cols    = N;
+        Bdesc.ld      = 0;
+        Bdesc.pack    = 0;
+        Bdesc.num     = num_experts;
     }
 
     tmg::MatrixLayout Ddesc;
