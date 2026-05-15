@@ -207,6 +207,8 @@ option(GGML_CUDA_FA                         "ggml: compile ggml FlashAttention C
 option(GGML_CUDA_FA_ALL_QUANTS              "ggml: compile all quants for FlashAttention"     OFF)
 option(GGML_CUDA_GRAPHS                     "ggml: use CUDA graphs (llama.cpp only)"          ${GGML_CUDA_GRAPHS_DEFAULT})
 option(GGML_CUDA_NCCL                       "ggml: use NVIDIA Collective Comm. Library"       ON)
+option(GGML_TURBOMIND                       "ggml: build libggml-turbomind.so (V100 sm70 grouped-MoE GEMM via turbomind, SPRINT-023 P1)" OFF)
+set(GGML_TURBOMIND_LMDEPLOY_SRC "" CACHE PATH "Path to lmdeploy/src tree (required if GGML_TURBOMIND=ON)")
 set   (GGML_CUDA_COMPRESSION_MODE "size" CACHE STRING
                                             "ggml: cuda link binary compression mode; requires cuda 12.8+")
 set_property(CACHE GGML_CUDA_COMPRESSION_MODE PROPERTY STRINGS "none;speed;balance;size")
@@ -296,6 +298,22 @@ include(GNUInstallDirs)
 #
 
 add_subdirectory(src)
+
+# SPRINT-023 P1 — turbomind sm70 grouped-MoE GEMM (.so + dlopen + C ABI).
+#
+# Decision: libggml-turbomind.so is built as a STANDALONE cmake project,
+# NOT add_subdirectory'd here. Reason: lmdeploy's CMakeLists set
+# cmake_minimum_required(VERSION 3.11), which resets CUDA policy state and
+# breaks the parent llama.cpp build's CMAKE_CUDA_COMPILE_WHOLE_COMPILATION.
+#
+# Build instructions in ggml/vendor/turbomind/README.md. The resulting .so
+# is loaded at runtime via dlopen by ggml-cuda when the CUDA_TURBOMIND
+# buffer type is requested.
+#
+# This flag exists as a marker for runtime tests / packaging only.
+if (GGML_TURBOMIND)
+    message(STATUS "GGML_TURBOMIND=ON: build libggml-turbomind.so separately via ggml/vendor/turbomind/CMakeLists.txt; runtime dlopen path enabled in libggml-cuda.so.")
+endif()
 
 #
 # tests and examples
