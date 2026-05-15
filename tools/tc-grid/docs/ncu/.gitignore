@@ -1,0 +1,3 @@
+# ncu raw report files (binary; commit only the derived CSVs)
+*.ncu-rep
+*.log

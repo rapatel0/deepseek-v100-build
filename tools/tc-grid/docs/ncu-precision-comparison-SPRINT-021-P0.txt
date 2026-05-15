@@ -1,0 +1,40 @@
+=== fp16 ===
+rows: 7
+dram__throughput.avg.pct_of_peak_sustained_elapsed                % 18.43
+l1tex__data_pipe_lsu_wavefronts_mem_shared.sum.pct_of_peak_sustained_elapsed % 55.64
+launch__registers_per_thread                                      register/thread 254
+sm__cycles_active.avg.pct_of_peak_sustained_elapsed               % 94.30
+sm__pipe_tensor_op_hmma_cycles_active.sum.pct_of_peak_sustained_elapsed % 83.53
+sm__warps_active.avg.pct_of_peak_sustained_active                 % 12.37
+smsp__average_warp_latency_per_inst_issued.ratio                  cycle 3.62
+
+=== fp8 ===
+rows: 7
+dram__throughput.avg.pct_of_peak_sustained_elapsed                % 8.76
+l1tex__data_pipe_lsu_wavefronts_mem_shared.sum.pct_of_peak_sustained_elapsed % 43.34
+launch__registers_per_thread                                      register/thread 244
+sm__cycles_active.avg.pct_of_peak_sustained_elapsed               % 94.99
+sm__pipe_tensor_op_hmma_cycles_active.sum.pct_of_peak_sustained_elapsed % 55.70
+sm__warps_active.avg.pct_of_peak_sustained_active                 % 12.12
+smsp__average_warp_latency_per_inst_issued.ratio                  cycle 3.59
+
+=== u4 ===
+rows: 7
+dram__throughput.avg.pct_of_peak_sustained_elapsed                % 7.87
+l1tex__data_pipe_lsu_wavefronts_mem_shared.sum.pct_of_peak_sustained_elapsed % 38.63
+launch__registers_per_thread                                      register/thread 242
+sm__cycles_active.avg.pct_of_peak_sustained_elapsed               % 93.25
+sm__pipe_tensor_op_hmma_cycles_active.sum.pct_of_peak_sustained_elapsed % 60.94
+sm__warps_active.avg.pct_of_peak_sustained_active                 % 12.50
+smsp__average_warp_latency_per_inst_issued.ratio                  cycle 3.80
+
+
+=== v12_ms3 INT8 (tc-grid) ===
+rows: 2 (median of mm_int8_lut_v12_ms3<128,128,16,4,16,1>)
+dram__throughput.avg.pct_of_peak_sustained_elapsed                % 9.40
+l1tex__data_pipe_lsu_wavefronts_mem_shared.sum.pct_of_peak_sustained_elapsed % 48.26
+launch__registers_per_thread                                      register/thread 152
+sm__cycles_active.avg.pct_of_peak_sustained_elapsed               % 94.43
+sm__pipe_tensor_op_hmma_cycles_active.sum.pct_of_peak_sustained_elapsed % 31.72
+sm__warps_active.avg.pct_of_peak_sustained_active                 % 12.24
+smsp__average_warp_latency_per_inst_issued.ratio                  cycle 7.63

@@ -1,0 +1,2609 @@
+========= COMPUTE-SANITIZER
+device: Tesla V100-SXM2-32GB, cc=7.0, smem=48KiB/cta
+
+=== cuBLAS FP16 GEMM ceiling (V100 TC peak target 125 TFLOPS) ===
+format,path,dist,M,N,K,tile,status,detail
+CUBLAS_FP16,REF,U(-1,1),64,7168,7168,cublas,OK,ms=11.150,tflops=0.59,gbps=9.4,maxabs=0.0e+0,p99=0.0e+0,rel=0.0e+0
+========= Host API memory access error at host access to 0x7f2e029e0400 of size 32768 bytes
+=========     Uninitialized access at 0x7f2e029e0400 on access by cudaMemcpy source
+=========     Saved host backtrace up to driver entry point at error
+=========     Host Frame:cuMemcpyDtoH_v2 [0x37ecb0]
+=========                in /lib/x86_64-linux-gnu/libcuda.so.1
+=========     Host Frame: [0x465f1]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame: [0x17eda]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:cudaMemcpy [0x6b867]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:tc_grid::evaluate_tolerance(float const*, float const*, unsigned long) [0x9967]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:tc_grid::launch_int8(tc_grid::LaunchSpec const&, void const*, float const*, float*, float const*) [0x1a75e]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:main [0x46c3]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame: [0x29d90]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:__libc_start_main [0x29e40]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:_start [0x4be5]
+=========                in /src/tools/tc-grid/build/tc-grid
+========= 
+========= Host API memory access error at host access to 0x7f2e029e0400 of size 32768 bytes
+=========     Uninitialized access at 0x7f2e029e0420 on access by cudaMemcpy source
+=========     Saved host backtrace up to driver entry point at error
+=========     Host Frame:cuMemcpyDtoH_v2 [0x37ecb0]
+=========                in /lib/x86_64-linux-gnu/libcuda.so.1
+=========     Host Frame: [0x465f1]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame: [0x17eda]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:cudaMemcpy [0x6b867]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:tc_grid::evaluate_tolerance(float const*, float const*, unsigned long) [0x9967]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:tc_grid::launch_int8(tc_grid::LaunchSpec const&, void const*, float const*, float*, float const*) [0x1a75e]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:main [0x46c3]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame: [0x29d90]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:__libc_start_main [0x29e40]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:_start [0x4be5]
+=========                in /src/tools/tc-grid/build/tc-grid
+========= 
+========= Host API memory access error at host access to 0x7f2e029e0400 of size 32768 bytes
+=========     Uninitialized access at 0x7f2e029e0440 on access by cudaMemcpy source
+=========     Saved host backtrace up to driver entry point at error
+=========     Host Frame:cuMemcpyDtoH_v2 [0x37ecb0]
+=========                in /lib/x86_64-linux-gnu/libcuda.so.1
+=========     Host Frame: [0x465f1]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame: [0x17eda]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:cudaMemcpy [0x6b867]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:tc_grid::evaluate_tolerance(float const*, float const*, unsigned long) [0x9967]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:tc_grid::launch_int8(tc_grid::LaunchSpec const&, void const*, float const*, float*, float const*) [0x1a75e]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:main [0x46c3]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame: [0x29d90]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:__libc_start_main [0x29e40]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:_start [0x4be5]
+=========                in /src/tools/tc-grid/build/tc-grid
+========= 
+========= Host API memory access error at host access to 0x7f2e029e0400 of size 32768 bytes
+=========     Uninitialized access at 0x7f2e029e0460 on access by cudaMemcpy source
+=========     Saved host backtrace up to driver entry point at error
+=========     Host Frame:cuMemcpyDtoH_v2 [0x37ecb0]
+=========                in /lib/x86_64-linux-gnu/libcuda.so.1
+=========     Host Frame: [0x465f1]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame: [0x17eda]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:cudaMemcpy [0x6b867]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:tc_grid::evaluate_tolerance(float const*, float const*, unsigned long) [0x9967]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:tc_grid::launch_int8(tc_grid::LaunchSpec const&, void const*, float const*, float*, float const*) [0x1a75e]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:main [0x46c3]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame: [0x29d90]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:__libc_start_main [0x29e40]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:_start [0x4be5]
+=========                in /src/tools/tc-grid/build/tc-grid
+========= 
+========= Host API memory access error at host access to 0x7f2e029e0400 of size 32768 bytes
+=========     Uninitialized access at 0x7f2e029e0480 on access by cudaMemcpy source
+=========     Saved host backtrace up to driver entry point at error
+=========     Host Frame:cuMemcpyDtoH_v2 [0x37ecb0]
+=========                in /lib/x86_64-linux-gnu/libcuda.so.1
+=========     Host Frame: [0x465f1]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame: [0x17eda]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:cudaMemcpy [0x6b867]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:tc_grid::evaluate_tolerance(float const*, float const*, unsigned long) [0x9967]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:tc_grid::launch_int8(tc_grid::LaunchSpec const&, void const*, float const*, float*, float const*) [0x1a75e]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:main [0x46c3]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame: [0x29d90]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:__libc_start_main [0x29e40]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:_start [0x4be5]
+=========                in /src/tools/tc-grid/build/tc-grid
+========= 
+========= Host API memory access error at host access to 0x7f2e029e0400 of size 32768 bytes
+=========     Uninitialized access at 0x7f2e029e04a0 on access by cudaMemcpy source
+=========     Saved host backtrace up to driver entry point at error
+=========     Host Frame:cuMemcpyDtoH_v2 [0x37ecb0]
+=========                in /lib/x86_64-linux-gnu/libcuda.so.1
+=========     Host Frame: [0x465f1]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame: [0x17eda]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:cudaMemcpy [0x6b867]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:tc_grid::evaluate_tolerance(float const*, float const*, unsigned long) [0x9967]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:tc_grid::launch_int8(tc_grid::LaunchSpec const&, void const*, float const*, float*, float const*) [0x1a75e]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:main [0x46c3]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame: [0x29d90]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:__libc_start_main [0x29e40]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:_start [0x4be5]
+=========                in /src/tools/tc-grid/build/tc-grid
+========= 
+========= Host API memory access error at host access to 0x7f2e029e0400 of size 32768 bytes
+=========     Uninitialized access at 0x7f2e029e04c0 on access by cudaMemcpy source
+=========     Saved host backtrace up to driver entry point at error
+=========     Host Frame:cuMemcpyDtoH_v2 [0x37ecb0]
+=========                in /lib/x86_64-linux-gnu/libcuda.so.1
+=========     Host Frame: [0x465f1]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame: [0x17eda]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:cudaMemcpy [0x6b867]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:tc_grid::evaluate_tolerance(float const*, float const*, unsigned long) [0x9967]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:tc_grid::launch_int8(tc_grid::LaunchSpec const&, void const*, float const*, float*, float const*) [0x1a75e]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:main [0x46c3]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame: [0x29d90]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:__libc_start_main [0x29e40]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:_start [0x4be5]
+=========                in /src/tools/tc-grid/build/tc-grid
+========= 
+========= Host API memory access error at host access to 0x7f2e029e0400 of size 32768 bytes
+=========     Uninitialized access at 0x7f2e029e04e0 on access by cudaMemcpy source
+=========     Saved host backtrace up to driver entry point at error
+=========     Host Frame:cuMemcpyDtoH_v2 [0x37ecb0]
+=========                in /lib/x86_64-linux-gnu/libcuda.so.1
+=========     Host Frame: [0x465f1]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame: [0x17eda]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:cudaMemcpy [0x6b867]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:tc_grid::evaluate_tolerance(float const*, float const*, unsigned long) [0x9967]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:tc_grid::launch_int8(tc_grid::LaunchSpec const&, void const*, float const*, float*, float const*) [0x1a75e]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:main [0x46c3]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame: [0x29d90]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:__libc_start_main [0x29e40]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:_start [0x4be5]
+=========                in /src/tools/tc-grid/build/tc-grid
+========= 
+========= Host API memory access error at host access to 0x7f2e029e0400 of size 32768 bytes
+=========     Uninitialized access at 0x7f2e029e0500 on access by cudaMemcpy source
+=========     Saved host backtrace up to driver entry point at error
+=========     Host Frame:cuMemcpyDtoH_v2 [0x37ecb0]
+=========                in /lib/x86_64-linux-gnu/libcuda.so.1
+=========     Host Frame: [0x465f1]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame: [0x17eda]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:cudaMemcpy [0x6b867]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:tc_grid::evaluate_tolerance(float const*, float const*, unsigned long) [0x9967]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:tc_grid::launch_int8(tc_grid::LaunchSpec const&, void const*, float const*, float*, float const*) [0x1a75e]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:main [0x46c3]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame: [0x29d90]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:__libc_start_main [0x29e40]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:_start [0x4be5]
+=========                in /src/tools/tc-grid/build/tc-grid
+========= 
+========= Host API memory access error at host access to 0x7f2e029e0400 of size 32768 bytes
+=========     Uninitialized access at 0x7f2e029e0520 on access by cudaMemcpy source
+=========     Saved host backtrace up to driver entry point at error
+=========     Host Frame:cuMemcpyDtoH_v2 [0x37ecb0]
+=========                in /lib/x86_64-linux-gnu/libcuda.so.1
+=========     Host Frame: [0x465f1]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame: [0x17eda]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:cudaMemcpy [0x6b867]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:tc_grid::evaluate_tolerance(float const*, float const*, unsigned long) [0x9967]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:tc_grid::launch_int8(tc_grid::LaunchSpec const&, void const*, float const*, float*, float const*) [0x1a75e]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:main [0x46c3]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame: [0x29d90]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:__libc_start_main [0x29e40]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:_start [0x4be5]
+=========                in /src/tools/tc-grid/build/tc-grid
+========= 
+========= Host API memory access error at host access to 0x7f2e029e0400 of size 32768 bytes
+=========     Uninitialized access at 0x7f2e029e0540 on access by cudaMemcpy source
+=========     Saved host backtrace up to driver entry point at error
+=========     Host Frame:cuMemcpyDtoH_v2 [0x37ecb0]
+=========                in /lib/x86_64-linux-gnu/libcuda.so.1
+=========     Host Frame: [0x465f1]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame: [0x17eda]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:cudaMemcpy [0x6b867]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:tc_grid::evaluate_tolerance(float const*, float const*, unsigned long) [0x9967]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:tc_grid::launch_int8(tc_grid::LaunchSpec const&, void const*, float const*, float*, float const*) [0x1a75e]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:main [0x46c3]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame: [0x29d90]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:__libc_start_main [0x29e40]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:_start [0x4be5]
+=========                in /src/tools/tc-grid/build/tc-grid
+========= 
+========= Host API memory access error at host access to 0x7f2e029e0400 of size 32768 bytes
+=========     Uninitialized access at 0x7f2e029e0560 on access by cudaMemcpy source
+=========     Saved host backtrace up to driver entry point at error
+=========     Host Frame:cuMemcpyDtoH_v2 [0x37ecb0]
+=========                in /lib/x86_64-linux-gnu/libcuda.so.1
+=========     Host Frame: [0x465f1]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame: [0x17eda]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:cudaMemcpy [0x6b867]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:tc_grid::evaluate_tolerance(float const*, float const*, unsigned long) [0x9967]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:tc_grid::launch_int8(tc_grid::LaunchSpec const&, void const*, float const*, float*, float const*) [0x1a75e]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:main [0x46c3]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame: [0x29d90]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:__libc_start_main [0x29e40]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:_start [0x4be5]
+=========                in /src/tools/tc-grid/build/tc-grid
+========= 
+========= Host API memory access error at host access to 0x7f2e029e0400 of size 32768 bytes
+=========     Uninitialized access at 0x7f2e029e0580 on access by cudaMemcpy source
+=========     Saved host backtrace up to driver entry point at error
+=========     Host Frame:cuMemcpyDtoH_v2 [0x37ecb0]
+=========                in /lib/x86_64-linux-gnu/libcuda.so.1
+=========     Host Frame: [0x465f1]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame: [0x17eda]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:cudaMemcpy [0x6b867]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:tc_grid::evaluate_tolerance(float const*, float const*, unsigned long) [0x9967]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:tc_grid::launch_int8(tc_grid::LaunchSpec const&, void const*, float const*, float*, float const*) [0x1a75e]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:main [0x46c3]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame: [0x29d90]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:__libc_start_main [0x29e40]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:_start [0x4be5]
+=========                in /src/tools/tc-grid/build/tc-grid
+========= 
+========= Host API memory access error at host access to 0x7f2e029e0400 of size 32768 bytes
+=========     Uninitialized access at 0x7f2e029e05a0 on access by cudaMemcpy source
+=========     Saved host backtrace up to driver entry point at error
+=========     Host Frame:cuMemcpyDtoH_v2 [0x37ecb0]
+=========                in /lib/x86_64-linux-gnu/libcuda.so.1
+=========     Host Frame: [0x465f1]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame: [0x17eda]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:cudaMemcpy [0x6b867]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:tc_grid::evaluate_tolerance(float const*, float const*, unsigned long) [0x9967]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:tc_grid::launch_int8(tc_grid::LaunchSpec const&, void const*, float const*, float*, float const*) [0x1a75e]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:main [0x46c3]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame: [0x29d90]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:__libc_start_main [0x29e40]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:_start [0x4be5]
+=========                in /src/tools/tc-grid/build/tc-grid
+========= 
+========= Host API memory access error at host access to 0x7f2e029e0400 of size 32768 bytes
+=========     Uninitialized access at 0x7f2e029e05c0 on access by cudaMemcpy source
+=========     Saved host backtrace up to driver entry point at error
+=========     Host Frame:cuMemcpyDtoH_v2 [0x37ecb0]
+=========                in /lib/x86_64-linux-gnu/libcuda.so.1
+=========     Host Frame: [0x465f1]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame: [0x17eda]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:cudaMemcpy [0x6b867]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:tc_grid::evaluate_tolerance(float const*, float const*, unsigned long) [0x9967]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:tc_grid::launch_int8(tc_grid::LaunchSpec const&, void const*, float const*, float*, float const*) [0x1a75e]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:main [0x46c3]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame: [0x29d90]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:__libc_start_main [0x29e40]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:_start [0x4be5]
+=========                in /src/tools/tc-grid/build/tc-grid
+========= 
+========= Host API memory access error at host access to 0x7f2e029e0400 of size 32768 bytes
+=========     Uninitialized access at 0x7f2e029e05e0 on access by cudaMemcpy source
+=========     Saved host backtrace up to driver entry point at error
+=========     Host Frame:cuMemcpyDtoH_v2 [0x37ecb0]
+=========                in /lib/x86_64-linux-gnu/libcuda.so.1
+=========     Host Frame: [0x465f1]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame: [0x17eda]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:cudaMemcpy [0x6b867]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:tc_grid::evaluate_tolerance(float const*, float const*, unsigned long) [0x9967]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:tc_grid::launch_int8(tc_grid::LaunchSpec const&, void const*, float const*, float*, float const*) [0x1a75e]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:main [0x46c3]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame: [0x29d90]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:__libc_start_main [0x29e40]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:_start [0x4be5]
+=========                in /src/tools/tc-grid/build/tc-grid
+========= 
+========= Host API memory access error at host access to 0x7f2e029e0400 of size 32768 bytes
+=========     Uninitialized access at 0x7f2e029e0600 on access by cudaMemcpy source
+=========     Saved host backtrace up to driver entry point at error
+=========     Host Frame:cuMemcpyDtoH_v2 [0x37ecb0]
+=========                in /lib/x86_64-linux-gnu/libcuda.so.1
+=========     Host Frame: [0x465f1]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame: [0x17eda]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:cudaMemcpy [0x6b867]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:tc_grid::evaluate_tolerance(float const*, float const*, unsigned long) [0x9967]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:tc_grid::launch_int8(tc_grid::LaunchSpec const&, void const*, float const*, float*, float const*) [0x1a75e]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:main [0x46c3]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame: [0x29d90]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:__libc_start_main [0x29e40]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:_start [0x4be5]
+=========                in /src/tools/tc-grid/build/tc-grid
+========= 
+========= Host API memory access error at host access to 0x7f2e029e0400 of size 32768 bytes
+=========     Uninitialized access at 0x7f2e029e0620 on access by cudaMemcpy source
+=========     Saved host backtrace up to driver entry point at error
+=========     Host Frame:cuMemcpyDtoH_v2 [0x37ecb0]
+=========                in /lib/x86_64-linux-gnu/libcuda.so.1
+=========     Host Frame: [0x465f1]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame: [0x17eda]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:cudaMemcpy [0x6b867]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:tc_grid::evaluate_tolerance(float const*, float const*, unsigned long) [0x9967]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:tc_grid::launch_int8(tc_grid::LaunchSpec const&, void const*, float const*, float*, float const*) [0x1a75e]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:main [0x46c3]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame: [0x29d90]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:__libc_start_main [0x29e40]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:_start [0x4be5]
+=========                in /src/tools/tc-grid/build/tc-grid
+========= 
+========= Host API memory access error at host access to 0x7f2e029e0400 of size 32768 bytes
+=========     Uninitialized access at 0x7f2e029e0640 on access by cudaMemcpy source
+=========     Saved host backtrace up to driver entry point at error
+=========     Host Frame:cuMemcpyDtoH_v2 [0x37ecb0]
+=========                in /lib/x86_64-linux-gnu/libcuda.so.1
+=========     Host Frame: [0x465f1]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame: [0x17eda]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:cudaMemcpy [0x6b867]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:tc_grid::evaluate_tolerance(float const*, float const*, unsigned long) [0x9967]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:tc_grid::launch_int8(tc_grid::LaunchSpec const&, void const*, float const*, float*, float const*) [0x1a75e]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:main [0x46c3]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame: [0x29d90]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:__libc_start_main [0x29e40]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:_start [0x4be5]
+=========                in /src/tools/tc-grid/build/tc-grid
+========= 
+========= Host API memory access error at host access to 0x7f2e029e0400 of size 32768 bytes
+=========     Uninitialized access at 0x7f2e029e0660 on access by cudaMemcpy source
+=========     Saved host backtrace up to driver entry point at error
+=========     Host Frame:cuMemcpyDtoH_v2 [0x37ecb0]
+=========                in /lib/x86_64-linux-gnu/libcuda.so.1
+=========     Host Frame: [0x465f1]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame: [0x17eda]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:cudaMemcpy [0x6b867]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:tc_grid::evaluate_tolerance(float const*, float const*, unsigned long) [0x9967]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:tc_grid::launch_int8(tc_grid::LaunchSpec const&, void const*, float const*, float*, float const*) [0x1a75e]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:main [0x46c3]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame: [0x29d90]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:__libc_start_main [0x29e40]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:_start [0x4be5]
+=========                in /src/tools/tc-grid/build/tc-grid
+========= 
+========= Host API memory access error at host access to 0x7f2e029e0400 of size 32768 bytes
+=========     Uninitialized access at 0x7f2e029e0680 on access by cudaMemcpy source
+=========     Saved host backtrace up to driver entry point at error
+=========     Host Frame:cuMemcpyDtoH_v2 [0x37ecb0]
+=========                in /lib/x86_64-linux-gnu/libcuda.so.1
+=========     Host Frame: [0x465f1]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame: [0x17eda]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:cudaMemcpy [0x6b867]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:tc_grid::evaluate_tolerance(float const*, float const*, unsigned long) [0x9967]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:tc_grid::launch_int8(tc_grid::LaunchSpec const&, void const*, float const*, float*, float const*) [0x1a75e]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:main [0x46c3]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame: [0x29d90]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:__libc_start_main [0x29e40]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:_start [0x4be5]
+=========                in /src/tools/tc-grid/build/tc-grid
+========= 
+========= Host API memory access error at host access to 0x7f2e029e0400 of size 32768 bytes
+=========     Uninitialized access at 0x7f2e029e06a0 on access by cudaMemcpy source
+=========     Saved host backtrace up to driver entry point at error
+=========     Host Frame:cuMemcpyDtoH_v2 [0x37ecb0]
+=========                in /lib/x86_64-linux-gnu/libcuda.so.1
+=========     Host Frame: [0x465f1]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame: [0x17eda]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:cudaMemcpy [0x6b867]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:tc_grid::evaluate_tolerance(float const*, float const*, unsigned long) [0x9967]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:tc_grid::launch_int8(tc_grid::LaunchSpec const&, void const*, float const*, float*, float const*) [0x1a75e]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:main [0x46c3]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame: [0x29d90]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:__libc_start_main [0x29e40]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:_start [0x4be5]
+=========                in /src/tools/tc-grid/build/tc-grid
+========= 
+========= Host API memory access error at host access to 0x7f2e029e0400 of size 32768 bytes
+=========     Uninitialized access at 0x7f2e029e06c0 on access by cudaMemcpy source
+=========     Saved host backtrace up to driver entry point at error
+=========     Host Frame:cuMemcpyDtoH_v2 [0x37ecb0]
+=========                in /lib/x86_64-linux-gnu/libcuda.so.1
+=========     Host Frame: [0x465f1]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame: [0x17eda]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:cudaMemcpy [0x6b867]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:tc_grid::evaluate_tolerance(float const*, float const*, unsigned long) [0x9967]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:tc_grid::launch_int8(tc_grid::LaunchSpec const&, void const*, float const*, float*, float const*) [0x1a75e]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:main [0x46c3]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame: [0x29d90]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:__libc_start_main [0x29e40]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:_start [0x4be5]
+=========                in /src/tools/tc-grid/build/tc-grid
+========= 
+========= Host API memory access error at host access to 0x7f2e029e0400 of size 32768 bytes
+=========     Uninitialized access at 0x7f2e029e06e0 on access by cudaMemcpy source
+=========     Saved host backtrace up to driver entry point at error
+=========     Host Frame:cuMemcpyDtoH_v2 [0x37ecb0]
+=========                in /lib/x86_64-linux-gnu/libcuda.so.1
+=========     Host Frame: [0x465f1]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame: [0x17eda]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:cudaMemcpy [0x6b867]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:tc_grid::evaluate_tolerance(float const*, float const*, unsigned long) [0x9967]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:tc_grid::launch_int8(tc_grid::LaunchSpec const&, void const*, float const*, float*, float const*) [0x1a75e]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:main [0x46c3]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame: [0x29d90]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:__libc_start_main [0x29e40]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:_start [0x4be5]
+=========                in /src/tools/tc-grid/build/tc-grid
+========= 
+========= Host API memory access error at host access to 0x7f2e029e0400 of size 32768 bytes
+=========     Uninitialized access at 0x7f2e029e0700 on access by cudaMemcpy source
+=========     Saved host backtrace up to driver entry point at error
+=========     Host Frame:cuMemcpyDtoH_v2 [0x37ecb0]
+=========                in /lib/x86_64-linux-gnu/libcuda.so.1
+=========     Host Frame: [0x465f1]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame: [0x17eda]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:cudaMemcpy [0x6b867]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:tc_grid::evaluate_tolerance(float const*, float const*, unsigned long) [0x9967]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:tc_grid::launch_int8(tc_grid::LaunchSpec const&, void const*, float const*, float*, float const*) [0x1a75e]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:main [0x46c3]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame: [0x29d90]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:__libc_start_main [0x29e40]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:_start [0x4be5]
+=========                in /src/tools/tc-grid/build/tc-grid
+========= 
+========= Host API memory access error at host access to 0x7f2e029e0400 of size 32768 bytes
+=========     Uninitialized access at 0x7f2e029e0720 on access by cudaMemcpy source
+=========     Saved host backtrace up to driver entry point at error
+=========     Host Frame:cuMemcpyDtoH_v2 [0x37ecb0]
+=========                in /lib/x86_64-linux-gnu/libcuda.so.1
+=========     Host Frame: [0x465f1]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame: [0x17eda]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:cudaMemcpy [0x6b867]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:tc_grid::evaluate_tolerance(float const*, float const*, unsigned long) [0x9967]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:tc_grid::launch_int8(tc_grid::LaunchSpec const&, void const*, float const*, float*, float const*) [0x1a75e]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:main [0x46c3]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame: [0x29d90]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:__libc_start_main [0x29e40]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:_start [0x4be5]
+=========                in /src/tools/tc-grid/build/tc-grid
+========= 
+========= Host API memory access error at host access to 0x7f2e029e0400 of size 32768 bytes
+=========     Uninitialized access at 0x7f2e029e0740 on access by cudaMemcpy source
+=========     Saved host backtrace up to driver entry point at error
+=========     Host Frame:cuMemcpyDtoH_v2 [0x37ecb0]
+=========                in /lib/x86_64-linux-gnu/libcuda.so.1
+=========     Host Frame: [0x465f1]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame: [0x17eda]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:cudaMemcpy [0x6b867]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:tc_grid::evaluate_tolerance(float const*, float const*, unsigned long) [0x9967]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:tc_grid::launch_int8(tc_grid::LaunchSpec const&, void const*, float const*, float*, float const*) [0x1a75e]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:main [0x46c3]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame: [0x29d90]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:__libc_start_main [0x29e40]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:_start [0x4be5]
+=========                in /src/tools/tc-grid/build/tc-grid
+========= 
+========= Host API memory access error at host access to 0x7f2e029e0400 of size 32768 bytes
+=========     Uninitialized access at 0x7f2e029e0760 on access by cudaMemcpy source
+=========     Saved host backtrace up to driver entry point at error
+=========     Host Frame:cuMemcpyDtoH_v2 [0x37ecb0]
+=========                in /lib/x86_64-linux-gnu/libcuda.so.1
+=========     Host Frame: [0x465f1]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame: [0x17eda]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:cudaMemcpy [0x6b867]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:tc_grid::evaluate_tolerance(float const*, float const*, unsigned long) [0x9967]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:tc_grid::launch_int8(tc_grid::LaunchSpec const&, void const*, float const*, float*, float const*) [0x1a75e]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:main [0x46c3]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame: [0x29d90]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:__libc_start_main [0x29e40]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:_start [0x4be5]
+=========                in /src/tools/tc-grid/build/tc-grid
+========= 
+========= Host API memory access error at host access to 0x7f2e029e0400 of size 32768 bytes
+=========     Uninitialized access at 0x7f2e029e0780 on access by cudaMemcpy source
+=========     Saved host backtrace up to driver entry point at error
+=========     Host Frame:cuMemcpyDtoH_v2 [0x37ecb0]
+=========                in /lib/x86_64-linux-gnu/libcuda.so.1
+=========     Host Frame: [0x465f1]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame: [0x17eda]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:cudaMemcpy [0x6b867]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:tc_grid::evaluate_tolerance(float const*, float const*, unsigned long) [0x9967]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:tc_grid::launch_int8(tc_grid::LaunchSpec const&, void const*, float const*, float*, float const*) [0x1a75e]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:main [0x46c3]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame: [0x29d90]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:__libc_start_main [0x29e40]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:_start [0x4be5]
+=========                in /src/tools/tc-grid/build/tc-grid
+========= 
+========= Host API memory access error at host access to 0x7f2e029e0400 of size 32768 bytes
+=========     Uninitialized access at 0x7f2e029e07a0 on access by cudaMemcpy source
+=========     Saved host backtrace up to driver entry point at error
+=========     Host Frame:cuMemcpyDtoH_v2 [0x37ecb0]
+=========                in /lib/x86_64-linux-gnu/libcuda.so.1
+=========     Host Frame: [0x465f1]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame: [0x17eda]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:cudaMemcpy [0x6b867]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:tc_grid::evaluate_tolerance(float const*, float const*, unsigned long) [0x9967]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:tc_grid::launch_int8(tc_grid::LaunchSpec const&, void const*, float const*, float*, float const*) [0x1a75e]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:main [0x46c3]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame: [0x29d90]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:__libc_start_main [0x29e40]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:_start [0x4be5]
+=========                in /src/tools/tc-grid/build/tc-grid
+========= 
+========= Host API memory access error at host access to 0x7f2e029e0400 of size 32768 bytes
+=========     Uninitialized access at 0x7f2e029e07c0 on access by cudaMemcpy source
+=========     Saved host backtrace up to driver entry point at error
+=========     Host Frame:cuMemcpyDtoH_v2 [0x37ecb0]
+=========                in /lib/x86_64-linux-gnu/libcuda.so.1
+=========     Host Frame: [0x465f1]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame: [0x17eda]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:cudaMemcpy [0x6b867]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:tc_grid::evaluate_tolerance(float const*, float const*, unsigned long) [0x9967]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:tc_grid::launch_int8(tc_grid::LaunchSpec const&, void const*, float const*, float*, float const*) [0x1a75e]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:main [0x46c3]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame: [0x29d90]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:__libc_start_main [0x29e40]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:_start [0x4be5]
+=========                in /src/tools/tc-grid/build/tc-grid
+========= 
+========= Host API memory access error at host access to 0x7f2e029e0400 of size 32768 bytes
+=========     Uninitialized access at 0x7f2e029e07e0 on access by cudaMemcpy source
+=========     Saved host backtrace up to driver entry point at error
+=========     Host Frame:cuMemcpyDtoH_v2 [0x37ecb0]
+=========                in /lib/x86_64-linux-gnu/libcuda.so.1
+=========     Host Frame: [0x465f1]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame: [0x17eda]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:cudaMemcpy [0x6b867]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:tc_grid::evaluate_tolerance(float const*, float const*, unsigned long) [0x9967]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:tc_grid::launch_int8(tc_grid::LaunchSpec const&, void const*, float const*, float*, float const*) [0x1a75e]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:main [0x46c3]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame: [0x29d90]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:__libc_start_main [0x29e40]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:_start [0x4be5]
+=========                in /src/tools/tc-grid/build/tc-grid
+========= 
+========= Host API memory access error at host access to 0x7f2e029e0400 of size 32768 bytes
+=========     Uninitialized access at 0x7f2e029e0800 on access by cudaMemcpy source
+=========     Saved host backtrace up to driver entry point at error
+=========     Host Frame:cuMemcpyDtoH_v2 [0x37ecb0]
+=========                in /lib/x86_64-linux-gnu/libcuda.so.1
+=========     Host Frame: [0x465f1]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame: [0x17eda]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:cudaMemcpy [0x6b867]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:tc_grid::evaluate_tolerance(float const*, float const*, unsigned long) [0x9967]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:tc_grid::launch_int8(tc_grid::LaunchSpec const&, void const*, float const*, float*, float const*) [0x1a75e]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:main [0x46c3]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame: [0x29d90]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:__libc_start_main [0x29e40]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:_start [0x4be5]
+=========                in /src/tools/tc-grid/build/tc-grid
+========= 
+========= Host API memory access error at host access to 0x7f2e029e0400 of size 32768 bytes
+=========     Uninitialized access at 0x7f2e029e0820 on access by cudaMemcpy source
+=========     Saved host backtrace up to driver entry point at error
+=========     Host Frame:cuMemcpyDtoH_v2 [0x37ecb0]
+=========                in /lib/x86_64-linux-gnu/libcuda.so.1
+=========     Host Frame: [0x465f1]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame: [0x17eda]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:cudaMemcpy [0x6b867]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:tc_grid::evaluate_tolerance(float const*, float const*, unsigned long) [0x9967]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:tc_grid::launch_int8(tc_grid::LaunchSpec const&, void const*, float const*, float*, float const*) [0x1a75e]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:main [0x46c3]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame: [0x29d90]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:__libc_start_main [0x29e40]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:_start [0x4be5]
+=========                in /src/tools/tc-grid/build/tc-grid
+========= 
+========= Host API memory access error at host access to 0x7f2e029e0400 of size 32768 bytes
+=========     Uninitialized access at 0x7f2e029e0840 on access by cudaMemcpy source
+=========     Saved host backtrace up to driver entry point at error
+=========     Host Frame:cuMemcpyDtoH_v2 [0x37ecb0]
+=========                in /lib/x86_64-linux-gnu/libcuda.so.1
+=========     Host Frame: [0x465f1]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame: [0x17eda]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:cudaMemcpy [0x6b867]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:tc_grid::evaluate_tolerance(float const*, float const*, unsigned long) [0x9967]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:tc_grid::launch_int8(tc_grid::LaunchSpec const&, void const*, float const*, float*, float const*) [0x1a75e]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:main [0x46c3]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame: [0x29d90]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:__libc_start_main [0x29e40]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:_start [0x4be5]
+=========                in /src/tools/tc-grid/build/tc-grid
+========= 
+========= Host API memory access error at host access to 0x7f2e029e0400 of size 32768 bytes
+=========     Uninitialized access at 0x7f2e029e0860 on access by cudaMemcpy source
+=========     Saved host backtrace up to driver entry point at error
+=========     Host Frame:cuMemcpyDtoH_v2 [0x37ecb0]
+=========                in /lib/x86_64-linux-gnu/libcuda.so.1
+=========     Host Frame: [0x465f1]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame: [0x17eda]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:cudaMemcpy [0x6b867]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:tc_grid::evaluate_tolerance(float const*, float const*, unsigned long) [0x9967]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:tc_grid::launch_int8(tc_grid::LaunchSpec const&, void const*, float const*, float*, float const*) [0x1a75e]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:main [0x46c3]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame: [0x29d90]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:__libc_start_main [0x29e40]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:_start [0x4be5]
+=========                in /src/tools/tc-grid/build/tc-grid
+========= 
+========= Host API memory access error at host access to 0x7f2e029e0400 of size 32768 bytes
+=========     Uninitialized access at 0x7f2e029e0880 on access by cudaMemcpy source
+=========     Saved host backtrace up to driver entry point at error
+=========     Host Frame:cuMemcpyDtoH_v2 [0x37ecb0]
+=========                in /lib/x86_64-linux-gnu/libcuda.so.1
+=========     Host Frame: [0x465f1]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame: [0x17eda]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:cudaMemcpy [0x6b867]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:tc_grid::evaluate_tolerance(float const*, float const*, unsigned long) [0x9967]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:tc_grid::launch_int8(tc_grid::LaunchSpec const&, void const*, float const*, float*, float const*) [0x1a75e]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:main [0x46c3]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame: [0x29d90]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:__libc_start_main [0x29e40]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:_start [0x4be5]
+=========                in /src/tools/tc-grid/build/tc-grid
+========= 
+========= Host API memory access error at host access to 0x7f2e029e0400 of size 32768 bytes
+=========     Uninitialized access at 0x7f2e029e08a0 on access by cudaMemcpy source
+=========     Saved host backtrace up to driver entry point at error
+=========     Host Frame:cuMemcpyDtoH_v2 [0x37ecb0]
+=========                in /lib/x86_64-linux-gnu/libcuda.so.1
+=========     Host Frame: [0x465f1]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame: [0x17eda]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:cudaMemcpy [0x6b867]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:tc_grid::evaluate_tolerance(float const*, float const*, unsigned long) [0x9967]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:tc_grid::launch_int8(tc_grid::LaunchSpec const&, void const*, float const*, float*, float const*) [0x1a75e]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:main [0x46c3]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame: [0x29d90]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:__libc_start_main [0x29e40]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:_start [0x4be5]
+=========                in /src/tools/tc-grid/build/tc-grid
+========= 
+========= Host API memory access error at host access to 0x7f2e029e0400 of size 32768 bytes
+=========     Uninitialized access at 0x7f2e029e08c0 on access by cudaMemcpy source
+=========     Saved host backtrace up to driver entry point at error
+=========     Host Frame:cuMemcpyDtoH_v2 [0x37ecb0]
+=========                in /lib/x86_64-linux-gnu/libcuda.so.1
+=========     Host Frame: [0x465f1]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame: [0x17eda]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:cudaMemcpy [0x6b867]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:tc_grid::evaluate_tolerance(float const*, float const*, unsigned long) [0x9967]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:tc_grid::launch_int8(tc_grid::LaunchSpec const&, void const*, float const*, float*, float const*) [0x1a75e]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:main [0x46c3]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame: [0x29d90]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:__libc_start_main [0x29e40]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:_start [0x4be5]
+=========                in /src/tools/tc-grid/build/tc-grid
+========= 
+========= Host API memory access error at host access to 0x7f2e029e0400 of size 32768 bytes
+=========     Uninitialized access at 0x7f2e029e08e0 on access by cudaMemcpy source
+=========     Saved host backtrace up to driver entry point at error
+=========     Host Frame:cuMemcpyDtoH_v2 [0x37ecb0]
+=========                in /lib/x86_64-linux-gnu/libcuda.so.1
+=========     Host Frame: [0x465f1]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame: [0x17eda]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:cudaMemcpy [0x6b867]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:tc_grid::evaluate_tolerance(float const*, float const*, unsigned long) [0x9967]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:tc_grid::launch_int8(tc_grid::LaunchSpec const&, void const*, float const*, float*, float const*) [0x1a75e]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:main [0x46c3]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame: [0x29d90]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:__libc_start_main [0x29e40]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:_start [0x4be5]
+=========                in /src/tools/tc-grid/build/tc-grid
+========= 
+========= Host API memory access error at host access to 0x7f2e029e0400 of size 32768 bytes
+=========     Uninitialized access at 0x7f2e029e0900 on access by cudaMemcpy source
+=========     Saved host backtrace up to driver entry point at error
+=========     Host Frame:cuMemcpyDtoH_v2 [0x37ecb0]
+=========                in /lib/x86_64-linux-gnu/libcuda.so.1
+=========     Host Frame: [0x465f1]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame: [0x17eda]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:cudaMemcpy [0x6b867]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:tc_grid::evaluate_tolerance(float const*, float const*, unsigned long) [0x9967]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:tc_grid::launch_int8(tc_grid::LaunchSpec const&, void const*, float const*, float*, float const*) [0x1a75e]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:main [0x46c3]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame: [0x29d90]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:__libc_start_main [0x29e40]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:_start [0x4be5]
+=========                in /src/tools/tc-grid/build/tc-grid
+========= 
+========= Host API memory access error at host access to 0x7f2e029e0400 of size 32768 bytes
+=========     Uninitialized access at 0x7f2e029e0920 on access by cudaMemcpy source
+=========     Saved host backtrace up to driver entry point at error
+=========     Host Frame:cuMemcpyDtoH_v2 [0x37ecb0]
+=========                in /lib/x86_64-linux-gnu/libcuda.so.1
+=========     Host Frame: [0x465f1]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame: [0x17eda]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:cudaMemcpy [0x6b867]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:tc_grid::evaluate_tolerance(float const*, float const*, unsigned long) [0x9967]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:tc_grid::launch_int8(tc_grid::LaunchSpec const&, void const*, float const*, float*, float const*) [0x1a75e]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:main [0x46c3]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame: [0x29d90]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:__libc_start_main [0x29e40]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:_start [0x4be5]
+=========                in /src/tools/tc-grid/build/tc-grid
+========= 
+========= Host API memory access error at host access to 0x7f2e029e0400 of size 32768 bytes
+=========     Uninitialized access at 0x7f2e029e0940 on access by cudaMemcpy source
+=========     Saved host backtrace up to driver entry point at error
+=========     Host Frame:cuMemcpyDtoH_v2 [0x37ecb0]
+=========                in /lib/x86_64-linux-gnu/libcuda.so.1
+=========     Host Frame: [0x465f1]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame: [0x17eda]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:cudaMemcpy [0x6b867]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:tc_grid::evaluate_tolerance(float const*, float const*, unsigned long) [0x9967]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:tc_grid::launch_int8(tc_grid::LaunchSpec const&, void const*, float const*, float*, float const*) [0x1a75e]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:main [0x46c3]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame: [0x29d90]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:__libc_start_main [0x29e40]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:_start [0x4be5]
+=========                in /src/tools/tc-grid/build/tc-grid
+========= 
+========= Host API memory access error at host access to 0x7f2e029e0400 of size 32768 bytes
+=========     Uninitialized access at 0x7f2e029e0960 on access by cudaMemcpy source
+=========     Saved host backtrace up to driver entry point at error
+=========     Host Frame:cuMemcpyDtoH_v2 [0x37ecb0]
+=========                in /lib/x86_64-linux-gnu/libcuda.so.1
+=========     Host Frame: [0x465f1]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame: [0x17eda]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:cudaMemcpy [0x6b867]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:tc_grid::evaluate_tolerance(float const*, float const*, unsigned long) [0x9967]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:tc_grid::launch_int8(tc_grid::LaunchSpec const&, void const*, float const*, float*, float const*) [0x1a75e]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:main [0x46c3]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame: [0x29d90]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:__libc_start_main [0x29e40]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:_start [0x4be5]
+=========                in /src/tools/tc-grid/build/tc-grid
+========= 
+========= Host API memory access error at host access to 0x7f2e029e0400 of size 32768 bytes
+=========     Uninitialized access at 0x7f2e029e0980 on access by cudaMemcpy source
+=========     Saved host backtrace up to driver entry point at error
+=========     Host Frame:cuMemcpyDtoH_v2 [0x37ecb0]
+=========                in /lib/x86_64-linux-gnu/libcuda.so.1
+=========     Host Frame: [0x465f1]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame: [0x17eda]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:cudaMemcpy [0x6b867]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:tc_grid::evaluate_tolerance(float const*, float const*, unsigned long) [0x9967]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:tc_grid::launch_int8(tc_grid::LaunchSpec const&, void const*, float const*, float*, float const*) [0x1a75e]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:main [0x46c3]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame: [0x29d90]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:__libc_start_main [0x29e40]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:_start [0x4be5]
+=========                in /src/tools/tc-grid/build/tc-grid
+========= 
+========= Host API memory access error at host access to 0x7f2e029e0400 of size 32768 bytes
+=========     Uninitialized access at 0x7f2e029e09a0 on access by cudaMemcpy source
+=========     Saved host backtrace up to driver entry point at error
+=========     Host Frame:cuMemcpyDtoH_v2 [0x37ecb0]
+=========                in /lib/x86_64-linux-gnu/libcuda.so.1
+=========     Host Frame: [0x465f1]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame: [0x17eda]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:cudaMemcpy [0x6b867]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:tc_grid::evaluate_tolerance(float const*, float const*, unsigned long) [0x9967]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:tc_grid::launch_int8(tc_grid::LaunchSpec const&, void const*, float const*, float*, float const*) [0x1a75e]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:main [0x46c3]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame: [0x29d90]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:__libc_start_main [0x29e40]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:_start [0x4be5]
+=========                in /src/tools/tc-grid/build/tc-grid
+========= 
+========= Host API memory access error at host access to 0x7f2e029e0400 of size 32768 bytes
+=========     Uninitialized access at 0x7f2e029e09c0 on access by cudaMemcpy source
+=========     Saved host backtrace up to driver entry point at error
+=========     Host Frame:cuMemcpyDtoH_v2 [0x37ecb0]
+=========                in /lib/x86_64-linux-gnu/libcuda.so.1
+=========     Host Frame: [0x465f1]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame: [0x17eda]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:cudaMemcpy [0x6b867]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:tc_grid::evaluate_tolerance(float const*, float const*, unsigned long) [0x9967]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:tc_grid::launch_int8(tc_grid::LaunchSpec const&, void const*, float const*, float*, float const*) [0x1a75e]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:main [0x46c3]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame: [0x29d90]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:__libc_start_main [0x29e40]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:_start [0x4be5]
+=========                in /src/tools/tc-grid/build/tc-grid
+========= 
+========= Host API memory access error at host access to 0x7f2e029e0400 of size 32768 bytes
+=========     Uninitialized access at 0x7f2e029e09e0 on access by cudaMemcpy source
+=========     Saved host backtrace up to driver entry point at error
+=========     Host Frame:cuMemcpyDtoH_v2 [0x37ecb0]
+=========                in /lib/x86_64-linux-gnu/libcuda.so.1
+=========     Host Frame: [0x465f1]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame: [0x17eda]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:cudaMemcpy [0x6b867]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:tc_grid::evaluate_tolerance(float const*, float const*, unsigned long) [0x9967]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:tc_grid::launch_int8(tc_grid::LaunchSpec const&, void const*, float const*, float*, float const*) [0x1a75e]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:main [0x46c3]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame: [0x29d90]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:__libc_start_main [0x29e40]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:_start [0x4be5]
+=========                in /src/tools/tc-grid/build/tc-grid
+========= 
+========= Host API memory access error at host access to 0x7f2e029e0400 of size 32768 bytes
+=========     Uninitialized access at 0x7f2e029e0a00 on access by cudaMemcpy source
+=========     Saved host backtrace up to driver entry point at error
+=========     Host Frame:cuMemcpyDtoH_v2 [0x37ecb0]
+=========                in /lib/x86_64-linux-gnu/libcuda.so.1
+=========     Host Frame: [0x465f1]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame: [0x17eda]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:cudaMemcpy [0x6b867]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:tc_grid::evaluate_tolerance(float const*, float const*, unsigned long) [0x9967]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:tc_grid::launch_int8(tc_grid::LaunchSpec const&, void const*, float const*, float*, float const*) [0x1a75e]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:main [0x46c3]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame: [0x29d90]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:__libc_start_main [0x29e40]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:_start [0x4be5]
+=========                in /src/tools/tc-grid/build/tc-grid
+========= 
+========= Host API memory access error at host access to 0x7f2e029e0400 of size 32768 bytes
+=========     Uninitialized access at 0x7f2e029e0a20 on access by cudaMemcpy source
+=========     Saved host backtrace up to driver entry point at error
+=========     Host Frame:cuMemcpyDtoH_v2 [0x37ecb0]
+=========                in /lib/x86_64-linux-gnu/libcuda.so.1
+=========     Host Frame: [0x465f1]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame: [0x17eda]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:cudaMemcpy [0x6b867]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:tc_grid::evaluate_tolerance(float const*, float const*, unsigned long) [0x9967]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:tc_grid::launch_int8(tc_grid::LaunchSpec const&, void const*, float const*, float*, float const*) [0x1a75e]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:main [0x46c3]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame: [0x29d90]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:__libc_start_main [0x29e40]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:_start [0x4be5]
+=========                in /src/tools/tc-grid/build/tc-grid
+========= 
+========= Host API memory access error at host access to 0x7f2e029e0400 of size 32768 bytes
+=========     Uninitialized access at 0x7f2e029e0a40 on access by cudaMemcpy source
+=========     Saved host backtrace up to driver entry point at error
+=========     Host Frame:cuMemcpyDtoH_v2 [0x37ecb0]
+=========                in /lib/x86_64-linux-gnu/libcuda.so.1
+=========     Host Frame: [0x465f1]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame: [0x17eda]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:cudaMemcpy [0x6b867]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:tc_grid::evaluate_tolerance(float const*, float const*, unsigned long) [0x9967]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:tc_grid::launch_int8(tc_grid::LaunchSpec const&, void const*, float const*, float*, float const*) [0x1a75e]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:main [0x46c3]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame: [0x29d90]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:__libc_start_main [0x29e40]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:_start [0x4be5]
+=========                in /src/tools/tc-grid/build/tc-grid
+========= 
+========= Host API memory access error at host access to 0x7f2e029e0400 of size 32768 bytes
+=========     Uninitialized access at 0x7f2e029e0a60 on access by cudaMemcpy source
+=========     Saved host backtrace up to driver entry point at error
+=========     Host Frame:cuMemcpyDtoH_v2 [0x37ecb0]
+=========                in /lib/x86_64-linux-gnu/libcuda.so.1
+=========     Host Frame: [0x465f1]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame: [0x17eda]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:cudaMemcpy [0x6b867]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:tc_grid::evaluate_tolerance(float const*, float const*, unsigned long) [0x9967]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:tc_grid::launch_int8(tc_grid::LaunchSpec const&, void const*, float const*, float*, float const*) [0x1a75e]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:main [0x46c3]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame: [0x29d90]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:__libc_start_main [0x29e40]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:_start [0x4be5]
+=========                in /src/tools/tc-grid/build/tc-grid
+========= 
+========= Host API memory access error at host access to 0x7f2e029e0400 of size 32768 bytes
+=========     Uninitialized access at 0x7f2e029e0a80 on access by cudaMemcpy source
+=========     Saved host backtrace up to driver entry point at error
+=========     Host Frame:cuMemcpyDtoH_v2 [0x37ecb0]
+=========                in /lib/x86_64-linux-gnu/libcuda.so.1
+=========     Host Frame: [0x465f1]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame: [0x17eda]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:cudaMemcpy [0x6b867]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:tc_grid::evaluate_tolerance(float const*, float const*, unsigned long) [0x9967]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:tc_grid::launch_int8(tc_grid::LaunchSpec const&, void const*, float const*, float*, float const*) [0x1a75e]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:main [0x46c3]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame: [0x29d90]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:__libc_start_main [0x29e40]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:_start [0x4be5]
+=========                in /src/tools/tc-grid/build/tc-grid
+========= 
+========= Host API memory access error at host access to 0x7f2e029e0400 of size 32768 bytes
+=========     Uninitialized access at 0x7f2e029e0aa0 on access by cudaMemcpy source
+=========     Saved host backtrace up to driver entry point at error
+=========     Host Frame:cuMemcpyDtoH_v2 [0x37ecb0]
+=========                in /lib/x86_64-linux-gnu/libcuda.so.1
+=========     Host Frame: [0x465f1]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame: [0x17eda]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:cudaMemcpy [0x6b867]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:tc_grid::evaluate_tolerance(float const*, float const*, unsigned long) [0x9967]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:tc_grid::launch_int8(tc_grid::LaunchSpec const&, void const*, float const*, float*, float const*) [0x1a75e]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:main [0x46c3]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame: [0x29d90]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:__libc_start_main [0x29e40]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:_start [0x4be5]
+=========                in /src/tools/tc-grid/build/tc-grid
+========= 
+========= Host API memory access error at host access to 0x7f2e029e0400 of size 32768 bytes
+=========     Uninitialized access at 0x7f2e029e0ac0 on access by cudaMemcpy source
+=========     Saved host backtrace up to driver entry point at error
+=========     Host Frame:cuMemcpyDtoH_v2 [0x37ecb0]
+=========                in /lib/x86_64-linux-gnu/libcuda.so.1
+=========     Host Frame: [0x465f1]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame: [0x17eda]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:cudaMemcpy [0x6b867]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:tc_grid::evaluate_tolerance(float const*, float const*, unsigned long) [0x9967]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:tc_grid::launch_int8(tc_grid::LaunchSpec const&, void const*, float const*, float*, float const*) [0x1a75e]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:main [0x46c3]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame: [0x29d90]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:__libc_start_main [0x29e40]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:_start [0x4be5]
+=========                in /src/tools/tc-grid/build/tc-grid
+========= 
+========= Host API memory access error at host access to 0x7f2e029e0400 of size 32768 bytes
+=========     Uninitialized access at 0x7f2e029e0ae0 on access by cudaMemcpy source
+=========     Saved host backtrace up to driver entry point at error
+=========     Host Frame:cuMemcpyDtoH_v2 [0x37ecb0]
+=========                in /lib/x86_64-linux-gnu/libcuda.so.1
+=========     Host Frame: [0x465f1]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame: [0x17eda]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:cudaMemcpy [0x6b867]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:tc_grid::evaluate_tolerance(float const*, float const*, unsigned long) [0x9967]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:tc_grid::launch_int8(tc_grid::LaunchSpec const&, void const*, float const*, float*, float const*) [0x1a75e]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:main [0x46c3]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame: [0x29d90]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:__libc_start_main [0x29e40]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:_start [0x4be5]
+=========                in /src/tools/tc-grid/build/tc-grid
+========= 
+========= Host API memory access error at host access to 0x7f2e029e0400 of size 32768 bytes
+=========     Uninitialized access at 0x7f2e029e0b00 on access by cudaMemcpy source
+=========     Saved host backtrace up to driver entry point at error
+=========     Host Frame:cuMemcpyDtoH_v2 [0x37ecb0]
+=========                in /lib/x86_64-linux-gnu/libcuda.so.1
+=========     Host Frame: [0x465f1]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame: [0x17eda]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:cudaMemcpy [0x6b867]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:tc_grid::evaluate_tolerance(float const*, float const*, unsigned long) [0x9967]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:tc_grid::launch_int8(tc_grid::LaunchSpec const&, void const*, float const*, float*, float const*) [0x1a75e]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:main [0x46c3]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame: [0x29d90]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:__libc_start_main [0x29e40]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:_start [0x4be5]
+=========                in /src/tools/tc-grid/build/tc-grid
+========= 
+========= Host API memory access error at host access to 0x7f2e029e0400 of size 32768 bytes
+=========     Uninitialized access at 0x7f2e029e0b20 on access by cudaMemcpy source
+=========     Saved host backtrace up to driver entry point at error
+=========     Host Frame:cuMemcpyDtoH_v2 [0x37ecb0]
+=========                in /lib/x86_64-linux-gnu/libcuda.so.1
+=========     Host Frame: [0x465f1]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame: [0x17eda]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:cudaMemcpy [0x6b867]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:tc_grid::evaluate_tolerance(float const*, float const*, unsigned long) [0x9967]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:tc_grid::launch_int8(tc_grid::LaunchSpec const&, void const*, float const*, float*, float const*) [0x1a75e]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:main [0x46c3]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame: [0x29d90]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:__libc_start_main [0x29e40]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:_start [0x4be5]
+=========                in /src/tools/tc-grid/build/tc-grid
+========= 
+========= Host API memory access error at host access to 0x7f2e029e0400 of size 32768 bytes
+=========     Uninitialized access at 0x7f2e029e0b40 on access by cudaMemcpy source
+=========     Saved host backtrace up to driver entry point at error
+=========     Host Frame:cuMemcpyDtoH_v2 [0x37ecb0]
+=========                in /lib/x86_64-linux-gnu/libcuda.so.1
+=========     Host Frame: [0x465f1]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame: [0x17eda]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:cudaMemcpy [0x6b867]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:tc_grid::evaluate_tolerance(float const*, float const*, unsigned long) [0x9967]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:tc_grid::launch_int8(tc_grid::LaunchSpec const&, void const*, float const*, float*, float const*) [0x1a75e]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:main [0x46c3]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame: [0x29d90]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:__libc_start_main [0x29e40]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:_start [0x4be5]
+=========                in /src/tools/tc-grid/build/tc-grid
+========= 
+========= Host API memory access error at host access to 0x7f2e029e0400 of size 32768 bytes
+=========     Uninitialized access at 0x7f2e029e0b60 on access by cudaMemcpy source
+=========     Saved host backtrace up to driver entry point at error
+=========     Host Frame:cuMemcpyDtoH_v2 [0x37ecb0]
+=========                in /lib/x86_64-linux-gnu/libcuda.so.1
+=========     Host Frame: [0x465f1]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame: [0x17eda]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:cudaMemcpy [0x6b867]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:tc_grid::evaluate_tolerance(float const*, float const*, unsigned long) [0x9967]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:tc_grid::launch_int8(tc_grid::LaunchSpec const&, void const*, float const*, float*, float const*) [0x1a75e]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:main [0x46c3]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame: [0x29d90]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:__libc_start_main [0x29e40]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:_start [0x4be5]
+=========                in /src/tools/tc-grid/build/tc-grid
+========= 
+========= Host API memory access error at host access to 0x7f2e029e0400 of size 32768 bytes
+=========     Uninitialized access at 0x7f2e029e0b80 on access by cudaMemcpy source
+=========     Saved host backtrace up to driver entry point at error
+=========     Host Frame:cuMemcpyDtoH_v2 [0x37ecb0]
+=========                in /lib/x86_64-linux-gnu/libcuda.so.1
+=========     Host Frame: [0x465f1]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame: [0x17eda]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:cudaMemcpy [0x6b867]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:tc_grid::evaluate_tolerance(float const*, float const*, unsigned long) [0x9967]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:tc_grid::launch_int8(tc_grid::LaunchSpec const&, void const*, float const*, float*, float const*) [0x1a75e]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:main [0x46c3]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame: [0x29d90]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:__libc_start_main [0x29e40]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:_start [0x4be5]
+=========                in /src/tools/tc-grid/build/tc-grid
+========= 
+========= Host API memory access error at host access to 0x7f2e029e0400 of size 32768 bytes
+=========     Uninitialized access at 0x7f2e029e0ba0 on access by cudaMemcpy source
+=========     Saved host backtrace up to driver entry point at error
+=========     Host Frame:cuMemcpyDtoH_v2 [0x37ecb0]
+=========                in /lib/x86_64-linux-gnu/libcuda.so.1
+=========     Host Frame: [0x465f1]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame: [0x17eda]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:cudaMemcpy [0x6b867]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:tc_grid::evaluate_tolerance(float const*, float const*, unsigned long) [0x9967]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:tc_grid::launch_int8(tc_grid::LaunchSpec const&, void const*, float const*, float*, float const*) [0x1a75e]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:main [0x46c3]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame: [0x29d90]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:__libc_start_main [0x29e40]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:_start [0x4be5]
+=========                in /src/tools/tc-grid/build/tc-grid
+========= 
+========= Host API memory access error at host access to 0x7f2e029e0400 of size 32768 bytes
+=========     Uninitialized access at 0x7f2e029e0bc0 on access by cudaMemcpy source
+=========     Saved host backtrace up to driver entry point at error
+=========     Host Frame:cuMemcpyDtoH_v2 [0x37ecb0]
+=========                in /lib/x86_64-linux-gnu/libcuda.so.1
+=========     Host Frame: [0x465f1]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame: [0x17eda]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:cudaMemcpy [0x6b867]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:tc_grid::evaluate_tolerance(float const*, float const*, unsigned long) [0x9967]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:tc_grid::launch_int8(tc_grid::LaunchSpec const&, void const*, float const*, float*, float const*) [0x1a75e]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:main [0x46c3]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame: [0x29d90]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:__libc_start_main [0x29e40]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:_start [0x4be5]
+=========                in /src/tools/tc-grid/build/tc-grid
+========= 
+========= Host API memory access error at host access to 0x7f2e029e0400 of size 32768 bytes
+=========     Uninitialized access at 0x7f2e029e0be0 on access by cudaMemcpy source
+=========     Saved host backtrace up to driver entry point at error
+=========     Host Frame:cuMemcpyDtoH_v2 [0x37ecb0]
+=========                in /lib/x86_64-linux-gnu/libcuda.so.1
+=========     Host Frame: [0x465f1]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame: [0x17eda]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:cudaMemcpy [0x6b867]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:tc_grid::evaluate_tolerance(float const*, float const*, unsigned long) [0x9967]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:tc_grid::launch_int8(tc_grid::LaunchSpec const&, void const*, float const*, float*, float const*) [0x1a75e]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:main [0x46c3]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame: [0x29d90]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:__libc_start_main [0x29e40]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:_start [0x4be5]
+=========                in /src/tools/tc-grid/build/tc-grid
+========= 
+========= Host API memory access error at host access to 0x7f2e029e0400 of size 32768 bytes
+=========     Uninitialized access at 0x7f2e029e0c00 on access by cudaMemcpy source
+=========     Saved host backtrace up to driver entry point at error
+=========     Host Frame:cuMemcpyDtoH_v2 [0x37ecb0]
+=========                in /lib/x86_64-linux-gnu/libcuda.so.1
+=========     Host Frame: [0x465f1]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame: [0x17eda]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:cudaMemcpy [0x6b867]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:tc_grid::evaluate_tolerance(float const*, float const*, unsigned long) [0x9967]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:tc_grid::launch_int8(tc_grid::LaunchSpec const&, void const*, float const*, float*, float const*) [0x1a75e]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:main [0x46c3]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame: [0x29d90]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:__libc_start_main [0x29e40]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:_start [0x4be5]
+=========                in /src/tools/tc-grid/build/tc-grid
+========= 
+========= Host API memory access error at host access to 0x7f2e029e0400 of size 32768 bytes
+=========     Uninitialized access at 0x7f2e029e0c20 on access by cudaMemcpy source
+=========     Saved host backtrace up to driver entry point at error
+=========     Host Frame:cuMemcpyDtoH_v2 [0x37ecb0]
+=========                in /lib/x86_64-linux-gnu/libcuda.so.1
+=========     Host Frame: [0x465f1]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame: [0x17eda]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:cudaMemcpy [0x6b867]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:tc_grid::evaluate_tolerance(float const*, float const*, unsigned long) [0x9967]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:tc_grid::launch_int8(tc_grid::LaunchSpec const&, void const*, float const*, float*, float const*) [0x1a75e]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:main [0x46c3]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame: [0x29d90]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:__libc_start_main [0x29e40]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:_start [0x4be5]
+=========                in /src/tools/tc-grid/build/tc-grid
+========= 
+========= Host API memory access error at host access to 0x7f2e029e0400 of size 32768 bytes
+=========     Uninitialized access at 0x7f2e029e0c40 on access by cudaMemcpy source
+=========     Saved host backtrace up to driver entry point at error
+=========     Host Frame:cuMemcpyDtoH_v2 [0x37ecb0]
+=========                in /lib/x86_64-linux-gnu/libcuda.so.1
+=========     Host Frame: [0x465f1]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame: [0x17eda]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:cudaMemcpy [0x6b867]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:tc_grid::evaluate_tolerance(float const*, float const*, unsigned long) [0x9967]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:tc_grid::launch_int8(tc_grid::LaunchSpec const&, void const*, float const*, float*, float const*) [0x1a75e]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:main [0x46c3]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame: [0x29d90]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:__libc_start_main [0x29e40]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:_start [0x4be5]
+=========                in /src/tools/tc-grid/build/tc-grid
+========= 
+========= Host API memory access error at host access to 0x7f2e029e0400 of size 32768 bytes
+=========     Uninitialized access at 0x7f2e029e0c60 on access by cudaMemcpy source
+=========     Saved host backtrace up to driver entry point at error
+=========     Host Frame:cuMemcpyDtoH_v2 [0x37ecb0]
+=========                in /lib/x86_64-linux-gnu/libcuda.so.1
+=========     Host Frame: [0x465f1]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame: [0x17eda]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:cudaMemcpy [0x6b867]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:tc_grid::evaluate_tolerance(float const*, float const*, unsigned long) [0x9967]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:tc_grid::launch_int8(tc_grid::LaunchSpec const&, void const*, float const*, float*, float const*) [0x1a75e]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:main [0x46c3]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame: [0x29d90]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:__libc_start_main [0x29e40]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:_start [0x4be5]
+=========                in /src/tools/tc-grid/build/tc-grid
+========= 
+========= Host API memory access error at host access to 0x7f2e029e0400 of size 32768 bytes
+=========     Uninitialized access at 0x7f2e029e0c80 on access by cudaMemcpy source
+=========     Saved host backtrace up to driver entry point at error
+=========     Host Frame:cuMemcpyDtoH_v2 [0x37ecb0]
+=========                in /lib/x86_64-linux-gnu/libcuda.so.1
+=========     Host Frame: [0x465f1]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame: [0x17eda]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:cudaMemcpy [0x6b867]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:tc_grid::evaluate_tolerance(float const*, float const*, unsigned long) [0x9967]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:tc_grid::launch_int8(tc_grid::LaunchSpec const&, void const*, float const*, float*, float const*) [0x1a75e]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:main [0x46c3]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame: [0x29d90]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:__libc_start_main [0x29e40]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:_start [0x4be5]
+=========                in /src/tools/tc-grid/build/tc-grid
+========= 
+========= Host API memory access error at host access to 0x7f2e029e0400 of size 32768 bytes
+=========     Uninitialized access at 0x7f2e029e0ca0 on access by cudaMemcpy source
+=========     Saved host backtrace up to driver entry point at error
+=========     Host Frame:cuMemcpyDtoH_v2 [0x37ecb0]
+=========                in /lib/x86_64-linux-gnu/libcuda.so.1
+=========     Host Frame: [0x465f1]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame: [0x17eda]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:cudaMemcpy [0x6b867]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:tc_grid::evaluate_tolerance(float const*, float const*, unsigned long) [0x9967]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:tc_grid::launch_int8(tc_grid::LaunchSpec const&, void const*, float const*, float*, float const*) [0x1a75e]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:main [0x46c3]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame: [0x29d90]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:__libc_start_main [0x29e40]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:_start [0x4be5]
+=========                in /src/tools/tc-grid/build/tc-grid
+========= 
+========= Host API memory access error at host access to 0x7f2e029e0400 of size 32768 bytes
+=========     Uninitialized access at 0x7f2e029e0cc0 on access by cudaMemcpy source
+=========     Saved host backtrace up to driver entry point at error
+=========     Host Frame:cuMemcpyDtoH_v2 [0x37ecb0]
+=========                in /lib/x86_64-linux-gnu/libcuda.so.1
+=========     Host Frame: [0x465f1]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame: [0x17eda]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:cudaMemcpy [0x6b867]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:tc_grid::evaluate_tolerance(float const*, float const*, unsigned long) [0x9967]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:tc_grid::launch_int8(tc_grid::LaunchSpec const&, void const*, float const*, float*, float const*) [0x1a75e]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:main [0x46c3]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame: [0x29d90]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:__libc_start_main [0x29e40]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:_start [0x4be5]
+=========                in /src/tools/tc-grid/build/tc-grid
+========= 
+========= Host API memory access error at host access to 0x7f2e029e0400 of size 32768 bytes
+=========     Uninitialized access at 0x7f2e029e0ce0 on access by cudaMemcpy source
+=========     Saved host backtrace up to driver entry point at error
+=========     Host Frame:cuMemcpyDtoH_v2 [0x37ecb0]
+=========                in /lib/x86_64-linux-gnu/libcuda.so.1
+=========     Host Frame: [0x465f1]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame: [0x17eda]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:cudaMemcpy [0x6b867]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:tc_grid::evaluate_tolerance(float const*, float const*, unsigned long) [0x9967]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:tc_grid::launch_int8(tc_grid::LaunchSpec const&, void const*, float const*, float*, float const*) [0x1a75e]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:main [0x46c3]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame: [0x29d90]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:__libc_start_main [0x29e40]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:_start [0x4be5]
+=========                in /src/tools/tc-grid/build/tc-grid
+========= 
+========= Host API memory access error at host access to 0x7f2e029e0400 of size 32768 bytes
+=========     Uninitialized access at 0x7f2e029e0d00 on access by cudaMemcpy source
+=========     Saved host backtrace up to driver entry point at error
+=========     Host Frame:cuMemcpyDtoH_v2 [0x37ecb0]
+=========                in /lib/x86_64-linux-gnu/libcuda.so.1
+=========     Host Frame: [0x465f1]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame: [0x17eda]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:cudaMemcpy [0x6b867]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:tc_grid::evaluate_tolerance(float const*, float const*, unsigned long) [0x9967]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:tc_grid::launch_int8(tc_grid::LaunchSpec const&, void const*, float const*, float*, float const*) [0x1a75e]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:main [0x46c3]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame: [0x29d90]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:__libc_start_main [0x29e40]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:_start [0x4be5]
+=========                in /src/tools/tc-grid/build/tc-grid
+========= 
+========= Host API memory access error at host access to 0x7f2e029e0400 of size 32768 bytes
+=========     Uninitialized access at 0x7f2e029e0d20 on access by cudaMemcpy source
+=========     Saved host backtrace up to driver entry point at error
+=========     Host Frame:cuMemcpyDtoH_v2 [0x37ecb0]
+=========                in /lib/x86_64-linux-gnu/libcuda.so.1
+=========     Host Frame: [0x465f1]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame: [0x17eda]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:cudaMemcpy [0x6b867]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:tc_grid::evaluate_tolerance(float const*, float const*, unsigned long) [0x9967]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:tc_grid::launch_int8(tc_grid::LaunchSpec const&, void const*, float const*, float*, float const*) [0x1a75e]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:main [0x46c3]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame: [0x29d90]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:__libc_start_main [0x29e40]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:_start [0x4be5]
+=========                in /src/tools/tc-grid/build/tc-grid
+========= 
+========= Host API memory access error at host access to 0x7f2e029e0400 of size 32768 bytes
+=========     Uninitialized access at 0x7f2e029e0d40 on access by cudaMemcpy source
+=========     Saved host backtrace up to driver entry point at error
+=========     Host Frame:cuMemcpyDtoH_v2 [0x37ecb0]
+=========                in /lib/x86_64-linux-gnu/libcuda.so.1
+=========     Host Frame: [0x465f1]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame: [0x17eda]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:cudaMemcpy [0x6b867]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:tc_grid::evaluate_tolerance(float const*, float const*, unsigned long) [0x9967]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:tc_grid::launch_int8(tc_grid::LaunchSpec const&, void const*, float const*, float*, float const*) [0x1a75e]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:main [0x46c3]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame: [0x29d90]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:__libc_start_main [0x29e40]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:_start [0x4be5]
+=========                in /src/tools/tc-grid/build/tc-grid
+========= 
+========= Host API memory access error at host access to 0x7f2e029e0400 of size 32768 bytes
+=========     Uninitialized access at 0x7f2e029e0d60 on access by cudaMemcpy source
+=========     Saved host backtrace up to driver entry point at error
+=========     Host Frame:cuMemcpyDtoH_v2 [0x37ecb0]
+=========                in /lib/x86_64-linux-gnu/libcuda.so.1
+=========     Host Frame: [0x465f1]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame: [0x17eda]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:cudaMemcpy [0x6b867]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:tc_grid::evaluate_tolerance(float const*, float const*, unsigned long) [0x9967]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:tc_grid::launch_int8(tc_grid::LaunchSpec const&, void const*, float const*, float*, float const*) [0x1a75e]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:main [0x46c3]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame: [0x29d90]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:__libc_start_main [0x29e40]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:_start [0x4be5]
+=========                in /src/tools/tc-grid/build/tc-grid
+========= 
+========= Host API memory access error at host access to 0x7f2e029e0400 of size 32768 bytes
+=========     Uninitialized access at 0x7f2e029e0d80 on access by cudaMemcpy source
+=========     Saved host backtrace up to driver entry point at error
+=========     Host Frame:cuMemcpyDtoH_v2 [0x37ecb0]
+=========                in /lib/x86_64-linux-gnu/libcuda.so.1
+=========     Host Frame: [0x465f1]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame: [0x17eda]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:cudaMemcpy [0x6b867]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:tc_grid::evaluate_tolerance(float const*, float const*, unsigned long) [0x9967]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:tc_grid::launch_int8(tc_grid::LaunchSpec const&, void const*, float const*, float*, float const*) [0x1a75e]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:main [0x46c3]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame: [0x29d90]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:__libc_start_main [0x29e40]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:_start [0x4be5]
+=========                in /src/tools/tc-grid/build/tc-grid
+========= 
+========= Host API memory access error at host access to 0x7f2e029e0400 of size 32768 bytes
+=========     Uninitialized access at 0x7f2e029e0da0 on access by cudaMemcpy source
+=========     Saved host backtrace up to driver entry point at error
+=========     Host Frame:cuMemcpyDtoH_v2 [0x37ecb0]
+=========                in /lib/x86_64-linux-gnu/libcuda.so.1
+=========     Host Frame: [0x465f1]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame: [0x17eda]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:cudaMemcpy [0x6b867]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:tc_grid::evaluate_tolerance(float const*, float const*, unsigned long) [0x9967]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:tc_grid::launch_int8(tc_grid::LaunchSpec const&, void const*, float const*, float*, float const*) [0x1a75e]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:main [0x46c3]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame: [0x29d90]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:__libc_start_main [0x29e40]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:_start [0x4be5]
+=========                in /src/tools/tc-grid/build/tc-grid
+========= 
+========= Host API memory access error at host access to 0x7f2e029e0400 of size 32768 bytes
+=========     Uninitialized access at 0x7f2e029e0dc0 on access by cudaMemcpy source
+=========     Saved host backtrace up to driver entry point at error
+=========     Host Frame:cuMemcpyDtoH_v2 [0x37ecb0]
+=========                in /lib/x86_64-linux-gnu/libcuda.so.1
+=========     Host Frame: [0x465f1]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame: [0x17eda]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:cudaMemcpy [0x6b867]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:tc_grid::evaluate_tolerance(float const*, float const*, unsigned long) [0x9967]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:tc_grid::launch_int8(tc_grid::LaunchSpec const&, void const*, float const*, float*, float const*) [0x1a75e]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:main [0x46c3]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame: [0x29d90]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:__libc_start_main [0x29e40]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:_start [0x4be5]
+=========                in /src/tools/tc-grid/build/tc-grid
+========= 
+========= Host API memory access error at host access to 0x7f2e029e0400 of size 32768 bytes
+=========     Uninitialized access at 0x7f2e029e0de0 on access by cudaMemcpy source
+=========     Saved host backtrace up to driver entry point at error
+=========     Host Frame:cuMemcpyDtoH_v2 [0x37ecb0]
+=========                in /lib/x86_64-linux-gnu/libcuda.so.1
+=========     Host Frame: [0x465f1]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame: [0x17eda]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:cudaMemcpy [0x6b867]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:tc_grid::evaluate_tolerance(float const*, float const*, unsigned long) [0x9967]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:tc_grid::launch_int8(tc_grid::LaunchSpec const&, void const*, float const*, float*, float const*) [0x1a75e]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:main [0x46c3]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame: [0x29d90]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:__libc_start_main [0x29e40]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:_start [0x4be5]
+=========                in /src/tools/tc-grid/build/tc-grid
+========= 
+========= Host API memory access error at host access to 0x7f2e029e0400 of size 32768 bytes
+=========     Uninitialized access at 0x7f2e029e0e00 on access by cudaMemcpy source
+=========     Saved host backtrace up to driver entry point at error
+=========     Host Frame:cuMemcpyDtoH_v2 [0x37ecb0]
+=========                in /lib/x86_64-linux-gnu/libcuda.so.1
+=========     Host Frame: [0x465f1]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame: [0x17eda]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:cudaMemcpy [0x6b867]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:tc_grid::evaluate_tolerance(float const*, float const*, unsigned long) [0x9967]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:tc_grid::launch_int8(tc_grid::LaunchSpec const&, void const*, float const*, float*, float const*) [0x1a75e]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:main [0x46c3]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame: [0x29d90]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:__libc_start_main [0x29e40]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:_start [0x4be5]
+=========                in /src/tools/tc-grid/build/tc-grid
+========= 
+========= Host API memory access error at host access to 0x7f2e029e0400 of size 32768 bytes
+=========     Uninitialized access at 0x7f2e029e0e20 on access by cudaMemcpy source
+=========     Saved host backtrace up to driver entry point at error
+=========     Host Frame:cuMemcpyDtoH_v2 [0x37ecb0]
+=========                in /lib/x86_64-linux-gnu/libcuda.so.1
+=========     Host Frame: [0x465f1]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame: [0x17eda]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:cudaMemcpy [0x6b867]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:tc_grid::evaluate_tolerance(float const*, float const*, unsigned long) [0x9967]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:tc_grid::launch_int8(tc_grid::LaunchSpec const&, void const*, float const*, float*, float const*) [0x1a75e]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:main [0x46c3]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame: [0x29d90]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:__libc_start_main [0x29e40]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:_start [0x4be5]
+=========                in /src/tools/tc-grid/build/tc-grid
+========= 
+========= Host API memory access error at host access to 0x7f2e029e0400 of size 32768 bytes
+=========     Uninitialized access at 0x7f2e029e0e40 on access by cudaMemcpy source
+=========     Saved host backtrace up to driver entry point at error
+=========     Host Frame:cuMemcpyDtoH_v2 [0x37ecb0]
+=========                in /lib/x86_64-linux-gnu/libcuda.so.1
+=========     Host Frame: [0x465f1]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame: [0x17eda]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:cudaMemcpy [0x6b867]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:tc_grid::evaluate_tolerance(float const*, float const*, unsigned long) [0x9967]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:tc_grid::launch_int8(tc_grid::LaunchSpec const&, void const*, float const*, float*, float const*) [0x1a75e]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:main [0x46c3]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame: [0x29d90]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:__libc_start_main [0x29e40]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:_start [0x4be5]
+=========                in /src/tools/tc-grid/build/tc-grid
+========= 
+========= Host API memory access error at host access to 0x7f2e029e0400 of size 32768 bytes
+=========     Uninitialized access at 0x7f2e029e0e60 on access by cudaMemcpy source
+=========     Saved host backtrace up to driver entry point at error
+=========     Host Frame:cuMemcpyDtoH_v2 [0x37ecb0]
+=========                in /lib/x86_64-linux-gnu/libcuda.so.1
+=========     Host Frame: [0x465f1]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame: [0x17eda]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:cudaMemcpy [0x6b867]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:tc_grid::evaluate_tolerance(float const*, float const*, unsigned long) [0x9967]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:tc_grid::launch_int8(tc_grid::LaunchSpec const&, void const*, float const*, float*, float const*) [0x1a75e]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:main [0x46c3]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame: [0x29d90]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:__libc_start_main [0x29e40]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:_start [0x4be5]
+=========                in /src/tools/tc-grid/build/tc-grid
+========= 
+========= Host API memory access error at host access to 0x7f2e029e0400 of size 32768 bytes
+=========     Uninitialized access at 0x7f2e029e0e80 on access by cudaMemcpy source
+=========     Saved host backtrace up to driver entry point at error
+=========     Host Frame:cuMemcpyDtoH_v2 [0x37ecb0]
+=========                in /lib/x86_64-linux-gnu/libcuda.so.1
+=========     Host Frame: [0x465f1]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame: [0x17eda]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:cudaMemcpy [0x6b867]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:tc_grid::evaluate_tolerance(float const*, float const*, unsigned long) [0x9967]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:tc_grid::launch_int8(tc_grid::LaunchSpec const&, void const*, float const*, float*, float const*) [0x1a75e]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:main [0x46c3]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame: [0x29d90]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:__libc_start_main [0x29e40]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:_start [0x4be5]
+=========                in /src/tools/tc-grid/build/tc-grid
+========= 
+========= Host API memory access error at host access to 0x7f2e029e0400 of size 32768 bytes
+=========     Uninitialized access at 0x7f2e029e0ea0 on access by cudaMemcpy source
+=========     Saved host backtrace up to driver entry point at error
+=========     Host Frame:cuMemcpyDtoH_v2 [0x37ecb0]
+=========                in /lib/x86_64-linux-gnu/libcuda.so.1
+=========     Host Frame: [0x465f1]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame: [0x17eda]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:cudaMemcpy [0x6b867]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:tc_grid::evaluate_tolerance(float const*, float const*, unsigned long) [0x9967]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:tc_grid::launch_int8(tc_grid::LaunchSpec const&, void const*, float const*, float*, float const*) [0x1a75e]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:main [0x46c3]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame: [0x29d90]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:__libc_start_main [0x29e40]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:_start [0x4be5]
+=========                in /src/tools/tc-grid/build/tc-grid
+========= 
+========= Host API memory access error at host access to 0x7f2e029e0400 of size 32768 bytes
+=========     Uninitialized access at 0x7f2e029e0ec0 on access by cudaMemcpy source
+=========     Saved host backtrace up to driver entry point at error
+=========     Host Frame:cuMemcpyDtoH_v2 [0x37ecb0]
+=========                in /lib/x86_64-linux-gnu/libcuda.so.1
+=========     Host Frame: [0x465f1]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame: [0x17eda]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:cudaMemcpy [0x6b867]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:tc_grid::evaluate_tolerance(float const*, float const*, unsigned long) [0x9967]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:tc_grid::launch_int8(tc_grid::LaunchSpec const&, void const*, float const*, float*, float const*) [0x1a75e]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:main [0x46c3]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame: [0x29d90]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:__libc_start_main [0x29e40]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:_start [0x4be5]
+=========                in /src/tools/tc-grid/build/tc-grid
+========= 
+========= Host API memory access error at host access to 0x7f2e029e0400 of size 32768 bytes
+=========     Uninitialized access at 0x7f2e029e0ee0 on access by cudaMemcpy source
+=========     Saved host backtrace up to driver entry point at error
+=========     Host Frame:cuMemcpyDtoH_v2 [0x37ecb0]
+=========                in /lib/x86_64-linux-gnu/libcuda.so.1
+=========     Host Frame: [0x465f1]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame: [0x17eda]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:cudaMemcpy [0x6b867]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:tc_grid::evaluate_tolerance(float const*, float const*, unsigned long) [0x9967]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:tc_grid::launch_int8(tc_grid::LaunchSpec const&, void const*, float const*, float*, float const*) [0x1a75e]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:main [0x46c3]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame: [0x29d90]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:__libc_start_main [0x29e40]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:_start [0x4be5]
+=========                in /src/tools/tc-grid/build/tc-grid
+========= 
+========= Host API memory access error at host access to 0x7f2e029e0400 of size 32768 bytes
+=========     Uninitialized access at 0x7f2e029e0f00 on access by cudaMemcpy source
+=========     Saved host backtrace up to driver entry point at error
+=========     Host Frame:cuMemcpyDtoH_v2 [0x37ecb0]
+=========                in /lib/x86_64-linux-gnu/libcuda.so.1
+=========     Host Frame: [0x465f1]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame: [0x17eda]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:cudaMemcpy [0x6b867]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:tc_grid::evaluate_tolerance(float const*, float const*, unsigned long) [0x9967]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:tc_grid::launch_int8(tc_grid::LaunchSpec const&, void const*, float const*, float*, float const*) [0x1a75e]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:main [0x46c3]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame: [0x29d90]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:__libc_start_main [0x29e40]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:_start [0x4be5]
+=========                in /src/tools/tc-grid/build/tc-grid
+========= 
+========= Host API memory access error at host access to 0x7f2e029e0400 of size 32768 bytes
+=========     Uninitialized access at 0x7f2e029e0f20 on access by cudaMemcpy source
+=========     Saved host backtrace up to driver entry point at error
+=========     Host Frame:cuMemcpyDtoH_v2 [0x37ecb0]
+=========                in /lib/x86_64-linux-gnu/libcuda.so.1
+=========     Host Frame: [0x465f1]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame: [0x17eda]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:cudaMemcpy [0x6b867]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:tc_grid::evaluate_tolerance(float const*, float const*, unsigned long) [0x9967]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:tc_grid::launch_int8(tc_grid::LaunchSpec const&, void const*, float const*, float*, float const*) [0x1a75e]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:main [0x46c3]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame: [0x29d90]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:__libc_start_main [0x29e40]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:_start [0x4be5]
+=========                in /src/tools/tc-grid/build/tc-grid
+========= 
+========= Host API memory access error at host access to 0x7f2e029e0400 of size 32768 bytes
+=========     Uninitialized access at 0x7f2e029e0f40 on access by cudaMemcpy source
+=========     Saved host backtrace up to driver entry point at error
+=========     Host Frame:cuMemcpyDtoH_v2 [0x37ecb0]
+=========                in /lib/x86_64-linux-gnu/libcuda.so.1
+=========     Host Frame: [0x465f1]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame: [0x17eda]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:cudaMemcpy [0x6b867]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:tc_grid::evaluate_tolerance(float const*, float const*, unsigned long) [0x9967]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:tc_grid::launch_int8(tc_grid::LaunchSpec const&, void const*, float const*, float*, float const*) [0x1a75e]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:main [0x46c3]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame: [0x29d90]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:__libc_start_main [0x29e40]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:_start [0x4be5]
+=========                in /src/tools/tc-grid/build/tc-grid
+========= 
+========= Host API memory access error at host access to 0x7f2e029e0400 of size 32768 bytes
+=========     Uninitialized access at 0x7f2e029e0f60 on access by cudaMemcpy source
+=========     Saved host backtrace up to driver entry point at error
+=========     Host Frame:cuMemcpyDtoH_v2 [0x37ecb0]
+=========                in /lib/x86_64-linux-gnu/libcuda.so.1
+=========     Host Frame: [0x465f1]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame: [0x17eda]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:cudaMemcpy [0x6b867]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:tc_grid::evaluate_tolerance(float const*, float const*, unsigned long) [0x9967]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:tc_grid::launch_int8(tc_grid::LaunchSpec const&, void const*, float const*, float*, float const*) [0x1a75e]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:main [0x46c3]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame: [0x29d90]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:__libc_start_main [0x29e40]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:_start [0x4be5]
+=========                in /src/tools/tc-grid/build/tc-grid
+========= 
+========= Host API memory access error at host access to 0x7f2e029e0400 of size 32768 bytes
+=========     Uninitialized access at 0x7f2e029e0f80 on access by cudaMemcpy source
+=========     Saved host backtrace up to driver entry point at error
+=========     Host Frame:cuMemcpyDtoH_v2 [0x37ecb0]
+=========                in /lib/x86_64-linux-gnu/libcuda.so.1
+=========     Host Frame: [0x465f1]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame: [0x17eda]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:cudaMemcpy [0x6b867]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:tc_grid::evaluate_tolerance(float const*, float const*, unsigned long) [0x9967]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:tc_grid::launch_int8(tc_grid::LaunchSpec const&, void const*, float const*, float*, float const*) [0x1a75e]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:main [0x46c3]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame: [0x29d90]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:__libc_start_main [0x29e40]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:_start [0x4be5]
+=========                in /src/tools/tc-grid/build/tc-grid
+========= 
+========= Host API memory access error at host access to 0x7f2e029e0400 of size 32768 bytes
+=========     Uninitialized access at 0x7f2e029e0fa0 on access by cudaMemcpy source
+=========     Saved host backtrace up to driver entry point at error
+=========     Host Frame:cuMemcpyDtoH_v2 [0x37ecb0]
+=========                in /lib/x86_64-linux-gnu/libcuda.so.1
+=========     Host Frame: [0x465f1]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame: [0x17eda]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:cudaMemcpy [0x6b867]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:tc_grid::evaluate_tolerance(float const*, float const*, unsigned long) [0x9967]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:tc_grid::launch_int8(tc_grid::LaunchSpec const&, void const*, float const*, float*, float const*) [0x1a75e]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:main [0x46c3]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame: [0x29d90]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:__libc_start_main [0x29e40]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:_start [0x4be5]
+=========                in /src/tools/tc-grid/build/tc-grid
+========= 
+========= Host API memory access error at host access to 0x7f2e029e0400 of size 32768 bytes
+=========     Uninitialized access at 0x7f2e029e0fc0 on access by cudaMemcpy source
+=========     Saved host backtrace up to driver entry point at error
+=========     Host Frame:cuMemcpyDtoH_v2 [0x37ecb0]
+=========                in /lib/x86_64-linux-gnu/libcuda.so.1
+=========     Host Frame: [0x465f1]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame: [0x17eda]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:cudaMemcpy [0x6b867]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:tc_grid::evaluate_tolerance(float const*, float const*, unsigned long) [0x9967]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:tc_grid::launch_int8(tc_grid::LaunchSpec const&, void const*, float const*, float*, float const*) [0x1a75e]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:main [0x46c3]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame: [0x29d90]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:__libc_start_main [0x29e40]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:_start [0x4be5]
+=========                in /src/tools/tc-grid/build/tc-grid
+========= 
+========= Host API memory access error at host access to 0x7f2e029e0400 of size 32768 bytes
+=========     Uninitialized access at 0x7f2e029e0fe0 on access by cudaMemcpy source
+=========     Saved host backtrace up to driver entry point at error
+=========     Host Frame:cuMemcpyDtoH_v2 [0x37ecb0]
+=========                in /lib/x86_64-linux-gnu/libcuda.so.1
+=========     Host Frame: [0x465f1]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame: [0x17eda]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:cudaMemcpy [0x6b867]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:tc_grid::evaluate_tolerance(float const*, float const*, unsigned long) [0x9967]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:tc_grid::launch_int8(tc_grid::LaunchSpec const&, void const*, float const*, float*, float const*) [0x1a75e]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:main [0x46c3]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame: [0x29d90]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:__libc_start_main [0x29e40]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:_start [0x4be5]
+=========                in /src/tools/tc-grid/build/tc-grid
+========= 
+========= Host API memory access error at host access to 0x7f2e029e0400 of size 32768 bytes
+=========     Uninitialized access at 0x7f2e029e1000 on access by cudaMemcpy source
+=========     Saved host backtrace up to driver entry point at error
+=========     Host Frame:cuMemcpyDtoH_v2 [0x37ecb0]
+=========                in /lib/x86_64-linux-gnu/libcuda.so.1
+=========     Host Frame: [0x465f1]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame: [0x17eda]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:cudaMemcpy [0x6b867]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:tc_grid::evaluate_tolerance(float const*, float const*, unsigned long) [0x9967]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:tc_grid::launch_int8(tc_grid::LaunchSpec const&, void const*, float const*, float*, float const*) [0x1a75e]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:main [0x46c3]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame: [0x29d90]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:__libc_start_main [0x29e40]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:_start [0x4be5]
+=========                in /src/tools/tc-grid/build/tc-grid
+========= 
+========= Host API memory access error at host access to 0x7f2e029e0400 of size 32768 bytes
+=========     Uninitialized access at 0x7f2e029e1020 on access by cudaMemcpy source
+=========     Saved host backtrace up to driver entry point at error
+=========     Host Frame:cuMemcpyDtoH_v2 [0x37ecb0]
+=========                in /lib/x86_64-linux-gnu/libcuda.so.1
+=========     Host Frame: [0x465f1]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame: [0x17eda]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:cudaMemcpy [0x6b867]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:tc_grid::evaluate_tolerance(float const*, float const*, unsigned long) [0x9967]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:tc_grid::launch_int8(tc_grid::LaunchSpec const&, void const*, float const*, float*, float const*) [0x1a75e]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:main [0x46c3]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame: [0x29d90]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:__libc_start_main [0x29e40]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:_start [0x4be5]
+=========                in /src/tools/tc-grid/build/tc-grid
+========= 
+========= Host API memory access error at host access to 0x7f2e029e0400 of size 32768 bytes
+=========     Uninitialized access at 0x7f2e029e1040 on access by cudaMemcpy source
+=========     Saved host backtrace up to driver entry point at error
+=========     Host Frame:cuMemcpyDtoH_v2 [0x37ecb0]
+=========                in /lib/x86_64-linux-gnu/libcuda.so.1
+=========     Host Frame: [0x465f1]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame: [0x17eda]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:cudaMemcpy [0x6b867]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:tc_grid::evaluate_tolerance(float const*, float const*, unsigned long) [0x9967]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:tc_grid::launch_int8(tc_grid::LaunchSpec const&, void const*, float const*, float*, float const*) [0x1a75e]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:main [0x46c3]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame: [0x29d90]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:__libc_start_main [0x29e40]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:_start [0x4be5]
+=========                in /src/tools/tc-grid/build/tc-grid
+========= 
+========= Host API memory access error at host access to 0x7f2e029e0400 of size 32768 bytes
+=========     Uninitialized access at 0x7f2e029e1060 on access by cudaMemcpy source
+=========     Saved host backtrace up to driver entry point at error
+=========     Host Frame:cuMemcpyDtoH_v2 [0x37ecb0]
+=========                in /lib/x86_64-linux-gnu/libcuda.so.1
+=========     Host Frame: [0x465f1]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame: [0x17eda]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:cudaMemcpy [0x6b867]
+=========                in /usr/local/cuda/targets/x86_64-linux/lib/libcudart.so.12
+=========     Host Frame:tc_grid::evaluate_tolerance(float const*, float const*, unsigned long) [0x9967]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:tc_grid::launch_int8(tc_grid::LaunchSpec const&, void const*, float const*, float*, float const*) [0x1a75e]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame:main [0x46c3]
+=========                in /src/tools/tc-grid/build/tc-grid
+=========     Host Frame: [0x29d90]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:__libc_start_main [0x29e40]
+=========                in /lib/x86_64-linux-gnu/libc.so.6
+=========     Host Frame:_start [0x4be5]
+=========                in /src/tools/tc-grid/build/tc-grid
+========= 
+INT8,LUT,U(-1,1),64,7168,7168,16x64x32_w4,OK,ms=183.661,tflops=0.04,gbps=0.3,maxabs=3.949e-02,p99=1.861e-02,rel=2.596e-04
+INT8,BITSHIFT,U(-1,1),64,7168,7168,16x64x32_w4,OK,ms=148.021,tflops=0.04,gbps=0.4,maxabs=2.502e-02,p99=1.358e-02,rel=1.849e-04
+INT8,LUT,U(-1,1),64,7168,7168,16x128x32_w8,OK,ms=170.348,tflops=0.04,gbps=0.3,maxabs=3.949e-02,p99=1.861e-02,rel=2.596e-04
+INT8,BITSHIFT,U(-1,1),64,7168,7168,16x128x32_w8,OK,ms=135.251,tflops=0.05,gbps=0.4,maxabs=2.502e-02,p99=1.358e-02,rel=1.849e-04
+INT8,LUT,U(-1,1),64,7168,7168,16x128x32_w4f2,OK,ms=102.362,tflops=0.06,gbps=0.6,maxabs=3.949e-02,p99=1.861e-02,rel=2.596e-04
+INT8,BITSHIFT,U(-1,1),64,7168,7168,16x128x32_w4f2,SKIP,MF path-B not implemented
+INT8,LUT,U(-1,1),64,7168,7168,16x256x32_w4f4,OK,ms=87.051,tflops=0.08,gbps=0.7,maxabs=3.949e-02,p99=1.861e-02,rel=2.596e-04
+INT8,BITSHIFT,U(-1,1),64,7168,7168,16x256x32_w4f4,SKIP,MF path-B not implemented
+INT8,LUT,U(-1,1),64,7168,7168,128x64x32_w4_v1,OK,ms=29.040,tflops=0.23,gbps=2.0,maxabs=3.949e-02,p99=1.861e-02,rel=2.596e-04
+INT8,BITSHIFT,U(-1,1),64,7168,7168,128x64x32_w4_v1,SKIP,v1 path-B not implemented
+INT8,LUT,U(-1,1),64,7168,7168,128x128x32_w4_v1,OK,ms=32.720,tflops=0.20,gbps=1.8,maxabs=3.949e-02,p99=1.861e-02,rel=2.596e-04
+INT8,BITSHIFT,U(-1,1),64,7168,7168,128x128x32_w4_v1,SKIP,v1 path-B not implemented
+INT8,LUT,U(-1,1),64,7168,7168,128x256x32_w4_v1,OK,ms=58.661,tflops=0.11,gbps=1.0,maxabs=3.949e-02,p99=1.861e-02,rel=2.596e-04
+INT8,BITSHIFT,U(-1,1),64,7168,7168,128x256x32_w4_v1,SKIP,v1 path-B not implemented
+INT8,LUT,U(-1,1),64,7168,7168,128x256x32_w8_v1,OK,ms=35.825,tflops=0.18,gbps=1.6,maxabs=3.949e-02,p99=1.861e-02,rel=2.596e-04
+INT8,BITSHIFT,U(-1,1),64,7168,7168,128x256x32_w8_v1,SKIP,v1 path-B not implemented
+INT8,LUT,U(-1,1),64,7168,7168,64x64x32_w4_v1,OK,ms=24.553,tflops=0.27,gbps=2.4,maxabs=3.949e-02,p99=1.861e-02,rel=2.596e-04
+INT8,BITSHIFT,U(-1,1),64,7168,7168,64x64x32_w4_v1,SKIP,v1 path-B not implemented
+INT8,LUT,U(-1,1),64,7168,7168,64x128x32_w4_v1,OK,ms=29.984,tflops=0.22,gbps=1.9,maxabs=3.949e-02,p99=1.861e-02,rel=2.596e-04
+INT8,BITSHIFT,U(-1,1),64,7168,7168,64x128x32_w4_v1,SKIP,v1 path-B not implemented
+INT8,LUT,U(-1,1),64,7168,7168,128x64x32_w4_v2,OK,ms=4.802,tflops=1.37,gbps=12.1,maxabs=3.949e-02,p99=1.861e-02,rel=2.596e-04
+INT8,BITSHIFT,U(-1,1),64,7168,7168,128x64x32_w4_v2,SKIP,v2 path-B not implemented
+INT8,LUT,U(-1,1),64,7168,7168,128x128x32_w4_v2,OK,ms=4.297,tflops=1.53,gbps=13.6,maxabs=3.949e-02,p99=1.861e-02,rel=2.596e-04
+INT8,BITSHIFT,U(-1,1),64,7168,7168,128x128x32_w4_v2,SKIP,v2 path-B not implemented
+INT8,LUT,U(-1,1),64,7168,7168,128x256x32_w4_v2,OK,ms=7.424,tflops=0.89,gbps=7.8,maxabs=3.949e-02,p99=1.861e-02,rel=2.596e-04
+INT8,BITSHIFT,U(-1,1),64,7168,7168,128x256x32_w4_v2,SKIP,v2 path-B not implemented
+INT8,LUT,U(-1,1),64,7168,7168,128x256x32_w8_v2,OK,ms=4.098,tflops=1.60,gbps=14.2,maxabs=3.949e-02,p99=1.861e-02,rel=2.596e-04
+INT8,BITSHIFT,U(-1,1),64,7168,7168,128x256x32_w8_v2,SKIP,v2 path-B not implemented
+INT8,LUT,U(-1,1),64,7168,7168,64x64x32_w4_v2,OK,ms=4.602,tflops=1.43,gbps=12.7,maxabs=3.949e-02,p99=1.861e-02,rel=2.596e-04
+INT8,BITSHIFT,U(-1,1),64,7168,7168,64x64x32_w4_v2,SKIP,v2 path-B not implemented
+INT8,LUT,U(-1,1),64,7168,7168,64x128x32_w4_v2,OK,ms=4.360,tflops=1.51,gbps=13.4,maxabs=3.949e-02,p99=1.861e-02,rel=2.596e-04
+INT8,BITSHIFT,U(-1,1),64,7168,7168,64x128x32_w4_v2,SKIP,v2 path-B not implemented
+INT8,LUT,U(-1,1),64,7168,7168,128x64x32_w4_v3,OK,ms=6.042,tflops=1.09,gbps=9.6,maxabs=3.949e-02,p99=1.861e-02,rel=2.596e-04
+INT8,BITSHIFT,U(-1,1),64,7168,7168,128x64x32_w4_v3,SKIP,v3 path-B not implemented
+INT8,LUT,U(-1,1),64,7168,7168,128x128x32_w4_v3,OK,ms=5.354,tflops=1.23,gbps=10.9,maxabs=3.949e-02,p99=1.861e-02,rel=2.596e-04
+INT8,BITSHIFT,U(-1,1),64,7168,7168,128x128x32_w4_v3,SKIP,v3 path-B not implemented
+INT8,LUT,U(-1,1),64,7168,7168,128x256x32_w8_v3,SKIP,invalid argument
+INT8,BITSHIFT,U(-1,1),64,7168,7168,128x256x32_w8_v3,SKIP,v3 path-B not implemented
+INT8,LUT,U(-1,1),64,7168,7168,64x64x32_w4_v3,OK,ms=4.530,tflops=1.45,gbps=12.9,maxabs=3.949e-02,p99=1.861e-02,rel=2.596e-04
+INT8,BITSHIFT,U(-1,1),64,7168,7168,64x64x32_w4_v3,SKIP,v3 path-B not implemented
+INT8,LUT,U(-1,1),64,7168,7168,64x128x32_w4_v3,OK,ms=4.300,tflops=1.53,gbps=13.6,maxabs=3.949e-02,p99=1.861e-02,rel=2.596e-04
+INT8,BITSHIFT,U(-1,1),64,7168,7168,64x128x32_w4_v3,SKIP,v3 path-B not implemented
+INT8,LUT,U(-1,1),64,7168,7168,32x128x32_w4_v3_b1,OK,ms=4.989,tflops=1.32,gbps=11.7,maxabs=3.949e-02,p99=1.861e-02,rel=2.596e-04
+INT8,BITSHIFT,U(-1,1),64,7168,7168,32x128x32_w4_v3_b1,SKIP,v3 path-B not implemented
+INT8,LUT,U(-1,1),64,7168,7168,32x64x32_w4_v3_b1,OK,ms=7.282,tflops=0.90,gbps=8.0,maxabs=3.949e-02,p99=1.861e-02,rel=2.596e-04
+INT8,BITSHIFT,U(-1,1),64,7168,7168,32x64x32_w4_v3_b1,SKIP,v3 path-B not implemented
+INT8,LUT,U(-1,1),64,7168,7168,32x256x32_w8_v3_b1,OK,ms=4.302,tflops=1.53,gbps=13.5,maxabs=3.949e-02,p99=1.861e-02,rel=2.596e-04
+INT8,BITSHIFT,U(-1,1),64,7168,7168,32x256x32_w8_v3_b1,SKIP,v3 path-B not implemented
+INT8,LUT,U(-1,1),64,7168,7168,128x128x32_w8_v3_b1alt,OK,ms=4.664,tflops=1.41,gbps=12.5,maxabs=3.949e-02,p99=1.861e-02,rel=2.596e-04
+INT8,BITSHIFT,U(-1,1),64,7168,7168,128x128x32_w8_v3_b1alt,SKIP,v3 path-B not implemented
+INT8,LUT,U(-1,1),64,7168,7168,64x128x32_w8_v3_b1alt,OK,ms=3.039,tflops=2.16,gbps=19.2,maxabs=3.949e-02,p99=1.861e-02,rel=2.596e-04
+INT8,BITSHIFT,U(-1,1),64,7168,7168,64x128x32_w8_v3_b1alt,SKIP,v3 path-B not implemented
+INT8,LUT,U(-1,1),64,7168,7168,128x64x32_w4_v4,OK,ms=6.140,tflops=1.07,gbps=9.5,maxabs=3.949e-02,p99=1.861e-02,rel=2.596e-04
+INT8,BITSHIFT,U(-1,1),64,7168,7168,128x64x32_w4_v4,SKIP,v4 path-B not implemented
+INT8,LUT,U(-1,1),64,7168,7168,128x128x32_w4_v4,OK,ms=5.411,tflops=1.22,gbps=10.8,maxabs=3.949e-02,p99=1.861e-02,rel=2.596e-04
+INT8,BITSHIFT,U(-1,1),64,7168,7168,128x128x32_w4_v4,SKIP,v4 path-B not implemented
+INT8,LUT,U(-1,1),64,7168,7168,64x64x32_w4_v4,OK,ms=4.588,tflops=1.43,gbps=12.7,maxabs=3.949e-02,p99=1.861e-02,rel=2.596e-04
+INT8,BITSHIFT,U(-1,1),64,7168,7168,64x64x32_w4_v4,SKIP,v4 path-B not implemented
+INT8,LUT,U(-1,1),64,7168,7168,64x128x32_w4_v4,OK,ms=4.373,tflops=1.50,gbps=13.3,maxabs=3.949e-02,p99=1.861e-02,rel=2.596e-04
+INT8,BITSHIFT,U(-1,1),64,7168,7168,64x128x32_w4_v4,SKIP,v4 path-B not implemented
+INT8,LUT,U(-1,1),64,7168,7168,128x64x32_w4_v5,OK,ms=6.140,tflops=1.07,gbps=9.5,maxabs=3.949e-02,p99=1.861e-02,rel=2.596e-04
+INT8,BITSHIFT,U(-1,1),64,7168,7168,128x64x32_w4_v5,SKIP,v5 path-B not implemented
+INT8,LUT,U(-1,1),64,7168,7168,128x128x32_w4_v5,OK,ms=5.433,tflops=1.21,gbps=10.7,maxabs=3.949e-02,p99=1.861e-02,rel=2.596e-04
+INT8,BITSHIFT,U(-1,1),64,7168,7168,128x128x32_w4_v5,SKIP,v5 path-B not implemented
+INT8,LUT,U(-1,1),64,7168,7168,64x64x32_w4_v5,OK,ms=4.575,tflops=1.44,gbps=12.7,maxabs=3.949e-02,p99=1.861e-02,rel=2.596e-04
+INT8,BITSHIFT,U(-1,1),64,7168,7168,64x64x32_w4_v5,SKIP,v5 path-B not implemented
+INT8,LUT,U(-1,1),64,7168,7168,64x128x32_w4_v5,OK,ms=4.357,tflops=1.51,gbps=13.4,maxabs=3.949e-02,p99=1.861e-02,rel=2.596e-04
+INT8,BITSHIFT,U(-1,1),64,7168,7168,64x128x32_w4_v5,SKIP,v5 path-B not implemented
+INT8,LUT,U(-1,1),64,7168,7168,128x128x64_w4_v6,OK,ms=5.653,tflops=1.16,gbps=10.3,maxabs=3.949e-02,p99=1.861e-02,rel=2.596e-04
+INT8,BITSHIFT,U(-1,1),64,7168,7168,128x128x64_w4_v6,SKIP,v6 path-B not implemented
+INT8,LUT,U(-1,1),64,7168,7168,128x64x64_w4_v6,OK,ms=6.620,tflops=0.99,gbps=8.8,maxabs=3.949e-02,p99=1.861e-02,rel=2.596e-04
+INT8,BITSHIFT,U(-1,1),64,7168,7168,128x64x64_w4_v6,SKIP,v6 path-B not implemented
+INT8,LUT,U(-1,1),64,7168,7168,64x128x64_w4_v6,OK,ms=4.385,tflops=1.50,gbps=13.3,maxabs=3.949e-02,p99=1.861e-02,rel=2.596e-04
+INT8,BITSHIFT,U(-1,1),64,7168,7168,64x128x64_w4_v6,SKIP,v6 path-B not implemented
+INT8,LUT,U(-1,1),64,7168,7168,64x64x64_w4_v6,OK,ms=4.735,tflops=1.39,gbps=12.3,maxabs=3.949e-02,p99=1.861e-02,rel=2.596e-04
+INT8,BITSHIFT,U(-1,1),64,7168,7168,64x64x64_w4_v6,SKIP,v6 path-B not implemented
+INT8,LUT,U(-1,1),64,7168,7168,64x128x32_w4_v7,OK,ms=4.304,tflops=1.53,gbps=13.5,maxabs=3.949e-02,p99=1.861e-02,rel=2.596e-04
+INT8,BITSHIFT,U(-1,1),64,7168,7168,64x128x32_w4_v7,SKIP,v7 path-B not implemented
+INT8,LUT,U(-1,1),64,7168,7168,64x64x32_w4_v7,OK,ms=4.514,tflops=1.46,gbps=12.9,maxabs=3.949e-02,p99=1.861e-02,rel=2.596e-04
+INT8,BITSHIFT,U(-1,1),64,7168,7168,64x64x32_w4_v7,SKIP,v7 path-B not implemented
+INT8,LUT,U(-1,1),64,7168,7168,32x128x32_w4_v7,OK,ms=4.935,tflops=1.33,gbps=11.8,maxabs=3.949e-02,p99=1.861e-02,rel=2.596e-04
+INT8,BITSHIFT,U(-1,1),64,7168,7168,32x128x32_w4_v7,SKIP,v7 path-B not implemented
+INT8,LUT,U(-1,1),64,7168,7168,32x64x32_w4_v7,OK,ms=7.247,tflops=0.91,gbps=8.0,maxabs=3.949e-02,p99=1.861e-02,rel=2.596e-04
+INT8,BITSHIFT,U(-1,1),64,7168,7168,32x64x32_w4_v7,SKIP,v7 path-B not implemented
+INT8,LUT,U(-1,1),64,7168,7168,128x64x32_w4_v8,OK,ms=6.106,tflops=1.08,gbps=9.5,maxabs=2.259e+00,p99=6.036e-01,rel=5.469e-03
+INT8,BITSHIFT,U(-1,1),64,7168,7168,128x64x32_w4_v8,SKIP,v8 path-B not implemented
+INT8,LUT,U(-1,1),64,7168,7168,128x128x32_w4_v8,OK,ms=5.399,tflops=1.22,gbps=10.8,maxabs=2.259e+00,p99=6.036e-01,rel=5.469e-03
+INT8,BITSHIFT,U(-1,1),64,7168,7168,128x128x32_w4_v8,SKIP,v8 path-B not implemented
+INT8,LUT,U(-1,1),64,7168,7168,64x64x32_w4_v8,OK,ms=4.582,tflops=1.44,gbps=12.7,maxabs=2.259e+00,p99=6.036e-01,rel=5.469e-03
+INT8,BITSHIFT,U(-1,1),64,7168,7168,64x64x32_w4_v8,SKIP,v8 path-B not implemented
+INT8,LUT,U(-1,1),64,7168,7168,64x128x32_w4_v8,OK,ms=4.364,tflops=1.51,gbps=13.3,maxabs=2.259e+00,p99=6.036e-01,rel=5.469e-03
+INT8,BITSHIFT,U(-1,1),64,7168,7168,64x128x32_w4_v8,SKIP,v8 path-B not implemented
+INT8,LUT,U(-1,1),64,7168,7168,32x128x32_w4_v8,OK,ms=4.997,tflops=1.32,gbps=11.7,maxabs=2.259e+00,p99=6.036e-01,rel=5.469e-03
+INT8,BITSHIFT,U(-1,1),64,7168,7168,32x128x32_w4_v8,SKIP,v8 path-B not implemented
+INT8,LUT,U(-1,1),64,7168,7168,32x64x32_w4_v8,OK,ms=7.296,tflops=0.90,gbps=8.0,maxabs=2.259e+00,p99=6.036e-01,rel=5.469e-03
+INT8,BITSHIFT,U(-1,1),64,7168,7168,32x64x32_w4_v8,SKIP,v8 path-B not implemented
+INT8,LUT,U(-1,1),64,7168,7168,128x128x32_w4_v9_ck2,OK,ms=5.478,tflops=1.20,gbps=10.6,maxabs=1.770e+02,p99=9.159e+01,rel=7.099e-01
+INT8,BITSHIFT,U(-1,1),64,7168,7168,128x128x32_w4_v9_ck2,SKIP,v9 path-B not implemented
+INT8,LUT,U(-1,1),64,7168,7168,128x128x32_w4_v9_ck4,OK,ms=5.434,tflops=1.21,gbps=10.7,maxabs=1.770e+02,p99=9.157e+01,rel=7.100e-01
+INT8,BITSHIFT,U(-1,1),64,7168,7168,128x128x32_w4_v9_ck4,SKIP,v9 path-B not implemented
+INT8,LUT,U(-1,1),64,7168,7168,128x128x32_w4_v9_ck8,OK,ms=5.405,tflops=1.22,gbps=10.8,maxabs=1.770e+02,p99=9.158e+01,rel=7.101e-01
+INT8,BITSHIFT,U(-1,1),64,7168,7168,128x128x32_w4_v9_ck8,SKIP,v9 path-B not implemented
+INT8,LUT,U(-1,1),64,7168,7168,64x128x32_w4_v9_ck4,OK,ms=4.358,tflops=1.51,gbps=13.4,maxabs=1.770e+02,p99=9.157e+01,rel=7.100e-01
+INT8,BITSHIFT,U(-1,1),64,7168,7168,64x128x32_w4_v9_ck4,SKIP,v9 path-B not implemented
+INT8,LUT,U(-1,1),64,7168,7168,64x64x32_w4_v9_ck4,OK,ms=4.520,tflops=1.46,gbps=12.9,maxabs=1.770e+02,p99=9.157e+01,rel=7.100e-01
+INT8,BITSHIFT,U(-1,1),64,7168,7168,64x64x32_w4_v9_ck4,SKIP,v9 path-B not implemented
+INT8,LUT,U(-1,1),64,7168,7168,128x128x32_w4_v10,OK,ms=5.419,tflops=1.21,gbps=10.8,maxabs=3.949e-02,p99=1.861e-02,rel=2.596e-04
+INT8,BITSHIFT,U(-1,1),64,7168,7168,128x128x32_w4_v10,SKIP,v10 path-B not implemented
+INT8,LUT,U(-1,1),64,7168,7168,128x64x32_w4_v10,OK,ms=6.702,tflops=0.98,gbps=8.7,maxabs=3.949e-02,p99=1.861e-02,rel=2.596e-04
+INT8,BITSHIFT,U(-1,1),64,7168,7168,128x64x32_w4_v10,SKIP,v10 path-B not implemented
+INT8,LUT,U(-1,1),64,7168,7168,64x128x32_w4_v10,OK,ms=4.357,tflops=1.51,gbps=13.4,maxabs=3.949e-02,p99=1.861e-02,rel=2.596e-04
+INT8,BITSHIFT,U(-1,1),64,7168,7168,64x128x32_w4_v10,SKIP,v10 path-B not implemented
+INT8,LUT,U(-1,1),64,7168,7168,64x64x32_w4_v10,OK,ms=4.590,tflops=1.43,gbps=12.7,maxabs=3.949e-02,p99=1.861e-02,rel=2.596e-04
+INT8,BITSHIFT,U(-1,1),64,7168,7168,64x64x32_w4_v10,SKIP,v10 path-B not implemented
+INT8,LUT,U(-1,1),64,7168,7168,64x256x32_w8_v10,OK,ms=4.471,tflops=1.47,gbps=13.0,maxabs=3.949e-02,p99=1.861e-02,rel=2.596e-04
+INT8,BITSHIFT,U(-1,1),64,7168,7168,64x256x32_w8_v10,SKIP,v10 path-B not implemented
+INT8,LUT,U(-1,1),64,7168,7168,128x256x32_w8_v10,SKIP,invalid argument
+INT8,BITSHIFT,U(-1,1),64,7168,7168,128x256x32_w8_v10,SKIP,v10 path-B not implemented
+INT8,LUT,U(-1,1),64,7168,7168,128x128x32_w4_v11,OK,ms=5.398,tflops=1.22,gbps=10.8,maxabs=3.949e-02,p99=1.861e-02,rel=2.596e-04
+INT8,BITSHIFT,U(-1,1),64,7168,7168,128x128x32_w4_v11,SKIP,v11 path-B not implemented
+INT8,LUT,U(-1,1),64,7168,7168,64x128x32_w4_v11,OK,ms=4.325,tflops=1.52,gbps=13.5,maxabs=3.949e-02,p99=1.861e-02,rel=2.596e-04
+INT8,BITSHIFT,U(-1,1),64,7168,7168,64x128x32_w4_v11,SKIP,v11 path-B not implemented
+INT8,LUT,U(-1,1),64,7168,7168,128x256x32_w8_v11,OK,ms=5.984,tflops=1.10,gbps=9.7,maxabs=3.949e-02,p99=1.861e-02,rel=2.596e-04
+INT8,BITSHIFT,U(-1,1),64,7168,7168,128x256x32_w8_v11,SKIP,v11 path-B not implemented
+INT8,LUT,U(-1,1),64,7168,7168,64x256x32_w8_v11,OK,ms=4.404,tflops=1.49,gbps=13.2,maxabs=3.949e-02,p99=1.861e-02,rel=2.596e-04
+INT8,BITSHIFT,U(-1,1),64,7168,7168,64x256x32_w8_v11,SKIP,v11 path-B not implemented
+INT8,LUT,U(-1,1),64,7168,7168,128x128x16_w4_v11,OK,ms=4.770,tflops=1.38,gbps=12.2,maxabs=3.949e-02,p99=1.861e-02,rel=2.596e-04
+INT8,BITSHIFT,U(-1,1),64,7168,7168,128x128x16_w4_v11,SKIP,v11 path-B not implemented
+INT8,LUT,U(-1,1),64,7168,7168,64x128x16_w4_v11,OK,ms=3.946,tflops=1.67,gbps=14.8,maxabs=3.949e-02,p99=1.861e-02,rel=2.596e-04
+INT8,BITSHIFT,U(-1,1),64,7168,7168,64x128x16_w4_v11,SKIP,v11 path-B not implemented
+INT8,LUT,U(-1,1),64,7168,7168,128x256x16_w8_v11,OK,ms=6.727,tflops=0.98,gbps=8.7,maxabs=3.949e-02,p99=1.861e-02,rel=2.596e-04
+INT8,BITSHIFT,U(-1,1),64,7168,7168,128x256x16_w8_v11,SKIP,v11 path-B not implemented
+INT8,LUT,U(-1,1),64,7168,7168,64x256x16_w8_v11,OK,ms=3.813,tflops=1.72,gbps=15.3,maxabs=3.949e-02,p99=1.861e-02,rel=2.596e-04
+INT8,BITSHIFT,U(-1,1),64,7168,7168,64x256x16_w8_v11,SKIP,v11 path-B not implemented
+INT8,LUT,U(-1,1),64,7168,7168,64x256x16_w4f4_v11,OK,ms=5.717,tflops=1.15,gbps=10.2,maxabs=3.949e-02,p99=1.861e-02,rel=2.596e-04
+INT8,BITSHIFT,U(-1,1),64,7168,7168,64x256x16_w4f4_v11,SKIP,v11 path-B not implemented
+INT8,LUT,U(-1,1),64,7168,7168,128x256x16_w4f4_v11,OK,ms=7.780,tflops=0.85,gbps=7.5,maxabs=3.949e-02,p99=1.861e-02,rel=2.596e-04
+INT8,BITSHIFT,U(-1,1),64,7168,7168,128x256x16_w4f4_v11,SKIP,v11 path-B not implemented
+INT8,LUT,U(-1,1),64,7168,7168,32x128x16_w4_v11,OK,ms=4.474,tflops=1.47,gbps=13.0,maxabs=3.949e-02,p99=1.861e-02,rel=2.596e-04
+INT8,BITSHIFT,U(-1,1),64,7168,7168,32x128x16_w4_v11,SKIP,v11 path-B not implemented
+INT8,LUT,U(-1,1),64,7168,7168,32x256x16_w8_v11,OK,ms=4.263,tflops=1.54,gbps=13.7,maxabs=3.949e-02,p99=1.861e-02,rel=2.596e-04
+INT8,BITSHIFT,U(-1,1),64,7168,7168,32x256x16_w8_v11,SKIP,v11 path-B not implemented
+INT8,LUT,U(-1,1),64,7168,7168,32x128x32_w4_v11,OK,ms=4.914,tflops=1.34,gbps=11.9,maxabs=3.949e-02,p99=1.861e-02,rel=2.596e-04
+INT8,BITSHIFT,U(-1,1),64,7168,7168,32x128x32_w4_v11,SKIP,v11 path-B not implemented
+INT8,LUT,U(-1,1),64,7168,7168,192x128x16_w4_v11,OK,ms=6.145,tflops=1.07,gbps=9.5,maxabs=3.949e-02,p99=1.861e-02,rel=2.596e-04
+INT8,BITSHIFT,U(-1,1),64,7168,7168,192x128x16_w4_v11,SKIP,v11 path-B not implemented
+INT8,LUT,U(-1,1),64,7168,7168,256x128x16_w4_v11,OK,ms=8.472,tflops=0.78,gbps=6.9,maxabs=3.949e-02,p99=1.861e-02,rel=2.596e-04
+INT8,BITSHIFT,U(-1,1),64,7168,7168,256x128x16_w4_v11,SKIP,v11 path-B not implemented
+INT8,LUT,U(-1,1),64,7168,7168,128x128x64_w4_v11,SKIP,invalid argument
+INT8,BITSHIFT,U(-1,1),64,7168,7168,128x128x64_w4_v11,SKIP,v11 path-B not implemented
+INT8,LUT,U(-1,1),64,7168,7168,64x128x64_w4_v11,SKIP,invalid argument
+INT8,BITSHIFT,U(-1,1),64,7168,7168,64x128x64_w4_v11,SKIP,v11 path-B not implemented
+INT8,LUT,U(-1,1),64,7168,7168,64x256x64_w8_v11,SKIP,invalid argument
+INT8,BITSHIFT,U(-1,1),64,7168,7168,64x256x64_w8_v11,SKIP,v11 path-B not implemented
+INT8,LUT,U(-1,1),64,7168,7168,64x128x16_w2f4_v11,OK,ms=6.088,tflops=1.08,gbps=9.6,maxabs=3.949e-02,p99=1.861e-02,rel=2.596e-04
+INT8,BITSHIFT,U(-1,1),64,7168,7168,64x128x16_w2f4_v11,SKIP,v11 path-B not implemented
+INT8,LUT,U(-1,1),64,7168,7168,64x128x32_w2f4_v11,OK,ms=6.156,tflops=1.07,gbps=9.5,maxabs=3.949e-02,p99=1.861e-02,rel=2.596e-04
+INT8,BITSHIFT,U(-1,1),64,7168,7168,64x128x32_w2f4_v11,SKIP,v11 path-B not implemented
+INT8,LUT,U(-1,1),64,7168,7168,32x128x16_w2f4_v11,OK,ms=6.275,tflops=1.05,gbps=9.3,maxabs=3.949e-02,p99=1.861e-02,rel=2.596e-04
+INT8,BITSHIFT,U(-1,1),64,7168,7168,32x128x16_w2f4_v11,SKIP,v11 path-B not implemented
+INT8,LUT,U(-1,1),64,7168,7168,128x128x16_w4_v12,OK,ms=5.401,tflops=1.22,gbps=10.8,maxabs=2.259e+00,p99=6.036e-01,rel=5.469e-03
+INT8,BITSHIFT,U(-1,1),64,7168,7168,128x128x16_w4_v12,SKIP,v12 path-B not implemented
+INT8,LUT,U(-1,1),64,7168,7168,64x128x16_w4_v12,OK,ms=4.461,tflops=1.47,gbps=13.1,maxabs=2.259e+00,p99=6.036e-01,rel=5.469e-03
+INT8,BITSHIFT,U(-1,1),64,7168,7168,64x128x16_w4_v12,SKIP,v12 path-B not implemented
+INT8,LUT,U(-1,1),64,7168,7168,128x256x16_w8_v12,OK,ms=5.517,tflops=1.19,gbps=10.6,maxabs=2.259e+00,p99=6.036e-01,rel=5.469e-03
+INT8,BITSHIFT,U(-1,1),64,7168,7168,128x256x16_w8_v12,SKIP,v12 path-B not implemented
+INT8,LUT,U(-1,1),64,7168,7168,64x256x16_w8_v12,OK,ms=4.631,tflops=1.42,gbps=12.6,maxabs=2.259e+00,p99=6.036e-01,rel=5.469e-03
+INT8,BITSHIFT,U(-1,1),64,7168,7168,64x256x16_w8_v12,SKIP,v12 path-B not implemented
+INT8,LUT,U(-1,1),64,7168,7168,128x128x32_w4_v12,OK,ms=5.297,tflops=1.24,gbps=11.0,maxabs=2.259e+00,p99=6.036e-01,rel=5.469e-03
+INT8,BITSHIFT,U(-1,1),64,7168,7168,128x128x32_w4_v12,SKIP,v12 path-B not implemented
+INT8,LUT,U(-1,1),64,7168,7168,64x128x32_w4_v12,OK,ms=4.251,tflops=1.55,gbps=13.7,maxabs=2.259e+00,p99=6.036e-01,rel=5.469e-03
+INT8,BITSHIFT,U(-1,1),64,7168,7168,64x128x32_w4_v12,SKIP,v12 path-B not implemented
+INT8,LUT,U(-1,1),64,7168,7168,192x128x16_w4_v12,SKIP,invalid argument
+INT8,BITSHIFT,U(-1,1),64,7168,7168,192x128x16_w4_v12,SKIP,v12 path-B not implemented
+INT8,LUT,U(-1,1),64,7168,7168,256x128x16_w4_v12,SKIP,invalid argument
+INT8,BITSHIFT,U(-1,1),64,7168,7168,256x128x16_w4_v12,SKIP,v12 path-B not implemented
+INT8,LUT,U(-1,1),64,7168,7168,32x128x16_w4_v12,OK,ms=5.334,tflops=1.23,gbps=10.9,maxabs=2.259e+00,p99=6.036e-01,rel=5.469e-03
+INT8,BITSHIFT,U(-1,1),64,7168,7168,32x128x16_w4_v12,SKIP,v12 path-B not implemented
+INT8,LUT,U(-1,1),64,7168,7168,32x256x16_w8_v12,OK,ms=4.254,tflops=1.55,gbps=13.7,maxabs=2.259e+00,p99=6.036e-01,rel=5.469e-03
+INT8,BITSHIFT,U(-1,1),64,7168,7168,32x256x16_w8_v12,SKIP,v12 path-B not implemented
+INT8,LUT,U(-1,1),64,7168,7168,64x128x16_w2f4_v12,OK,ms=6.402,tflops=1.03,gbps=9.1,maxabs=2.259e+00,p99=6.036e-01,rel=5.469e-03
+INT8,BITSHIFT,U(-1,1),64,7168,7168,64x128x16_w2f4_v12,SKIP,v12 path-B not implemented
+INT8,LUT,U(-1,1),64,7168,7168,64x256x16_w4f4_v12,OK,ms=6.388,tflops=1.03,gbps=9.1,maxabs=2.259e+00,p99=6.036e-01,rel=5.469e-03
+INT8,BITSHIFT,U(-1,1),64,7168,7168,64x256x16_w4f4_v12,SKIP,v12 path-B not implemented
+INT8,LUT,U(-1,1),64,7168,7168,128x128x16_w4_v12_ms3,OK,ms=4.454,tflops=1.48,gbps=13.1,maxabs=2.259e+00,p99=6.036e-01,rel=5.469e-03
+INT8,BITSHIFT,U(-1,1),64,7168,7168,128x128x16_w4_v12_ms3,SKIP,v12_ms3 path-B not implemented
+INT8,LUT,U(-1,1),64,7168,7168,64x128x16_w4_v12_ms3,OK,ms=4.337,tflops=1.52,gbps=13.4,maxabs=2.259e+00,p99=6.036e-01,rel=5.469e-03
+INT8,BITSHIFT,U(-1,1),64,7168,7168,64x128x16_w4_v12_ms3,SKIP,v12_ms3 path-B not implemented
+INT8,LUT,U(-1,1),64,7168,7168,128x256x16_w8_v12_ms3,OK,ms=4.651,tflops=1.41,gbps=12.5,maxabs=2.259e+00,p99=6.036e-01,rel=5.469e-03
+INT8,BITSHIFT,U(-1,1),64,7168,7168,128x256x16_w8_v12_ms3,SKIP,v12_ms3 path-B not implemented
+INT8,LUT,U(-1,1),64,7168,7168,64x256x16_w8_v12_ms3,OK,ms=4.530,tflops=1.45,gbps=12.9,maxabs=2.259e+00,p99=6.036e-01,rel=5.469e-03
+INT8,BITSHIFT,U(-1,1),64,7168,7168,64x256x16_w8_v12_ms3,SKIP,v12_ms3 path-B not implemented
+INT8,LUT,U(-1,1),64,7168,7168,128x128x32_w4_v12_ms3,OK,ms=4.462,tflops=1.47,gbps=13.1,maxabs=2.259e+00,p99=6.036e-01,rel=5.469e-03
+INT8,BITSHIFT,U(-1,1),64,7168,7168,128x128x32_w4_v12_ms3,SKIP,v12_ms3 path-B not implemented
+INT8,LUT,U(-1,1),64,7168,7168,64x128x32_w4_v12_ms3,OK,ms=4.275,tflops=1.54,gbps=13.6,maxabs=2.259e+00,p99=6.036e-01,rel=5.469e-03
+INT8,BITSHIFT,U(-1,1),64,7168,7168,64x128x32_w4_v12_ms3,SKIP,v12_ms3 path-B not implemented
+INT8,LUT,U(-1,1),64,7168,7168,64x256x16_w4f4_v12_ms3,OK,ms=6.374,tflops=1.03,gbps=9.1,maxabs=2.259e+00,p99=6.036e-01,rel=5.469e-03
+INT8,BITSHIFT,U(-1,1),64,7168,7168,64x256x16_w4f4_v12_ms3,SKIP,v12_ms3 path-B not implemented
+INT8,LUT,U(-1,1),64,7168,7168,64x128x16_w2f4_v12_ms3,OK,ms=5.990,tflops=1.10,gbps=9.7,maxabs=2.259e+00,p99=6.036e-01,rel=5.469e-03
+INT8,BITSHIFT,U(-1,1),64,7168,7168,64x128x16_w2f4_v12_ms3,SKIP,v12_ms3 path-B not implemented
+INT8,LUT,U(-1,1),64,7168,7168,192x128x16_w4_v12_ms3_NEG,OK,ms=4.199,tflops=1.57,gbps=13.9,maxabs=2.259e+00,p99=6.036e-01,rel=5.469e-03
+INT8,BITSHIFT,U(-1,1),64,7168,7168,192x128x16_w4_v12_ms3_NEG,SKIP,v12_ms3 path-B not implemented
+INT8,LUT,U(-1,1),64,7168,7168,256x128x16_w4_v12_ms3_NEG,OK,ms=4.809,tflops=1.37,gbps=12.1,maxabs=2.259e+00,p99=6.036e-01,rel=5.469e-03

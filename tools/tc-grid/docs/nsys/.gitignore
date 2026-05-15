@@ -1,0 +1,3 @@
+# nsys raw report files (binary; commit only the derived CSV / PNG artifacts)
+*.nsys-rep
+*.sqlite

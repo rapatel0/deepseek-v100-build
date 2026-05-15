@@ -1,0 +1,2068 @@
+device: Tesla V100-SXM2-32GB, cc=7.0, smem=48KiB/cta
+
+=== cuBLAS FP16 GEMM ceiling (V100 TC peak target 125 TFLOPS) ===
+format,path,dist,M,N,K,tile,status,detail
+CUBLAS_FP16,REF,U(-1,1),1,4096,4096,cublas,OK,ms=0.072,tflops=0.46,gbps=465.1,maxabs=0.0e+0,p99=0.0e+0,rel=0.0e+0
+CUBLAS_FP16,REF,U(-1,1),16,4096,4096,cublas,OK,ms=0.063,tflops=8.49,gbps=534.8,maxabs=0.0e+0,p99=0.0e+0,rel=0.0e+0
+CUBLAS_FP16,REF,U(-1,1),64,4096,4096,cublas,OK,ms=0.120,tflops=17.86,gbps=287.8,maxabs=0.0e+0,p99=0.0e+0,rel=0.0e+0
+CUBLAS_FP16,REF,U(-1,1),128,4096,4096,cublas,OK,ms=0.100,tflops=42.81,gbps=355.4,maxabs=0.0e+0,p99=0.0e+0,rel=0.0e+0
+CUBLAS_FP16,REF,U(-1,1),256,4096,4096,cublas,OK,ms=0.145,tflops=59.44,gbps=261.2,maxabs=0.0e+0,p99=0.0e+0,rel=0.0e+0
+CUBLAS_FP16,REF,U(-1,1),512,4096,4096,cublas,OK,ms=0.251,tflops=68.35,gbps=166.9,maxabs=0.0e+0,p99=0.0e+0,rel=0.0e+0
+CUBLAS_FP16,REF,U(-1,1),1024,4096,4096,cublas,OK,ms=0.545,tflops=63.00,gbps=92.3,maxabs=0.0e+0,p99=0.0e+0,rel=0.0e+0
+CUBLAS_FP16,REF,U(-1,1),2048,4096,4096,cublas,OK,ms=0.829,tflops=82.93,gbps=81.0,maxabs=0.0e+0,p99=0.0e+0,rel=0.0e+0
+CUBLAS_FP16,REF,U(-1,1),1,7168,7168,cublas,OK,ms=0.197,tflops=0.52,gbps=521.0,maxabs=0.0e+0,p99=0.0e+0,rel=0.0e+0
+CUBLAS_FP16,REF,U(-1,1),16,7168,7168,cublas,OK,ms=0.232,tflops=7.08,gbps=444.6,maxabs=0.0e+0,p99=0.0e+0,rel=0.0e+0
+CUBLAS_FP16,REF,U(-1,1),64,7168,7168,cublas,OK,ms=0.348,tflops=18.92,gbps=300.9,maxabs=0.0e+0,p99=0.0e+0,rel=0.0e+0
+CUBLAS_FP16,REF,U(-1,1),128,7168,7168,cublas,OK,ms=0.397,tflops=33.12,gbps=268.0,maxabs=0.0e+0,p99=0.0e+0,rel=0.0e+0
+CUBLAS_FP16,REF,U(-1,1),256,7168,7168,cublas,OK,ms=0.478,tflops=55.06,gbps=230.5,maxabs=0.0e+0,p99=0.0e+0,rel=0.0e+0
+CUBLAS_FP16,REF,U(-1,1),512,7168,7168,cublas,OK,ms=0.684,tflops=76.88,gbps=171.6,maxabs=0.0e+0,p99=0.0e+0,rel=0.0e+0
+CUBLAS_FP16,REF,U(-1,1),1024,7168,7168,cublas,OK,ms=1.224,tflops=85.98,gbps=108.0,maxabs=0.0e+0,p99=0.0e+0,rel=0.0e+0
+CUBLAS_FP16,REF,U(-1,1),2048,7168,7168,cublas,OK,ms=2.369,tflops=88.85,gbps=68.2,maxabs=0.0e+0,p99=0.0e+0,rel=0.0e+0
+INT8,LUT,U(-1,1),1,4096,4096,16x64x32_w4,OK,ms=0.822,tflops=0.04,gbps=21.7,maxabs=1.897e-02,p99=1.446e-02,rel=2.592e-04
+INT8,BITSHIFT,U(-1,1),1,4096,4096,16x64x32_w4,OK,ms=0.504,tflops=0.07,gbps=35.4,maxabs=1.308e-02,p99=9.962e-03,rel=1.834e-04
+INT8,LUT,U(-1,1),1,4096,4096,16x128x32_w8,OK,ms=0.880,tflops=0.04,gbps=20.3,maxabs=1.897e-02,p99=1.446e-02,rel=2.592e-04
+INT8,BITSHIFT,U(-1,1),1,4096,4096,16x128x32_w8,OK,ms=0.595,tflops=0.06,gbps=30.0,maxabs=1.308e-02,p99=9.962e-03,rel=1.834e-04
+INT8,LUT,U(-1,1),1,4096,4096,16x128x32_w4f2,OK,ms=1.525,tflops=0.02,gbps=11.7,maxabs=1.897e-02,p99=1.446e-02,rel=2.592e-04
+INT8,BITSHIFT,U(-1,1),1,4096,4096,16x128x32_w4f2,SKIP,MF path-B not implemented
+INT8,LUT,U(-1,1),1,4096,4096,16x256x32_w4f4,OK,ms=2.881,tflops=0.01,gbps=6.2,maxabs=1.897e-02,p99=1.446e-02,rel=2.592e-04
+INT8,BITSHIFT,U(-1,1),1,4096,4096,16x256x32_w4f4,SKIP,MF path-B not implemented
+INT8,LUT,U(-1,1),1,4096,4096,128x64x32_w4_v1,OK,ms=1.116,tflops=0.03,gbps=16.0,maxabs=1.897e-02,p99=1.446e-02,rel=2.592e-04
+INT8,BITSHIFT,U(-1,1),1,4096,4096,128x64x32_w4_v1,SKIP,v1 path-B not implemented
+INT8,LUT,U(-1,1),1,4096,4096,128x128x32_w4_v1,OK,ms=1.802,tflops=0.02,gbps=9.9,maxabs=1.897e-02,p99=1.446e-02,rel=2.592e-04
+INT8,BITSHIFT,U(-1,1),1,4096,4096,128x128x32_w4_v1,SKIP,v1 path-B not implemented
+INT8,LUT,U(-1,1),1,4096,4096,128x256x32_w4_v1,OK,ms=3.914,tflops=0.01,gbps=4.6,maxabs=1.897e-02,p99=1.446e-02,rel=2.592e-04
+INT8,BITSHIFT,U(-1,1),1,4096,4096,128x256x32_w4_v1,SKIP,v1 path-B not implemented
+INT8,LUT,U(-1,1),1,4096,4096,128x256x32_w8_v1,OK,ms=1.894,tflops=0.02,gbps=9.4,maxabs=1.897e-02,p99=1.446e-02,rel=2.592e-04
+INT8,BITSHIFT,U(-1,1),1,4096,4096,128x256x32_w8_v1,SKIP,v1 path-B not implemented
+INT8,LUT,U(-1,1),1,4096,4096,64x64x32_w4_v1,OK,ms=0.853,tflops=0.04,gbps=20.9,maxabs=1.897e-02,p99=1.446e-02,rel=2.592e-04
+INT8,BITSHIFT,U(-1,1),1,4096,4096,64x64x32_w4_v1,SKIP,v1 path-B not implemented
+INT8,LUT,U(-1,1),1,4096,4096,64x128x32_w4_v1,OK,ms=1.516,tflops=0.02,gbps=11.8,maxabs=1.897e-02,p99=1.446e-02,rel=2.592e-04
+INT8,BITSHIFT,U(-1,1),1,4096,4096,64x128x32_w4_v1,SKIP,v1 path-B not implemented
+INT8,LUT,U(-1,1),1,4096,4096,128x64x32_w4_v2,OK,ms=0.427,tflops=0.08,gbps=41.9,maxabs=1.897e-02,p99=1.446e-02,rel=2.592e-04
+INT8,BITSHIFT,U(-1,1),1,4096,4096,128x64x32_w4_v2,SKIP,v2 path-B not implemented
+INT8,LUT,U(-1,1),1,4096,4096,128x128x32_w4_v2,OK,ms=0.568,tflops=0.06,gbps=31.4,maxabs=1.897e-02,p99=1.446e-02,rel=2.592e-04
+INT8,BITSHIFT,U(-1,1),1,4096,4096,128x128x32_w4_v2,SKIP,v2 path-B not implemented
+INT8,LUT,U(-1,1),1,4096,4096,128x256x32_w4_v2,OK,ms=1.261,tflops=0.03,gbps=14.2,maxabs=1.897e-02,p99=1.446e-02,rel=2.592e-04
+INT8,BITSHIFT,U(-1,1),1,4096,4096,128x256x32_w4_v2,SKIP,v2 path-B not implemented
+INT8,LUT,U(-1,1),1,4096,4096,128x256x32_w8_v2,OK,ms=0.799,tflops=0.04,gbps=22.3,maxabs=1.897e-02,p99=1.446e-02,rel=2.592e-04
+INT8,BITSHIFT,U(-1,1),1,4096,4096,128x256x32_w8_v2,SKIP,v2 path-B not implemented
+INT8,LUT,U(-1,1),1,4096,4096,64x64x32_w4_v2,OK,ms=0.282,tflops=0.12,gbps=63.4,maxabs=1.897e-02,p99=1.446e-02,rel=2.592e-04
+INT8,BITSHIFT,U(-1,1),1,4096,4096,64x64x32_w4_v2,SKIP,v2 path-B not implemented
+INT8,LUT,U(-1,1),1,4096,4096,64x128x32_w4_v2,OK,ms=0.384,tflops=0.09,gbps=46.5,maxabs=1.897e-02,p99=1.446e-02,rel=2.592e-04
+INT8,BITSHIFT,U(-1,1),1,4096,4096,64x128x32_w4_v2,SKIP,v2 path-B not implemented
+INT8,LUT,U(-1,1),16,4096,4096,16x64x32_w4,OK,ms=0.761,tflops=0.71,gbps=24.1,maxabs=5.875e-04,p99=1.507e-04,rel=1.537e-06
+INT8,BITSHIFT,U(-1,1),16,4096,4096,16x64x32_w4,OK,ms=0.672,tflops=0.80,gbps=27.3,maxabs=1.643e-02,p99=1.011e-02,rel=1.826e-04
+INT8,LUT,U(-1,1),16,4096,4096,16x128x32_w8,OK,ms=0.840,tflops=0.64,gbps=21.8,maxabs=5.875e-04,p99=1.507e-04,rel=1.537e-06
+INT8,BITSHIFT,U(-1,1),16,4096,4096,16x128x32_w8,OK,ms=0.810,tflops=0.66,gbps=22.6,maxabs=1.643e-02,p99=1.011e-02,rel=1.826e-04
+INT8,LUT,U(-1,1),16,4096,4096,16x128x32_w4f2,OK,ms=1.393,tflops=0.39,gbps=13.2,maxabs=5.875e-04,p99=1.507e-04,rel=1.537e-06
+INT8,BITSHIFT,U(-1,1),16,4096,4096,16x128x32_w4f2,SKIP,MF path-B not implemented
+INT8,LUT,U(-1,1),16,4096,4096,16x256x32_w4f4,OK,ms=2.627,tflops=0.20,gbps=7.0,maxabs=5.875e-04,p99=1.507e-04,rel=1.537e-06
+INT8,BITSHIFT,U(-1,1),16,4096,4096,16x256x32_w4f4,SKIP,MF path-B not implemented
+INT8,LUT,U(-1,1),16,4096,4096,128x64x32_w4_v1,OK,ms=1.009,tflops=0.53,gbps=18.2,maxabs=5.875e-04,p99=1.507e-04,rel=1.537e-06
+INT8,BITSHIFT,U(-1,1),16,4096,4096,128x64x32_w4_v1,SKIP,v1 path-B not implemented
+INT8,LUT,U(-1,1),16,4096,4096,128x128x32_w4_v1,OK,ms=1.640,tflops=0.33,gbps=11.2,maxabs=5.875e-04,p99=1.507e-04,rel=1.537e-06
+INT8,BITSHIFT,U(-1,1),16,4096,4096,128x128x32_w4_v1,SKIP,v1 path-B not implemented
+INT8,LUT,U(-1,1),16,4096,4096,128x256x32_w4_v1,OK,ms=3.711,tflops=0.14,gbps=4.9,maxabs=5.875e-04,p99=1.507e-04,rel=1.537e-06
+INT8,BITSHIFT,U(-1,1),16,4096,4096,128x256x32_w4_v1,SKIP,v1 path-B not implemented
+INT8,LUT,U(-1,1),16,4096,4096,128x256x32_w8_v1,OK,ms=1.865,tflops=0.29,gbps=9.8,maxabs=5.875e-04,p99=1.507e-04,rel=1.537e-06
+INT8,BITSHIFT,U(-1,1),16,4096,4096,128x256x32_w8_v1,SKIP,v1 path-B not implemented
+INT8,LUT,U(-1,1),16,4096,4096,64x64x32_w4_v1,OK,ms=0.838,tflops=0.64,gbps=21.9,maxabs=5.875e-04,p99=1.507e-04,rel=1.537e-06
+INT8,BITSHIFT,U(-1,1),16,4096,4096,64x64x32_w4_v1,SKIP,v1 path-B not implemented
+INT8,LUT,U(-1,1),16,4096,4096,64x128x32_w4_v1,OK,ms=1.508,tflops=0.36,gbps=12.2,maxabs=5.875e-04,p99=1.507e-04,rel=1.537e-06
+INT8,BITSHIFT,U(-1,1),16,4096,4096,64x128x32_w4_v1,SKIP,v1 path-B not implemented
+INT8,LUT,U(-1,1),16,4096,4096,128x64x32_w4_v2,OK,ms=0.444,tflops=1.21,gbps=41.3,maxabs=5.875e-04,p99=1.507e-04,rel=1.537e-06
+INT8,BITSHIFT,U(-1,1),16,4096,4096,128x64x32_w4_v2,SKIP,v2 path-B not implemented
+INT8,LUT,U(-1,1),16,4096,4096,128x128x32_w4_v2,OK,ms=0.570,tflops=0.94,gbps=32.2,maxabs=5.875e-04,p99=1.507e-04,rel=1.537e-06
+INT8,BITSHIFT,U(-1,1),16,4096,4096,128x128x32_w4_v2,SKIP,v2 path-B not implemented
+INT8,LUT,U(-1,1),16,4096,4096,128x256x32_w4_v2,OK,ms=1.246,tflops=0.43,gbps=14.7,maxabs=5.875e-04,p99=1.507e-04,rel=1.537e-06
+INT8,BITSHIFT,U(-1,1),16,4096,4096,128x256x32_w4_v2,SKIP,v2 path-B not implemented
+INT8,LUT,U(-1,1),16,4096,4096,128x256x32_w8_v2,OK,ms=0.763,tflops=0.70,gbps=24.0,maxabs=5.875e-04,p99=1.507e-04,rel=1.537e-06
+INT8,BITSHIFT,U(-1,1),16,4096,4096,128x256x32_w8_v2,SKIP,v2 path-B not implemented
+INT8,LUT,U(-1,1),16,4096,4096,64x64x32_w4_v2,OK,ms=0.302,tflops=1.78,gbps=60.8,maxabs=5.875e-04,p99=1.507e-04,rel=1.537e-06
+INT8,BITSHIFT,U(-1,1),16,4096,4096,64x64x32_w4_v2,SKIP,v2 path-B not implemented
+INT8,LUT,U(-1,1),16,4096,4096,64x128x32_w4_v2,OK,ms=0.402,tflops=1.34,gbps=45.7,maxabs=5.875e-04,p99=1.507e-04,rel=1.537e-06
+INT8,BITSHIFT,U(-1,1),16,4096,4096,64x128x32_w4_v2,SKIP,v2 path-B not implemented
+INT8,LUT,U(-1,1),64,4096,4096,16x64x32_w4,OK,ms=0.791,tflops=2.72,gbps=25.2,maxabs=5.951e-04,p99=1.526e-04,rel=1.547e-06
+INT8,BITSHIFT,U(-1,1),64,4096,4096,16x64x32_w4,OK,ms=0.996,tflops=2.16,gbps=20.0,maxabs=1.858e-02,p99=1.003e-02,rel=1.825e-04
+INT8,LUT,U(-1,1),64,4096,4096,16x128x32_w8,OK,ms=0.820,tflops=2.62,gbps=24.3,maxabs=5.951e-04,p99=1.526e-04,rel=1.547e-06
+INT8,BITSHIFT,U(-1,1),64,4096,4096,16x128x32_w8,OK,ms=1.062,tflops=2.02,gbps=18.8,maxabs=1.858e-02,p99=1.003e-02,rel=1.825e-04
+INT8,LUT,U(-1,1),64,4096,4096,16x128x32_w4f2,OK,ms=1.377,tflops=1.56,gbps=14.5,maxabs=5.951e-04,p99=1.526e-04,rel=1.547e-06
+INT8,BITSHIFT,U(-1,1),64,4096,4096,16x128x32_w4f2,SKIP,MF path-B not implemented
+INT8,LUT,U(-1,1),64,4096,4096,16x256x32_w4f4,OK,ms=2.515,tflops=0.85,gbps=7.9,maxabs=5.951e-04,p99=1.526e-04,rel=1.547e-06
+INT8,BITSHIFT,U(-1,1),64,4096,4096,16x256x32_w4f4,SKIP,MF path-B not implemented
+INT8,LUT,U(-1,1),64,4096,4096,128x64x32_w4_v1,OK,ms=1.120,tflops=1.92,gbps=17.8,maxabs=5.951e-04,p99=1.526e-04,rel=1.547e-06
+INT8,BITSHIFT,U(-1,1),64,4096,4096,128x64x32_w4_v1,SKIP,v1 path-B not implemented
+INT8,LUT,U(-1,1),64,4096,4096,128x128x32_w4_v1,OK,ms=1.724,tflops=1.25,gbps=11.6,maxabs=5.951e-04,p99=1.526e-04,rel=1.547e-06
+INT8,BITSHIFT,U(-1,1),64,4096,4096,128x128x32_w4_v1,SKIP,v1 path-B not implemented
+INT8,LUT,U(-1,1),64,4096,4096,128x256x32_w4_v1,OK,ms=4.100,tflops=0.52,gbps=4.9,maxabs=5.951e-04,p99=1.526e-04,rel=1.547e-06
+INT8,BITSHIFT,U(-1,1),64,4096,4096,128x256x32_w4_v1,SKIP,v1 path-B not implemented
+INT8,LUT,U(-1,1),64,4096,4096,128x256x32_w8_v1,OK,ms=1.887,tflops=1.14,gbps=10.6,maxabs=5.951e-04,p99=1.526e-04,rel=1.547e-06
+INT8,BITSHIFT,U(-1,1),64,4096,4096,128x256x32_w8_v1,SKIP,v1 path-B not implemented
+INT8,LUT,U(-1,1),64,4096,4096,64x64x32_w4_v1,OK,ms=0.951,tflops=2.26,gbps=21.0,maxabs=5.951e-04,p99=1.526e-04,rel=1.547e-06
+INT8,BITSHIFT,U(-1,1),64,4096,4096,64x64x32_w4_v1,SKIP,v1 path-B not implemented
+INT8,LUT,U(-1,1),64,4096,4096,64x128x32_w4_v1,OK,ms=1.585,tflops=1.35,gbps=12.6,maxabs=5.951e-04,p99=1.526e-04,rel=1.547e-06
+INT8,BITSHIFT,U(-1,1),64,4096,4096,64x128x32_w4_v1,SKIP,v1 path-B not implemented
+INT8,LUT,U(-1,1),64,4096,4096,128x64x32_w4_v2,OK,ms=0.568,tflops=3.78,gbps=35.1,maxabs=5.951e-04,p99=1.526e-04,rel=1.547e-06
+INT8,BITSHIFT,U(-1,1),64,4096,4096,128x64x32_w4_v2,SKIP,v2 path-B not implemented
+INT8,LUT,U(-1,1),64,4096,4096,128x128x32_w4_v2,OK,ms=0.681,tflops=3.15,gbps=29.3,maxabs=5.951e-04,p99=1.526e-04,rel=1.547e-06
+INT8,BITSHIFT,U(-1,1),64,4096,4096,128x128x32_w4_v2,SKIP,v2 path-B not implemented
+INT8,LUT,U(-1,1),64,4096,4096,128x256x32_w4_v2,OK,ms=1.309,tflops=1.64,gbps=15.2,maxabs=5.951e-04,p99=1.526e-04,rel=1.547e-06
+INT8,BITSHIFT,U(-1,1),64,4096,4096,128x256x32_w4_v2,SKIP,v2 path-B not implemented
+INT8,LUT,U(-1,1),64,4096,4096,128x256x32_w8_v2,OK,ms=0.830,tflops=2.59,gbps=24.0,maxabs=5.951e-04,p99=1.526e-04,rel=1.547e-06
+INT8,BITSHIFT,U(-1,1),64,4096,4096,128x256x32_w8_v2,SKIP,v2 path-B not implemented
+INT8,LUT,U(-1,1),64,4096,4096,64x64x32_w4_v2,OK,ms=0.430,tflops=5.00,gbps=46.3,maxabs=5.951e-04,p99=1.526e-04,rel=1.547e-06
+INT8,BITSHIFT,U(-1,1),64,4096,4096,64x64x32_w4_v2,SKIP,v2 path-B not implemented
+INT8,LUT,U(-1,1),64,4096,4096,64x128x32_w4_v2,OK,ms=0.510,tflops=4.21,gbps=39.0,maxabs=5.951e-04,p99=1.526e-04,rel=1.547e-06
+INT8,BITSHIFT,U(-1,1),64,4096,4096,64x128x32_w4_v2,SKIP,v2 path-B not implemented
+INT8,LUT,U(-1,1),128,4096,4096,16x64x32_w4,OK,ms=0.918,tflops=4.68,gbps=24.0,maxabs=5.417e-04,p99=1.278e-04,rel=1.328e-06
+INT8,BITSHIFT,U(-1,1),128,4096,4096,16x64x32_w4,OK,ms=1.515,tflops=2.83,gbps=14.5,maxabs=1.857e-02,p99=1.003e-02,rel=1.827e-04
+INT8,LUT,U(-1,1),128,4096,4096,16x128x32_w8,OK,ms=0.956,tflops=4.49,gbps=23.0,maxabs=5.417e-04,p99=1.278e-04,rel=1.328e-06
+INT8,BITSHIFT,U(-1,1),128,4096,4096,16x128x32_w8,OK,ms=1.758,tflops=2.44,gbps=12.5,maxabs=1.857e-02,p99=1.003e-02,rel=1.827e-04
+INT8,LUT,U(-1,1),128,4096,4096,16x128x32_w4f2,OK,ms=1.477,tflops=2.91,gbps=14.9,maxabs=5.417e-04,p99=1.278e-04,rel=1.328e-06
+INT8,BITSHIFT,U(-1,1),128,4096,4096,16x128x32_w4f2,SKIP,MF path-B not implemented
+INT8,LUT,U(-1,1),128,4096,4096,16x256x32_w4f4,OK,ms=2.541,tflops=1.69,gbps=8.7,maxabs=5.417e-04,p99=1.278e-04,rel=1.328e-06
+INT8,BITSHIFT,U(-1,1),128,4096,4096,16x256x32_w4f4,SKIP,MF path-B not implemented
+INT8,LUT,U(-1,1),128,4096,4096,128x64x32_w4_v1,OK,ms=1.261,tflops=3.41,gbps=17.5,maxabs=5.417e-04,p99=1.278e-04,rel=1.328e-06
+INT8,BITSHIFT,U(-1,1),128,4096,4096,128x64x32_w4_v1,SKIP,v1 path-B not implemented
+INT8,LUT,U(-1,1),128,4096,4096,128x128x32_w4_v1,OK,ms=1.885,tflops=2.28,gbps=11.7,maxabs=5.417e-04,p99=1.278e-04,rel=1.328e-06
+INT8,BITSHIFT,U(-1,1),128,4096,4096,128x128x32_w4_v1,SKIP,v1 path-B not implemented
+INT8,LUT,U(-1,1),128,4096,4096,128x256x32_w4_v1,OK,ms=4.686,tflops=0.92,gbps=4.7,maxabs=5.417e-04,p99=1.278e-04,rel=1.328e-06
+INT8,BITSHIFT,U(-1,1),128,4096,4096,128x256x32_w4_v1,SKIP,v1 path-B not implemented
+INT8,LUT,U(-1,1),128,4096,4096,128x256x32_w8_v1,OK,ms=1.981,tflops=2.17,gbps=11.1,maxabs=5.417e-04,p99=1.278e-04,rel=1.328e-06
+INT8,BITSHIFT,U(-1,1),128,4096,4096,128x256x32_w8_v1,SKIP,v1 path-B not implemented
+INT8,LUT,U(-1,1),128,4096,4096,64x64x32_w4_v1,OK,ms=0.954,tflops=4.50,gbps=23.1,maxabs=5.417e-04,p99=1.278e-04,rel=1.328e-06
+INT8,BITSHIFT,U(-1,1),128,4096,4096,64x64x32_w4_v1,SKIP,v1 path-B not implemented
+INT8,LUT,U(-1,1),128,4096,4096,64x128x32_w4_v1,OK,ms=1.569,tflops=2.74,gbps=14.0,maxabs=5.417e-04,p99=1.278e-04,rel=1.328e-06
+INT8,BITSHIFT,U(-1,1),128,4096,4096,64x128x32_w4_v1,SKIP,v1 path-B not implemented
+INT8,LUT,U(-1,1),128,4096,4096,128x64x32_w4_v2,OK,ms=0.754,tflops=5.70,gbps=29.2,maxabs=5.417e-04,p99=1.278e-04,rel=1.328e-06
+INT8,BITSHIFT,U(-1,1),128,4096,4096,128x64x32_w4_v2,SKIP,v2 path-B not implemented
+INT8,LUT,U(-1,1),128,4096,4096,128x128x32_w4_v2,OK,ms=0.859,tflops=5.00,gbps=25.6,maxabs=5.417e-04,p99=1.278e-04,rel=1.328e-06
+INT8,BITSHIFT,U(-1,1),128,4096,4096,128x128x32_w4_v2,SKIP,v2 path-B not implemented
+INT8,LUT,U(-1,1),128,4096,4096,128x256x32_w4_v2,OK,ms=1.484,tflops=2.89,gbps=14.8,maxabs=5.417e-04,p99=1.278e-04,rel=1.328e-06
+INT8,BITSHIFT,U(-1,1),128,4096,4096,128x256x32_w4_v2,SKIP,v2 path-B not implemented
+INT8,LUT,U(-1,1),128,4096,4096,128x256x32_w8_v2,OK,ms=0.913,tflops=4.71,gbps=24.1,maxabs=5.417e-04,p99=1.278e-04,rel=1.328e-06
+INT8,BITSHIFT,U(-1,1),128,4096,4096,128x256x32_w8_v2,SKIP,v2 path-B not implemented
+INT8,LUT,U(-1,1),128,4096,4096,64x64x32_w4_v2,OK,ms=0.466,tflops=9.22,gbps=47.3,maxabs=5.417e-04,p99=1.278e-04,rel=1.328e-06
+INT8,BITSHIFT,U(-1,1),128,4096,4096,64x64x32_w4_v2,SKIP,v2 path-B not implemented
+INT8,LUT,U(-1,1),128,4096,4096,64x128x32_w4_v2,OK,ms=0.511,tflops=8.41,gbps=43.1,maxabs=5.417e-04,p99=1.278e-04,rel=1.328e-06
+INT8,BITSHIFT,U(-1,1),128,4096,4096,64x128x32_w4_v2,SKIP,v2 path-B not implemented
+INT8,LUT,U(-1,1),256,4096,4096,16x64x32_w4,OK,ms=1.826,tflops=4.70,gbps=14.4,maxabs=6.104e-04,p99=1.450e-04,rel=1.504e-06
+INT8,BITSHIFT,U(-1,1),256,4096,4096,16x64x32_w4,OK,ms=3.486,tflops=2.46,gbps=7.5,maxabs=1.858e-02,p99=1.001e-02,rel=1.824e-04
+INT8,LUT,U(-1,1),256,4096,4096,16x128x32_w8,OK,ms=1.911,tflops=4.49,gbps=13.7,maxabs=6.104e-04,p99=1.450e-04,rel=1.504e-06
+INT8,BITSHIFT,U(-1,1),256,4096,4096,16x128x32_w8,OK,ms=3.557,tflops=2.41,gbps=7.4,maxabs=1.858e-02,p99=1.001e-02,rel=1.824e-04
+INT8,LUT,U(-1,1),256,4096,4096,16x128x32_w4f2,OK,ms=1.672,tflops=5.14,gbps=15.7,maxabs=6.104e-04,p99=1.450e-04,rel=1.504e-06
+INT8,BITSHIFT,U(-1,1),256,4096,4096,16x128x32_w4f2,SKIP,MF path-B not implemented
+INT8,LUT,U(-1,1),256,4096,4096,16x256x32_w4f4,OK,ms=2.726,tflops=3.15,gbps=9.6,maxabs=6.104e-04,p99=1.450e-04,rel=1.504e-06
+INT8,BITSHIFT,U(-1,1),256,4096,4096,16x256x32_w4f4,SKIP,MF path-B not implemented
+INT8,LUT,U(-1,1),256,4096,4096,128x64x32_w4_v1,OK,ms=1.267,tflops=6.78,gbps=20.7,maxabs=6.104e-04,p99=1.450e-04,rel=1.504e-06
+INT8,BITSHIFT,U(-1,1),256,4096,4096,128x64x32_w4_v1,SKIP,v1 path-B not implemented
+INT8,LUT,U(-1,1),256,4096,4096,128x128x32_w4_v1,OK,ms=1.859,tflops=4.62,gbps=14.1,maxabs=6.104e-04,p99=1.450e-04,rel=1.504e-06
+INT8,BITSHIFT,U(-1,1),256,4096,4096,128x128x32_w4_v1,SKIP,v1 path-B not implemented
+INT8,LUT,U(-1,1),256,4096,4096,128x256x32_w4_v1,OK,ms=4.625,tflops=1.86,gbps=5.7,maxabs=6.104e-04,p99=1.450e-04,rel=1.504e-06
+INT8,BITSHIFT,U(-1,1),256,4096,4096,128x256x32_w4_v1,SKIP,v1 path-B not implemented
+INT8,LUT,U(-1,1),256,4096,4096,128x256x32_w8_v1,OK,ms=1.928,tflops=4.46,gbps=13.6,maxabs=6.104e-04,p99=1.450e-04,rel=1.504e-06
+INT8,BITSHIFT,U(-1,1),256,4096,4096,128x256x32_w8_v1,SKIP,v1 path-B not implemented
+INT8,LUT,U(-1,1),256,4096,4096,64x64x32_w4_v1,OK,ms=1.075,tflops=7.99,gbps=24.4,maxabs=6.104e-04,p99=1.450e-04,rel=1.504e-06
+INT8,BITSHIFT,U(-1,1),256,4096,4096,64x64x32_w4_v1,SKIP,v1 path-B not implemented
+INT8,LUT,U(-1,1),256,4096,4096,64x128x32_w4_v1,OK,ms=1.583,tflops=5.42,gbps=16.6,maxabs=6.104e-04,p99=1.450e-04,rel=1.504e-06
+INT8,BITSHIFT,U(-1,1),256,4096,4096,64x128x32_w4_v1,SKIP,v1 path-B not implemented
+INT8,LUT,U(-1,1),256,4096,4096,128x64x32_w4_v2,OK,ms=0.760,tflops=11.31,gbps=34.5,maxabs=6.104e-04,p99=1.450e-04,rel=1.504e-06
+INT8,BITSHIFT,U(-1,1),256,4096,4096,128x64x32_w4_v2,SKIP,v2 path-B not implemented
+INT8,LUT,U(-1,1),256,4096,4096,128x128x32_w4_v2,OK,ms=0.858,tflops=10.01,gbps=30.5,maxabs=6.104e-04,p99=1.450e-04,rel=1.504e-06
+INT8,BITSHIFT,U(-1,1),256,4096,4096,128x128x32_w4_v2,SKIP,v2 path-B not implemented
+INT8,LUT,U(-1,1),256,4096,4096,128x256x32_w4_v2,OK,ms=1.477,tflops=5.82,gbps=17.8,maxabs=6.104e-04,p99=1.450e-04,rel=1.504e-06
+INT8,BITSHIFT,U(-1,1),256,4096,4096,128x256x32_w4_v2,SKIP,v2 path-B not implemented
+INT8,LUT,U(-1,1),256,4096,4096,128x256x32_w8_v2,OK,ms=0.908,tflops=9.46,gbps=28.9,maxabs=6.104e-04,p99=1.450e-04,rel=1.504e-06
+INT8,BITSHIFT,U(-1,1),256,4096,4096,128x256x32_w8_v2,SKIP,v2 path-B not implemented
+INT8,LUT,U(-1,1),256,4096,4096,64x64x32_w4_v2,OK,ms=0.692,tflops=12.41,gbps=37.9,maxabs=6.104e-04,p99=1.450e-04,rel=1.504e-06
+INT8,BITSHIFT,U(-1,1),256,4096,4096,64x64x32_w4_v2,SKIP,v2 path-B not implemented
+INT8,LUT,U(-1,1),256,4096,4096,64x128x32_w4_v2,OK,ms=0.618,tflops=13.90,gbps=42.4,maxabs=6.104e-04,p99=1.450e-04,rel=1.504e-06
+INT8,BITSHIFT,U(-1,1),256,4096,4096,64x128x32_w4_v2,SKIP,v2 path-B not implemented
+INT8,LUT,U(-1,1),512,4096,4096,16x64x32_w4,OK,ms=3.661,tflops=4.69,gbps=9.5,maxabs=5.569e-04,p99=1.297e-04,rel=1.329e-06
+INT8,BITSHIFT,U(-1,1),512,4096,4096,16x64x32_w4,OK,ms=6.305,tflops=2.72,gbps=5.5,maxabs=1.982e-02,p99=1.001e-02,rel=1.824e-04
+INT8,LUT,U(-1,1),512,4096,4096,16x128x32_w8,OK,ms=3.839,tflops=4.48,gbps=9.0,maxabs=5.569e-04,p99=1.297e-04,rel=1.329e-06
+INT8,BITSHIFT,U(-1,1),512,4096,4096,16x128x32_w8,OK,ms=6.479,tflops=2.65,gbps=5.3,maxabs=1.982e-02,p99=1.001e-02,rel=1.824e-04
+INT8,LUT,U(-1,1),512,4096,4096,16x128x32_w4f2,OK,ms=3.205,tflops=5.36,gbps=10.8,maxabs=5.569e-04,p99=1.297e-04,rel=1.329e-06
+INT8,BITSHIFT,U(-1,1),512,4096,4096,16x128x32_w4f2,SKIP,MF path-B not implemented
+INT8,LUT,U(-1,1),512,4096,4096,16x256x32_w4f4,OK,ms=5.455,tflops=3.15,gbps=6.3,maxabs=5.569e-04,p99=1.297e-04,rel=1.329e-06
+INT8,BITSHIFT,U(-1,1),512,4096,4096,16x256x32_w4f4,SKIP,MF path-B not implemented
+INT8,LUT,U(-1,1),512,4096,4096,128x64x32_w4_v1,OK,ms=1.536,tflops=11.18,gbps=22.5,maxabs=5.569e-04,p99=1.297e-04,rel=1.329e-06
+INT8,BITSHIFT,U(-1,1),512,4096,4096,128x64x32_w4_v1,SKIP,v1 path-B not implemented
+INT8,LUT,U(-1,1),512,4096,4096,128x128x32_w4_v1,OK,ms=1.885,tflops=9.11,gbps=18.4,maxabs=5.569e-04,p99=1.297e-04,rel=1.329e-06
+INT8,BITSHIFT,U(-1,1),512,4096,4096,128x128x32_w4_v1,SKIP,v1 path-B not implemented
+INT8,LUT,U(-1,1),512,4096,4096,128x256x32_w4_v1,OK,ms=4.838,tflops=3.55,gbps=7.2,maxabs=5.569e-04,p99=1.297e-04,rel=1.329e-06
+INT8,BITSHIFT,U(-1,1),512,4096,4096,128x256x32_w4_v1,SKIP,v1 path-B not implemented
+INT8,LUT,U(-1,1),512,4096,4096,128x256x32_w8_v1,OK,ms=1.907,tflops=9.01,gbps=18.1,maxabs=5.569e-04,p99=1.297e-04,rel=1.329e-06
+INT8,BITSHIFT,U(-1,1),512,4096,4096,128x256x32_w8_v1,SKIP,v1 path-B not implemented
+INT8,LUT,U(-1,1),512,4096,4096,64x64x32_w4_v1,OK,ms=2.273,tflops=7.56,gbps=15.2,maxabs=5.569e-04,p99=1.297e-04,rel=1.329e-06
+INT8,BITSHIFT,U(-1,1),512,4096,4096,64x64x32_w4_v1,SKIP,v1 path-B not implemented
+INT8,LUT,U(-1,1),512,4096,4096,64x128x32_w4_v1,OK,ms=3.275,tflops=5.25,gbps=10.6,maxabs=5.569e-04,p99=1.297e-04,rel=1.329e-06
+INT8,BITSHIFT,U(-1,1),512,4096,4096,64x128x32_w4_v1,SKIP,v1 path-B not implemented
+INT8,LUT,U(-1,1),512,4096,4096,128x64x32_w4_v2,OK,ms=1.129,tflops=15.21,gbps=30.6,maxabs=5.569e-04,p99=1.297e-04,rel=1.329e-06
+INT8,BITSHIFT,U(-1,1),512,4096,4096,128x64x32_w4_v2,SKIP,v2 path-B not implemented
+INT8,LUT,U(-1,1),512,4096,4096,128x128x32_w4_v2,OK,ms=0.961,tflops=17.88,gbps=36.0,maxabs=5.569e-04,p99=1.297e-04,rel=1.329e-06
+INT8,BITSHIFT,U(-1,1),512,4096,4096,128x128x32_w4_v2,SKIP,v2 path-B not implemented
+INT8,LUT,U(-1,1),512,4096,4096,128x256x32_w4_v2,OK,ms=1.534,tflops=11.20,gbps=22.6,maxabs=5.569e-04,p99=1.297e-04,rel=1.329e-06
+INT8,BITSHIFT,U(-1,1),512,4096,4096,128x256x32_w4_v2,SKIP,v2 path-B not implemented
+INT8,LUT,U(-1,1),512,4096,4096,128x256x32_w8_v2,OK,ms=0.907,tflops=18.94,gbps=38.1,maxabs=5.569e-04,p99=1.297e-04,rel=1.329e-06
+INT8,BITSHIFT,U(-1,1),512,4096,4096,128x256x32_w8_v2,SKIP,v2 path-B not implemented
+INT8,LUT,U(-1,1),512,4096,4096,64x64x32_w4_v2,OK,ms=1.464,tflops=11.74,gbps=23.6,maxabs=5.569e-04,p99=1.297e-04,rel=1.329e-06
+INT8,BITSHIFT,U(-1,1),512,4096,4096,64x64x32_w4_v2,SKIP,v2 path-B not implemented
+INT8,LUT,U(-1,1),512,4096,4096,64x128x32_w4_v2,OK,ms=0.949,tflops=18.11,gbps=36.5,maxabs=5.569e-04,p99=1.297e-04,rel=1.329e-06
+INT8,BITSHIFT,U(-1,1),512,4096,4096,64x128x32_w4_v2,SKIP,v2 path-B not implemented
+INT8,LUT,U(-1,1),1024,4096,4096,16x64x32_w4,OK,ms=6.517,tflops=5.27,gbps=7.9,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+INT8,BITSHIFT,U(-1,1),1024,4096,4096,16x64x32_w4,OK,ms=12.297,tflops=2.79,gbps=4.2,maxabs=2.073e-02,p99=1.001e-02,rel=1.823e-04
+INT8,LUT,U(-1,1),1024,4096,4096,16x128x32_w8,OK,ms=7.068,tflops=4.86,gbps=7.3,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+INT8,BITSHIFT,U(-1,1),1024,4096,4096,16x128x32_w8,OK,ms=12.465,tflops=2.76,gbps=4.1,maxabs=2.073e-02,p99=1.001e-02,rel=1.823e-04
+INT8,LUT,U(-1,1),1024,4096,4096,16x128x32_w4f2,OK,ms=6.404,tflops=5.36,gbps=8.0,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+INT8,BITSHIFT,U(-1,1),1024,4096,4096,16x128x32_w4f2,SKIP,MF path-B not implemented
+INT8,LUT,U(-1,1),1024,4096,4096,16x256x32_w4f4,OK,ms=10.851,tflops=3.17,gbps=4.7,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+INT8,BITSHIFT,U(-1,1),1024,4096,4096,16x256x32_w4f4,SKIP,MF path-B not implemented
+INT8,LUT,U(-1,1),1024,4096,4096,128x64x32_w4_v1,OK,ms=3.150,tflops=10.91,gbps=16.3,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+INT8,BITSHIFT,U(-1,1),1024,4096,4096,128x64x32_w4_v1,SKIP,v1 path-B not implemented
+INT8,LUT,U(-1,1),1024,4096,4096,128x128x32_w4_v1,OK,ms=3.975,tflops=8.64,gbps=12.9,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+INT8,BITSHIFT,U(-1,1),1024,4096,4096,128x128x32_w4_v1,SKIP,v1 path-B not implemented
+INT8,LUT,U(-1,1),1024,4096,4096,128x256x32_w4_v1,OK,ms=6.019,tflops=5.71,gbps=8.5,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+INT8,BITSHIFT,U(-1,1),1024,4096,4096,128x256x32_w4_v1,SKIP,v1 path-B not implemented
+INT8,LUT,U(-1,1),1024,4096,4096,128x256x32_w8_v1,OK,ms=3.806,tflops=9.03,gbps=13.5,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+INT8,BITSHIFT,U(-1,1),1024,4096,4096,128x256x32_w8_v1,SKIP,v1 path-B not implemented
+INT8,LUT,U(-1,1),1024,4096,4096,64x64x32_w4_v1,OK,ms=3.468,tflops=9.91,gbps=14.8,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+INT8,BITSHIFT,U(-1,1),1024,4096,4096,64x64x32_w4_v1,SKIP,v1 path-B not implemented
+INT8,LUT,U(-1,1),1024,4096,4096,64x128x32_w4_v1,OK,ms=5.198,tflops=6.61,gbps=9.9,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+INT8,BITSHIFT,U(-1,1),1024,4096,4096,64x128x32_w4_v1,SKIP,v1 path-B not implemented
+INT8,LUT,U(-1,1),1024,4096,4096,128x64x32_w4_v2,OK,ms=2.305,tflops=14.91,gbps=22.3,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+INT8,BITSHIFT,U(-1,1),1024,4096,4096,128x64x32_w4_v2,SKIP,v2 path-B not implemented
+INT8,LUT,U(-1,1),1024,4096,4096,128x128x32_w4_v2,OK,ms=2.048,tflops=16.77,gbps=25.1,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+INT8,BITSHIFT,U(-1,1),1024,4096,4096,128x128x32_w4_v2,SKIP,v2 path-B not implemented
+INT8,LUT,U(-1,1),1024,4096,4096,128x256x32_w4_v2,OK,ms=2.867,tflops=11.98,gbps=17.9,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+INT8,BITSHIFT,U(-1,1),1024,4096,4096,128x256x32_w4_v2,SKIP,v2 path-B not implemented
+INT8,LUT,U(-1,1),1024,4096,4096,128x256x32_w8_v2,OK,ms=1.813,tflops=18.95,gbps=28.3,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+INT8,BITSHIFT,U(-1,1),1024,4096,4096,128x256x32_w8_v2,SKIP,v2 path-B not implemented
+INT8,LUT,U(-1,1),1024,4096,4096,64x64x32_w4_v2,OK,ms=2.464,tflops=13.94,gbps=20.9,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+INT8,BITSHIFT,U(-1,1),1024,4096,4096,64x64x32_w4_v2,SKIP,v2 path-B not implemented
+INT8,LUT,U(-1,1),1024,4096,4096,64x128x32_w4_v2,OK,ms=1.910,tflops=17.99,gbps=26.9,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+INT8,BITSHIFT,U(-1,1),1024,4096,4096,64x128x32_w4_v2,SKIP,v2 path-B not implemented
+INT8,LUT,U(-1,1),2048,4096,4096,16x64x32_w4,OK,ms=12.291,tflops=5.59,gbps=6.9,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+INT8,BITSHIFT,U(-1,1),2048,4096,4096,16x64x32_w4,OK,ms=24.041,tflops=2.86,gbps=3.5,maxabs=2.073e-02,p99=1.001e-02,rel=1.822e-04
+INT8,LUT,U(-1,1),2048,4096,4096,16x128x32_w8,OK,ms=13.174,tflops=5.22,gbps=6.4,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+INT8,BITSHIFT,U(-1,1),2048,4096,4096,16x128x32_w8,OK,ms=23.984,tflops=2.87,gbps=3.5,maxabs=2.073e-02,p99=1.001e-02,rel=1.822e-04
+INT8,LUT,U(-1,1),2048,4096,4096,16x128x32_w4f2,OK,ms=12.844,tflops=5.35,gbps=6.6,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+INT8,BITSHIFT,U(-1,1),2048,4096,4096,16x128x32_w4f2,SKIP,MF path-B not implemented
+INT8,LUT,U(-1,1),2048,4096,4096,16x256x32_w4f4,OK,ms=18.852,tflops=3.65,gbps=4.5,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+INT8,BITSHIFT,U(-1,1),2048,4096,4096,16x256x32_w4f4,SKIP,MF path-B not implemented
+INT8,LUT,U(-1,1),2048,4096,4096,128x64x32_w4_v1,OK,ms=6.422,tflops=10.70,gbps=13.2,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+INT8,BITSHIFT,U(-1,1),2048,4096,4096,128x64x32_w4_v1,SKIP,v1 path-B not implemented
+INT8,LUT,U(-1,1),2048,4096,4096,128x128x32_w4_v1,OK,ms=8.164,tflops=8.42,gbps=10.4,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+INT8,BITSHIFT,U(-1,1),2048,4096,4096,128x128x32_w4_v1,SKIP,v1 path-B not implemented
+INT8,LUT,U(-1,1),2048,4096,4096,128x256x32_w4_v1,OK,ms=12.487,tflops=5.50,gbps=6.8,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+INT8,BITSHIFT,U(-1,1),2048,4096,4096,128x256x32_w4_v1,SKIP,v1 path-B not implemented
+INT8,LUT,U(-1,1),2048,4096,4096,128x256x32_w8_v1,OK,ms=7.671,tflops=8.96,gbps=11.1,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+INT8,BITSHIFT,U(-1,1),2048,4096,4096,128x256x32_w8_v1,SKIP,v1 path-B not implemented
+INT8,LUT,U(-1,1),2048,4096,4096,64x64x32_w4_v1,OK,ms=6.886,tflops=9.98,gbps=12.3,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+INT8,BITSHIFT,U(-1,1),2048,4096,4096,64x64x32_w4_v1,SKIP,v1 path-B not implemented
+INT8,LUT,U(-1,1),2048,4096,4096,64x128x32_w4_v1,OK,ms=8.572,tflops=8.02,gbps=9.9,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+INT8,BITSHIFT,U(-1,1),2048,4096,4096,64x128x32_w4_v1,SKIP,v1 path-B not implemented
+INT8,LUT,U(-1,1),2048,4096,4096,128x64x32_w4_v2,OK,ms=4.628,tflops=14.85,gbps=18.4,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+INT8,BITSHIFT,U(-1,1),2048,4096,4096,128x64x32_w4_v2,SKIP,v2 path-B not implemented
+INT8,LUT,U(-1,1),2048,4096,4096,128x128x32_w4_v2,OK,ms=4.187,tflops=16.41,gbps=20.3,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+INT8,BITSHIFT,U(-1,1),2048,4096,4096,128x128x32_w4_v2,SKIP,v2 path-B not implemented
+INT8,LUT,U(-1,1),2048,4096,4096,128x256x32_w4_v2,OK,ms=6.362,tflops=10.80,gbps=13.4,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+INT8,BITSHIFT,U(-1,1),2048,4096,4096,128x256x32_w4_v2,SKIP,v2 path-B not implemented
+INT8,LUT,U(-1,1),2048,4096,4096,128x256x32_w8_v2,OK,ms=3.629,tflops=18.94,gbps=23.4,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+INT8,BITSHIFT,U(-1,1),2048,4096,4096,128x256x32_w8_v2,SKIP,v2 path-B not implemented
+INT8,LUT,U(-1,1),2048,4096,4096,64x64x32_w4_v2,OK,ms=4.755,tflops=14.45,gbps=17.9,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+INT8,BITSHIFT,U(-1,1),2048,4096,4096,64x64x32_w4_v2,SKIP,v2 path-B not implemented
+INT8,LUT,U(-1,1),2048,4096,4096,64x128x32_w4_v2,OK,ms=3.553,tflops=19.34,gbps=23.9,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+INT8,BITSHIFT,U(-1,1),2048,4096,4096,64x128x32_w4_v2,SKIP,v2 path-B not implemented
+INT8,LUT,U(-1,1),1,7168,7168,16x64x32_w4,OK,ms=1.474,tflops=0.07,gbps=37.1,maxabs=2.655e-02,p99=1.900e-02,rel=2.590e-04
+INT8,BITSHIFT,U(-1,1),1,7168,7168,16x64x32_w4,OK,ms=0.906,tflops=0.11,gbps=60.3,maxabs=1.870e-02,p99=1.344e-02,rel=1.818e-04
+INT8,LUT,U(-1,1),1,7168,7168,16x128x32_w8,OK,ms=1.428,tflops=0.07,gbps=38.3,maxabs=2.655e-02,p99=1.900e-02,rel=2.590e-04
+INT8,BITSHIFT,U(-1,1),1,7168,7168,16x128x32_w8,OK,ms=0.942,tflops=0.11,gbps=58.0,maxabs=1.870e-02,p99=1.344e-02,rel=1.818e-04
+INT8,LUT,U(-1,1),1,7168,7168,16x128x32_w4f2,OK,ms=2.542,tflops=0.04,gbps=21.5,maxabs=2.655e-02,p99=1.900e-02,rel=2.590e-04
+INT8,BITSHIFT,U(-1,1),1,7168,7168,16x128x32_w4f2,SKIP,MF path-B not implemented
+INT8,LUT,U(-1,1),1,7168,7168,16x256x32_w4f4,OK,ms=4.774,tflops=0.02,gbps=11.4,maxabs=2.655e-02,p99=1.900e-02,rel=2.590e-04
+INT8,BITSHIFT,U(-1,1),1,7168,7168,16x256x32_w4f4,SKIP,MF path-B not implemented
+INT8,LUT,U(-1,1),1,7168,7168,128x64x32_w4_v1,OK,ms=2.193,tflops=0.05,gbps=24.9,maxabs=2.655e-02,p99=1.900e-02,rel=2.590e-04
+INT8,BITSHIFT,U(-1,1),1,7168,7168,128x64x32_w4_v1,SKIP,v1 path-B not implemented
+INT8,LUT,U(-1,1),1,7168,7168,128x128x32_w4_v1,OK,ms=2.915,tflops=0.04,gbps=18.7,maxabs=2.655e-02,p99=1.900e-02,rel=2.590e-04
+INT8,BITSHIFT,U(-1,1),1,7168,7168,128x128x32_w4_v1,SKIP,v1 path-B not implemented
+INT8,LUT,U(-1,1),1,7168,7168,128x256x32_w4_v1,OK,ms=6.545,tflops=0.02,gbps=8.3,maxabs=2.655e-02,p99=1.900e-02,rel=2.590e-04
+INT8,BITSHIFT,U(-1,1),1,7168,7168,128x256x32_w4_v1,SKIP,v1 path-B not implemented
+INT8,LUT,U(-1,1),1,7168,7168,128x256x32_w8_v1,OK,ms=3.286,tflops=0.03,gbps=16.6,maxabs=2.655e-02,p99=1.900e-02,rel=2.590e-04
+INT8,BITSHIFT,U(-1,1),1,7168,7168,128x256x32_w8_v1,SKIP,v1 path-B not implemented
+INT8,LUT,U(-1,1),1,7168,7168,64x64x32_w4_v1,OK,ms=1.699,tflops=0.06,gbps=32.2,maxabs=2.655e-02,p99=1.900e-02,rel=2.590e-04
+INT8,BITSHIFT,U(-1,1),1,7168,7168,64x64x32_w4_v1,SKIP,v1 path-B not implemented
+INT8,LUT,U(-1,1),1,7168,7168,64x128x32_w4_v1,OK,ms=2.652,tflops=0.04,gbps=20.6,maxabs=2.655e-02,p99=1.900e-02,rel=2.590e-04
+INT8,BITSHIFT,U(-1,1),1,7168,7168,64x128x32_w4_v1,SKIP,v1 path-B not implemented
+INT8,LUT,U(-1,1),1,7168,7168,128x64x32_w4_v2,OK,ms=1.117,tflops=0.09,gbps=48.9,maxabs=2.655e-02,p99=1.900e-02,rel=2.590e-04
+INT8,BITSHIFT,U(-1,1),1,7168,7168,128x64x32_w4_v2,SKIP,v2 path-B not implemented
+INT8,LUT,U(-1,1),1,7168,7168,128x128x32_w4_v2,OK,ms=0.972,tflops=0.11,gbps=56.2,maxabs=2.655e-02,p99=1.900e-02,rel=2.590e-04
+INT8,BITSHIFT,U(-1,1),1,7168,7168,128x128x32_w4_v2,SKIP,v2 path-B not implemented
+INT8,LUT,U(-1,1),1,7168,7168,128x256x32_w4_v2,OK,ms=2.198,tflops=0.05,gbps=24.9,maxabs=2.655e-02,p99=1.900e-02,rel=2.590e-04
+INT8,BITSHIFT,U(-1,1),1,7168,7168,128x256x32_w4_v2,SKIP,v2 path-B not implemented
+INT8,LUT,U(-1,1),1,7168,7168,128x256x32_w8_v2,OK,ms=1.376,tflops=0.07,gbps=39.7,maxabs=2.655e-02,p99=1.900e-02,rel=2.590e-04
+INT8,BITSHIFT,U(-1,1),1,7168,7168,128x256x32_w8_v2,SKIP,v2 path-B not implemented
+INT8,LUT,U(-1,1),1,7168,7168,64x64x32_w4_v2,OK,ms=0.732,tflops=0.14,gbps=74.7,maxabs=2.655e-02,p99=1.900e-02,rel=2.590e-04
+INT8,BITSHIFT,U(-1,1),1,7168,7168,64x64x32_w4_v2,SKIP,v2 path-B not implemented
+INT8,LUT,U(-1,1),1,7168,7168,64x128x32_w4_v2,OK,ms=0.675,tflops=0.15,gbps=80.9,maxabs=2.655e-02,p99=1.900e-02,rel=2.590e-04
+INT8,BITSHIFT,U(-1,1),1,7168,7168,64x128x32_w4_v2,SKIP,v2 path-B not implemented
+INT8,LUT,U(-1,1),16,7168,7168,16x64x32_w4,OK,ms=1.437,tflops=1.14,gbps=38.6,maxabs=9.537e-04,p99=2.594e-04,rel=2.036e-06
+INT8,BITSHIFT,U(-1,1),16,7168,7168,16x64x32_w4,OK,ms=1.320,tflops=1.25,gbps=42.1,maxabs=2.362e-02,p99=1.330e-02,rel=1.824e-04
+INT8,LUT,U(-1,1),16,7168,7168,16x128x32_w8,OK,ms=1.521,tflops=1.08,gbps=36.5,maxabs=9.537e-04,p99=2.594e-04,rel=2.036e-06
+INT8,BITSHIFT,U(-1,1),16,7168,7168,16x128x32_w8,OK,ms=1.417,tflops=1.16,gbps=39.2,maxabs=2.362e-02,p99=1.330e-02,rel=1.824e-04
+INT8,LUT,U(-1,1),16,7168,7168,16x128x32_w4f2,OK,ms=2.580,tflops=0.64,gbps=21.5,maxabs=9.537e-04,p99=2.594e-04,rel=2.036e-06
+INT8,BITSHIFT,U(-1,1),16,7168,7168,16x128x32_w4f2,SKIP,MF path-B not implemented
+INT8,LUT,U(-1,1),16,7168,7168,16x256x32_w4f4,OK,ms=4.796,tflops=0.34,gbps=11.6,maxabs=9.537e-04,p99=2.594e-04,rel=2.036e-06
+INT8,BITSHIFT,U(-1,1),16,7168,7168,16x256x32_w4f4,SKIP,MF path-B not implemented
+INT8,LUT,U(-1,1),16,7168,7168,128x64x32_w4_v1,OK,ms=2.215,tflops=0.74,gbps=25.1,maxabs=9.537e-04,p99=2.594e-04,rel=2.036e-06
+INT8,BITSHIFT,U(-1,1),16,7168,7168,128x64x32_w4_v1,SKIP,v1 path-B not implemented
+INT8,LUT,U(-1,1),16,7168,7168,128x128x32_w4_v1,OK,ms=2.949,tflops=0.56,gbps=18.8,maxabs=9.537e-04,p99=2.594e-04,rel=2.036e-06
+INT8,BITSHIFT,U(-1,1),16,7168,7168,128x128x32_w4_v1,SKIP,v1 path-B not implemented
+INT8,LUT,U(-1,1),16,7168,7168,128x256x32_w4_v1,OK,ms=6.619,tflops=0.25,gbps=8.4,maxabs=9.537e-04,p99=2.594e-04,rel=2.036e-06
+INT8,BITSHIFT,U(-1,1),16,7168,7168,128x256x32_w4_v1,SKIP,v1 path-B not implemented
+INT8,LUT,U(-1,1),16,7168,7168,128x256x32_w8_v1,OK,ms=3.314,tflops=0.50,gbps=16.7,maxabs=9.537e-04,p99=2.594e-04,rel=2.036e-06
+INT8,BITSHIFT,U(-1,1),16,7168,7168,128x256x32_w8_v1,SKIP,v1 path-B not implemented
+INT8,LUT,U(-1,1),16,7168,7168,64x64x32_w4_v1,OK,ms=1.730,tflops=0.95,gbps=32.1,maxabs=9.537e-04,p99=2.594e-04,rel=2.036e-06
+INT8,BITSHIFT,U(-1,1),16,7168,7168,64x64x32_w4_v1,SKIP,v1 path-B not implemented
+INT8,LUT,U(-1,1),16,7168,7168,64x128x32_w4_v1,OK,ms=2.678,tflops=0.61,gbps=20.7,maxabs=9.537e-04,p99=2.594e-04,rel=2.036e-06
+INT8,BITSHIFT,U(-1,1),16,7168,7168,64x128x32_w4_v1,SKIP,v1 path-B not implemented
+INT8,LUT,U(-1,1),16,7168,7168,128x64x32_w4_v2,OK,ms=1.177,tflops=1.40,gbps=47.2,maxabs=9.537e-04,p99=2.594e-04,rel=2.036e-06
+INT8,BITSHIFT,U(-1,1),16,7168,7168,128x64x32_w4_v2,SKIP,v2 path-B not implemented
+INT8,LUT,U(-1,1),16,7168,7168,128x128x32_w4_v2,OK,ms=1.007,tflops=1.63,gbps=55.1,maxabs=9.537e-04,p99=2.594e-04,rel=2.036e-06
+INT8,BITSHIFT,U(-1,1),16,7168,7168,128x128x32_w4_v2,SKIP,v2 path-B not implemented
+INT8,LUT,U(-1,1),16,7168,7168,128x256x32_w4_v2,OK,ms=2.229,tflops=0.74,gbps=24.9,maxabs=9.537e-04,p99=2.594e-04,rel=2.036e-06
+INT8,BITSHIFT,U(-1,1),16,7168,7168,128x256x32_w4_v2,SKIP,v2 path-B not implemented
+INT8,LUT,U(-1,1),16,7168,7168,128x256x32_w8_v2,OK,ms=1.342,tflops=1.23,gbps=41.4,maxabs=9.537e-04,p99=2.594e-04,rel=2.036e-06
+INT8,BITSHIFT,U(-1,1),16,7168,7168,128x256x32_w8_v2,SKIP,v2 path-B not implemented
+INT8,LUT,U(-1,1),16,7168,7168,64x64x32_w4_v2,OK,ms=0.788,tflops=2.09,gbps=70.5,maxabs=9.537e-04,p99=2.594e-04,rel=2.036e-06
+INT8,BITSHIFT,U(-1,1),16,7168,7168,64x64x32_w4_v2,SKIP,v2 path-B not implemented
+INT8,LUT,U(-1,1),16,7168,7168,64x128x32_w4_v2,OK,ms=0.723,tflops=2.27,gbps=76.7,maxabs=9.537e-04,p99=2.594e-04,rel=2.036e-06
+INT8,BITSHIFT,U(-1,1),16,7168,7168,64x128x32_w4_v2,SKIP,v2 path-B not implemented
+INT8,LUT,U(-1,1),64,7168,7168,16x64x32_w4,OK,ms=1.603,tflops=4.10,gbps=36.4,maxabs=9.766e-04,p99=2.441e-04,rel=1.937e-06
+INT8,BITSHIFT,U(-1,1),64,7168,7168,16x64x32_w4,OK,ms=2.277,tflops=2.89,gbps=25.6,maxabs=2.787e-02,p99=1.323e-02,rel=1.823e-04
+INT8,LUT,U(-1,1),64,7168,7168,16x128x32_w8,OK,ms=1.648,tflops=3.99,gbps=35.3,maxabs=9.766e-04,p99=2.441e-04,rel=1.937e-06
+INT8,BITSHIFT,U(-1,1),64,7168,7168,16x128x32_w8,OK,ms=2.420,tflops=2.72,gbps=24.1,maxabs=2.787e-02,p99=1.323e-02,rel=1.823e-04
+INT8,LUT,U(-1,1),64,7168,7168,16x128x32_w4f2,OK,ms=2.602,tflops=2.53,gbps=22.4,maxabs=9.766e-04,p99=2.441e-04,rel=1.937e-06
+INT8,BITSHIFT,U(-1,1),64,7168,7168,16x128x32_w4f2,SKIP,MF path-B not implemented
+INT8,LUT,U(-1,1),64,7168,7168,16x256x32_w4f4,OK,ms=4.584,tflops=1.43,gbps=12.7,maxabs=9.766e-04,p99=2.441e-04,rel=1.937e-06
+INT8,BITSHIFT,U(-1,1),64,7168,7168,16x256x32_w4f4,SKIP,MF path-B not implemented
+INT8,LUT,U(-1,1),64,7168,7168,128x64x32_w4_v1,OK,ms=2.316,tflops=2.84,gbps=25.2,maxabs=9.766e-04,p99=2.441e-04,rel=1.937e-06
+INT8,BITSHIFT,U(-1,1),64,7168,7168,128x64x32_w4_v1,SKIP,v1 path-B not implemented
+INT8,LUT,U(-1,1),64,7168,7168,128x128x32_w4_v1,OK,ms=3.066,tflops=2.15,gbps=19.0,maxabs=9.766e-04,p99=2.441e-04,rel=1.937e-06
+INT8,BITSHIFT,U(-1,1),64,7168,7168,128x128x32_w4_v1,SKIP,v1 path-B not implemented
+INT8,LUT,U(-1,1),64,7168,7168,128x256x32_w4_v1,OK,ms=7.224,tflops=0.91,gbps=8.1,maxabs=9.766e-04,p99=2.441e-04,rel=1.937e-06
+INT8,BITSHIFT,U(-1,1),64,7168,7168,128x256x32_w4_v1,SKIP,v1 path-B not implemented
+INT8,LUT,U(-1,1),64,7168,7168,128x256x32_w8_v1,OK,ms=3.354,tflops=1.96,gbps=17.4,maxabs=9.766e-04,p99=2.441e-04,rel=1.937e-06
+INT8,BITSHIFT,U(-1,1),64,7168,7168,128x256x32_w8_v1,SKIP,v1 path-B not implemented
+INT8,LUT,U(-1,1),64,7168,7168,64x64x32_w4_v1,OK,ms=1.809,tflops=3.63,gbps=32.2,maxabs=9.766e-04,p99=2.441e-04,rel=1.937e-06
+INT8,BITSHIFT,U(-1,1),64,7168,7168,64x64x32_w4_v1,SKIP,v1 path-B not implemented
+INT8,LUT,U(-1,1),64,7168,7168,64x128x32_w4_v1,OK,ms=2.829,tflops=2.32,gbps=20.6,maxabs=9.766e-04,p99=2.441e-04,rel=1.937e-06
+INT8,BITSHIFT,U(-1,1),64,7168,7168,64x128x32_w4_v1,SKIP,v1 path-B not implemented
+INT8,LUT,U(-1,1),64,7168,7168,128x64x32_w4_v2,OK,ms=1.349,tflops=4.87,gbps=43.2,maxabs=9.766e-04,p99=2.441e-04,rel=1.937e-06
+INT8,BITSHIFT,U(-1,1),64,7168,7168,128x64x32_w4_v2,SKIP,v2 path-B not implemented
+INT8,LUT,U(-1,1),64,7168,7168,128x128x32_w4_v2,OK,ms=1.246,tflops=5.28,gbps=46.8,maxabs=9.766e-04,p99=2.441e-04,rel=1.937e-06
+INT8,BITSHIFT,U(-1,1),64,7168,7168,128x128x32_w4_v2,SKIP,v2 path-B not implemented
+INT8,LUT,U(-1,1),64,7168,7168,128x256x32_w4_v2,OK,ms=2.333,tflops=2.82,gbps=25.0,maxabs=9.766e-04,p99=2.441e-04,rel=1.937e-06
+INT8,BITSHIFT,U(-1,1),64,7168,7168,128x256x32_w4_v2,SKIP,v2 path-B not implemented
+INT8,LUT,U(-1,1),64,7168,7168,128x256x32_w8_v2,OK,ms=1.471,tflops=4.47,gbps=39.6,maxabs=9.766e-04,p99=2.441e-04,rel=1.937e-06
+INT8,BITSHIFT,U(-1,1),64,7168,7168,128x256x32_w8_v2,SKIP,v2 path-B not implemented
+INT8,LUT,U(-1,1),64,7168,7168,64x64x32_w4_v2,OK,ms=0.883,tflops=7.45,gbps=66.0,maxabs=9.766e-04,p99=2.441e-04,rel=1.937e-06
+INT8,BITSHIFT,U(-1,1),64,7168,7168,64x64x32_w4_v2,SKIP,v2 path-B not implemented
+INT8,LUT,U(-1,1),64,7168,7168,64x128x32_w4_v2,OK,ms=0.924,tflops=7.12,gbps=63.0,maxabs=9.766e-04,p99=2.441e-04,rel=1.937e-06
+INT8,BITSHIFT,U(-1,1),64,7168,7168,64x128x32_w4_v2,SKIP,v2 path-B not implemented
+INT8,LUT,U(-1,1),128,7168,7168,16x64x32_w4,OK,ms=3.341,tflops=3.94,gbps=18.5,maxabs=1.175e-03,p99=2.441e-04,rel=1.938e-06
+INT8,BITSHIFT,U(-1,1),128,7168,7168,16x64x32_w4,OK,ms=5.520,tflops=2.38,gbps=11.2,maxabs=2.787e-02,p99=1.323e-02,rel=1.822e-04
+INT8,LUT,U(-1,1),128,7168,7168,16x128x32_w8,OK,ms=3.602,tflops=3.65,gbps=17.2,maxabs=1.175e-03,p99=2.441e-04,rel=1.938e-06
+INT8,BITSHIFT,U(-1,1),128,7168,7168,16x128x32_w8,OK,ms=6.002,tflops=2.19,gbps=10.3,maxabs=2.787e-02,p99=1.323e-02,rel=1.822e-04
+INT8,LUT,U(-1,1),128,7168,7168,16x128x32_w4f2,OK,ms=2.753,tflops=4.78,gbps=22.5,maxabs=1.175e-03,p99=2.441e-04,rel=1.938e-06
+INT8,BITSHIFT,U(-1,1),128,7168,7168,16x128x32_w4f2,SKIP,MF path-B not implemented
+INT8,LUT,U(-1,1),128,7168,7168,16x256x32_w4f4,OK,ms=4.731,tflops=2.78,gbps=13.1,maxabs=1.175e-03,p99=2.441e-04,rel=1.938e-06
+INT8,BITSHIFT,U(-1,1),128,7168,7168,16x256x32_w4f4,SKIP,MF path-B not implemented
+INT8,LUT,U(-1,1),128,7168,7168,128x64x32_w4_v1,OK,ms=2.455,tflops=5.36,gbps=25.2,maxabs=1.175e-03,p99=2.441e-04,rel=1.938e-06
+INT8,BITSHIFT,U(-1,1),128,7168,7168,128x64x32_w4_v1,SKIP,v1 path-B not implemented
+INT8,LUT,U(-1,1),128,7168,7168,128x128x32_w4_v1,OK,ms=3.376,tflops=3.90,gbps=18.3,maxabs=1.175e-03,p99=2.441e-04,rel=1.938e-06
+INT8,BITSHIFT,U(-1,1),128,7168,7168,128x128x32_w4_v1,SKIP,v1 path-B not implemented
+INT8,LUT,U(-1,1),128,7168,7168,128x256x32_w4_v1,OK,ms=8.262,tflops=1.59,gbps=7.5,maxabs=1.175e-03,p99=2.441e-04,rel=1.938e-06
+INT8,BITSHIFT,U(-1,1),128,7168,7168,128x256x32_w4_v1,SKIP,v1 path-B not implemented
+INT8,LUT,U(-1,1),128,7168,7168,128x256x32_w8_v1,OK,ms=3.483,tflops=3.78,gbps=17.8,maxabs=1.175e-03,p99=2.441e-04,rel=1.938e-06
+INT8,BITSHIFT,U(-1,1),128,7168,7168,128x256x32_w8_v1,SKIP,v1 path-B not implemented
+INT8,LUT,U(-1,1),128,7168,7168,64x64x32_w4_v1,OK,ms=1.882,tflops=6.99,gbps=32.9,maxabs=1.175e-03,p99=2.441e-04,rel=1.938e-06
+INT8,BITSHIFT,U(-1,1),128,7168,7168,64x64x32_w4_v1,SKIP,v1 path-B not implemented
+INT8,LUT,U(-1,1),128,7168,7168,64x128x32_w4_v1,OK,ms=2.861,tflops=4.60,gbps=21.6,maxabs=1.175e-03,p99=2.441e-04,rel=1.938e-06
+INT8,BITSHIFT,U(-1,1),128,7168,7168,64x128x32_w4_v1,SKIP,v1 path-B not implemented
+INT8,LUT,U(-1,1),128,7168,7168,128x64x32_w4_v2,OK,ms=1.396,tflops=9.42,gbps=44.4,maxabs=1.175e-03,p99=2.441e-04,rel=1.938e-06
+INT8,BITSHIFT,U(-1,1),128,7168,7168,128x64x32_w4_v2,SKIP,v2 path-B not implemented
+INT8,LUT,U(-1,1),128,7168,7168,128x128x32_w4_v2,OK,ms=1.579,tflops=8.33,gbps=39.2,maxabs=1.175e-03,p99=2.441e-04,rel=1.938e-06
+INT8,BITSHIFT,U(-1,1),128,7168,7168,128x128x32_w4_v2,SKIP,v2 path-B not implemented
+INT8,LUT,U(-1,1),128,7168,7168,128x256x32_w4_v2,OK,ms=2.639,tflops=4.98,gbps=23.5,maxabs=1.175e-03,p99=2.441e-04,rel=1.938e-06
+INT8,BITSHIFT,U(-1,1),128,7168,7168,128x256x32_w4_v2,SKIP,v2 path-B not implemented
+INT8,LUT,U(-1,1),128,7168,7168,128x256x32_w8_v2,OK,ms=1.642,tflops=8.01,gbps=37.7,maxabs=1.175e-03,p99=2.441e-04,rel=1.938e-06
+INT8,BITSHIFT,U(-1,1),128,7168,7168,128x256x32_w8_v2,SKIP,v2 path-B not implemented
+INT8,LUT,U(-1,1),128,7168,7168,64x64x32_w4_v2,OK,ms=1.059,tflops=12.42,gbps=58.5,maxabs=1.175e-03,p99=2.441e-04,rel=1.938e-06
+INT8,BITSHIFT,U(-1,1),128,7168,7168,64x64x32_w4_v2,SKIP,v2 path-B not implemented
+INT8,LUT,U(-1,1),128,7168,7168,64x128x32_w4_v2,OK,ms=1.064,tflops=12.36,gbps=58.2,maxabs=1.175e-03,p99=2.441e-04,rel=1.938e-06
+INT8,BITSHIFT,U(-1,1),128,7168,7168,64x128x32_w4_v2,SKIP,v2 path-B not implemented
+INT8,LUT,U(-1,1),256,7168,7168,16x64x32_w4,OK,ms=5.186,tflops=5.07,gbps=13.4,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+INT8,BITSHIFT,U(-1,1),256,7168,7168,16x64x32_w4,OK,ms=9.343,tflops=2.82,gbps=7.4,maxabs=2.794e-02,p99=1.325e-02,rel=1.823e-04
+INT8,LUT,U(-1,1),256,7168,7168,16x128x32_w8,OK,ms=5.438,tflops=4.84,gbps=12.7,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+INT8,BITSHIFT,U(-1,1),256,7168,7168,16x128x32_w8,OK,ms=9.417,tflops=2.79,gbps=7.4,maxabs=2.794e-02,p99=1.325e-02,rel=1.823e-04
+INT8,LUT,U(-1,1),256,7168,7168,16x128x32_w4f2,OK,ms=5.936,tflops=4.43,gbps=11.7,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+INT8,BITSHIFT,U(-1,1),256,7168,7168,16x128x32_w4f2,SKIP,MF path-B not implemented
+INT8,LUT,U(-1,1),256,7168,7168,16x256x32_w4f4,OK,ms=9.717,tflops=2.71,gbps=7.1,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+INT8,BITSHIFT,U(-1,1),256,7168,7168,16x256x32_w4f4,SKIP,MF path-B not implemented
+INT8,LUT,U(-1,1),256,7168,7168,128x64x32_w4_v1,OK,ms=2.607,tflops=10.09,gbps=26.6,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+INT8,BITSHIFT,U(-1,1),256,7168,7168,128x64x32_w4_v1,SKIP,v1 path-B not implemented
+INT8,LUT,U(-1,1),256,7168,7168,128x128x32_w4_v1,OK,ms=3.356,tflops=7.84,gbps=20.6,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+INT8,BITSHIFT,U(-1,1),256,7168,7168,128x128x32_w4_v1,SKIP,v1 path-B not implemented
+INT8,LUT,U(-1,1),256,7168,7168,128x256x32_w4_v1,OK,ms=8.801,tflops=2.99,gbps=7.9,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+INT8,BITSHIFT,U(-1,1),256,7168,7168,128x256x32_w4_v1,SKIP,v1 path-B not implemented
+INT8,LUT,U(-1,1),256,7168,7168,128x256x32_w8_v1,OK,ms=3.390,tflops=7.76,gbps=20.4,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+INT8,BITSHIFT,U(-1,1),256,7168,7168,128x256x32_w8_v1,SKIP,v1 path-B not implemented
+INT8,LUT,U(-1,1),256,7168,7168,64x64x32_w4_v1,OK,ms=4.025,tflops=6.54,gbps=17.2,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+INT8,BITSHIFT,U(-1,1),256,7168,7168,64x64x32_w4_v1,SKIP,v1 path-B not implemented
+INT8,LUT,U(-1,1),256,7168,7168,64x128x32_w4_v1,OK,ms=3.001,tflops=8.77,gbps=23.1,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+INT8,BITSHIFT,U(-1,1),256,7168,7168,64x128x32_w4_v1,SKIP,v1 path-B not implemented
+INT8,LUT,U(-1,1),256,7168,7168,128x64x32_w4_v2,OK,ms=1.717,tflops=15.32,gbps=40.3,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+INT8,BITSHIFT,U(-1,1),256,7168,7168,128x64x32_w4_v2,SKIP,v2 path-B not implemented
+INT8,LUT,U(-1,1),256,7168,7168,128x128x32_w4_v2,OK,ms=1.574,tflops=16.71,gbps=44.0,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+INT8,BITSHIFT,U(-1,1),256,7168,7168,128x128x32_w4_v2,SKIP,v2 path-B not implemented
+INT8,LUT,U(-1,1),256,7168,7168,128x256x32_w4_v2,OK,ms=2.940,tflops=8.95,gbps=23.6,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+INT8,BITSHIFT,U(-1,1),256,7168,7168,128x256x32_w4_v2,SKIP,v2 path-B not implemented
+INT8,LUT,U(-1,1),256,7168,7168,128x256x32_w8_v2,OK,ms=1.638,tflops=16.06,gbps=42.3,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+INT8,BITSHIFT,U(-1,1),256,7168,7168,128x256x32_w8_v2,SKIP,v2 path-B not implemented
+INT8,LUT,U(-1,1),256,7168,7168,64x64x32_w4_v2,OK,ms=1.715,tflops=15.34,gbps=40.4,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+INT8,BITSHIFT,U(-1,1),256,7168,7168,64x64x32_w4_v2,SKIP,v2 path-B not implemented
+INT8,LUT,U(-1,1),256,7168,7168,64x128x32_w4_v2,OK,ms=1.288,tflops=20.43,gbps=53.8,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+INT8,BITSHIFT,U(-1,1),256,7168,7168,64x128x32_w4_v2,SKIP,v2 path-B not implemented
+INT8,LUT,U(-1,1),512,7168,7168,16x64x32_w4,OK,ms=10.376,tflops=5.07,gbps=8.1,maxabs=8.240e-04,p99=1.907e-04,rel=1.532e-06
+INT8,BITSHIFT,U(-1,1),512,7168,7168,16x64x32_w4,OK,ms=18.938,tflops=2.78,gbps=4.4,maxabs=2.800e-02,p99=1.324e-02,rel=1.822e-04
+INT8,LUT,U(-1,1),512,7168,7168,16x128x32_w8,OK,ms=10.960,tflops=4.80,gbps=7.7,maxabs=8.240e-04,p99=1.907e-04,rel=1.532e-06
+INT8,BITSHIFT,U(-1,1),512,7168,7168,16x128x32_w8,OK,ms=19.090,tflops=2.76,gbps=4.4,maxabs=2.800e-02,p99=1.324e-02,rel=1.822e-04
+INT8,LUT,U(-1,1),512,7168,7168,16x128x32_w4f2,OK,ms=11.709,tflops=4.49,gbps=7.2,maxabs=8.240e-04,p99=1.907e-04,rel=1.532e-06
+INT8,BITSHIFT,U(-1,1),512,7168,7168,16x128x32_w4f2,SKIP,MF path-B not implemented
+INT8,LUT,U(-1,1),512,7168,7168,16x256x32_w4f4,OK,ms=14.394,tflops=3.66,gbps=5.8,maxabs=8.240e-04,p99=1.907e-04,rel=1.532e-06
+INT8,BITSHIFT,U(-1,1),512,7168,7168,16x256x32_w4f4,SKIP,MF path-B not implemented
+INT8,LUT,U(-1,1),512,7168,7168,128x64x32_w4_v1,OK,ms=5.697,tflops=9.23,gbps=14.7,maxabs=8.240e-04,p99=1.907e-04,rel=1.532e-06
+INT8,BITSHIFT,U(-1,1),512,7168,7168,128x64x32_w4_v1,SKIP,v1 path-B not implemented
+INT8,LUT,U(-1,1),512,7168,7168,128x128x32_w4_v1,OK,ms=7.269,tflops=7.24,gbps=11.5,maxabs=8.240e-04,p99=1.907e-04,rel=1.532e-06
+INT8,BITSHIFT,U(-1,1),512,7168,7168,128x128x32_w4_v1,SKIP,v1 path-B not implemented
+INT8,LUT,U(-1,1),512,7168,7168,128x256x32_w4_v1,OK,ms=10.751,tflops=4.89,gbps=7.8,maxabs=8.240e-04,p99=1.907e-04,rel=1.532e-06
+INT8,BITSHIFT,U(-1,1),512,7168,7168,128x256x32_w4_v1,SKIP,v1 path-B not implemented
+INT8,LUT,U(-1,1),512,7168,7168,128x256x32_w8_v1,OK,ms=6.801,tflops=7.74,gbps=12.3,maxabs=8.240e-04,p99=1.907e-04,rel=1.532e-06
+INT8,BITSHIFT,U(-1,1),512,7168,7168,128x256x32_w8_v1,SKIP,v1 path-B not implemented
+INT8,LUT,U(-1,1),512,7168,7168,64x64x32_w4_v1,OK,ms=6.267,tflops=8.40,gbps=13.4,maxabs=8.240e-04,p99=1.907e-04,rel=1.532e-06
+INT8,BITSHIFT,U(-1,1),512,7168,7168,64x64x32_w4_v1,SKIP,v1 path-B not implemented
+INT8,LUT,U(-1,1),512,7168,7168,64x128x32_w4_v1,OK,ms=5.991,tflops=8.78,gbps=14.0,maxabs=8.240e-04,p99=1.907e-04,rel=1.532e-06
+INT8,BITSHIFT,U(-1,1),512,7168,7168,64x128x32_w4_v1,SKIP,v1 path-B not implemented
+INT8,LUT,U(-1,1),512,7168,7168,128x64x32_w4_v2,OK,ms=4.041,tflops=13.02,gbps=20.8,maxabs=8.240e-04,p99=1.907e-04,rel=1.532e-06
+INT8,BITSHIFT,U(-1,1),512,7168,7168,128x64x32_w4_v2,SKIP,v2 path-B not implemented
+INT8,LUT,U(-1,1),512,7168,7168,128x128x32_w4_v2,OK,ms=3.780,tflops=13.92,gbps=22.2,maxabs=8.240e-04,p99=1.907e-04,rel=1.532e-06
+INT8,BITSHIFT,U(-1,1),512,7168,7168,128x128x32_w4_v2,SKIP,v2 path-B not implemented
+INT8,LUT,U(-1,1),512,7168,7168,128x256x32_w4_v2,OK,ms=4.921,tflops=10.69,gbps=17.1,maxabs=8.240e-04,p99=1.907e-04,rel=1.532e-06
+INT8,BITSHIFT,U(-1,1),512,7168,7168,128x256x32_w4_v2,SKIP,v2 path-B not implemented
+INT8,LUT,U(-1,1),512,7168,7168,128x256x32_w8_v2,OK,ms=3.276,tflops=16.06,gbps=25.6,maxabs=8.240e-04,p99=1.907e-04,rel=1.532e-06
+INT8,BITSHIFT,U(-1,1),512,7168,7168,128x256x32_w8_v2,SKIP,v2 path-B not implemented
+INT8,LUT,U(-1,1),512,7168,7168,64x64x32_w4_v2,OK,ms=3.420,tflops=15.38,gbps=24.5,maxabs=8.240e-04,p99=1.907e-04,rel=1.532e-06
+INT8,BITSHIFT,U(-1,1),512,7168,7168,64x64x32_w4_v2,SKIP,v2 path-B not implemented
+INT8,LUT,U(-1,1),512,7168,7168,64x128x32_w4_v2,OK,ms=3.333,tflops=15.79,gbps=25.2,maxabs=8.240e-04,p99=1.907e-04,rel=1.532e-06
+INT8,BITSHIFT,U(-1,1),512,7168,7168,64x128x32_w4_v2,SKIP,v2 path-B not implemented
+INT8,LUT,U(-1,1),1024,7168,7168,16x64x32_w4,OK,ms=21.065,tflops=5.00,gbps=5.4,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+INT8,BITSHIFT,U(-1,1),1024,7168,7168,16x64x32_w4,OK,ms=38.554,tflops=2.73,gbps=2.9,maxabs=2.794e-02,p99=1.324e-02,rel=1.821e-04
+INT8,LUT,U(-1,1),1024,7168,7168,16x128x32_w8,OK,ms=21.725,tflops=4.84,gbps=5.2,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+INT8,BITSHIFT,U(-1,1),1024,7168,7168,16x128x32_w8,OK,ms=37.794,tflops=2.78,gbps=3.0,maxabs=2.794e-02,p99=1.324e-02,rel=1.821e-04
+INT8,LUT,U(-1,1),1024,7168,7168,16x128x32_w4f2,OK,ms=20.297,tflops=5.18,gbps=5.6,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+INT8,BITSHIFT,U(-1,1),1024,7168,7168,16x128x32_w4f2,SKIP,MF path-B not implemented
+INT8,LUT,U(-1,1),1024,7168,7168,16x256x32_w4f4,OK,ms=28.725,tflops=3.66,gbps=3.9,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+INT8,BITSHIFT,U(-1,1),1024,7168,7168,16x256x32_w4f4,SKIP,MF path-B not implemented
+INT8,LUT,U(-1,1),1024,7168,7168,128x64x32_w4_v1,OK,ms=8.455,tflops=12.45,gbps=13.4,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+INT8,BITSHIFT,U(-1,1),1024,7168,7168,128x64x32_w4_v1,SKIP,v1 path-B not implemented
+INT8,LUT,U(-1,1),1024,7168,7168,128x128x32_w4_v1,OK,ms=10.734,tflops=9.80,gbps=10.6,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+INT8,BITSHIFT,U(-1,1),1024,7168,7168,128x128x32_w4_v1,SKIP,v1 path-B not implemented
+INT8,LUT,U(-1,1),1024,7168,7168,128x256x32_w4_v1,OK,ms=22.295,tflops=4.72,gbps=5.1,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+INT8,BITSHIFT,U(-1,1),1024,7168,7168,128x256x32_w4_v1,SKIP,v1 path-B not implemented
+INT8,LUT,U(-1,1),1024,7168,7168,128x256x32_w8_v1,OK,ms=10.129,tflops=10.39,gbps=11.2,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+INT8,BITSHIFT,U(-1,1),1024,7168,7168,128x256x32_w8_v1,SKIP,v1 path-B not implemented
+INT8,LUT,U(-1,1),1024,7168,7168,64x64x32_w4_v1,OK,ms=10.712,tflops=9.82,gbps=10.6,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+INT8,BITSHIFT,U(-1,1),1024,7168,7168,64x64x32_w4_v1,SKIP,v1 path-B not implemented
+INT8,LUT,U(-1,1),1024,7168,7168,64x128x32_w4_v1,OK,ms=12.097,tflops=8.70,gbps=9.4,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+INT8,BITSHIFT,U(-1,1),1024,7168,7168,64x128x32_w4_v1,SKIP,v1 path-B not implemented
+INT8,LUT,U(-1,1),1024,7168,7168,128x64x32_w4_v2,OK,ms=6.244,tflops=16.85,gbps=18.1,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+INT8,BITSHIFT,U(-1,1),1024,7168,7168,128x64x32_w4_v2,SKIP,v2 path-B not implemented
+INT8,LUT,U(-1,1),1024,7168,7168,128x128x32_w4_v2,OK,ms=5.780,tflops=18.20,gbps=19.6,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+INT8,BITSHIFT,U(-1,1),1024,7168,7168,128x128x32_w4_v2,SKIP,v2 path-B not implemented
+INT8,LUT,U(-1,1),1024,7168,7168,128x256x32_w4_v2,OK,ms=11.273,tflops=9.33,gbps=10.1,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+INT8,BITSHIFT,U(-1,1),1024,7168,7168,128x256x32_w4_v2,SKIP,v2 path-B not implemented
+INT8,LUT,U(-1,1),1024,7168,7168,128x256x32_w8_v2,OK,ms=4.916,tflops=21.40,gbps=23.0,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+INT8,BITSHIFT,U(-1,1),1024,7168,7168,128x256x32_w8_v2,SKIP,v2 path-B not implemented
+INT8,LUT,U(-1,1),1024,7168,7168,64x64x32_w4_v2,OK,ms=6.825,tflops=15.42,gbps=16.6,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+INT8,BITSHIFT,U(-1,1),1024,7168,7168,64x64x32_w4_v2,SKIP,v2 path-B not implemented
+INT8,LUT,U(-1,1),1024,7168,7168,64x128x32_w4_v2,OK,ms=4.956,tflops=21.23,gbps=22.9,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+INT8,BITSHIFT,U(-1,1),1024,7168,7168,64x128x32_w4_v2,SKIP,v2 path-B not implemented
+INT8,LUT,U(-1,1),2048,7168,7168,16x64x32_w4,OK,ms=40.113,tflops=5.25,gbps=4.3,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+INT8,BITSHIFT,U(-1,1),2048,7168,7168,16x64x32_w4,OK,ms=80.356,tflops=2.62,gbps=2.1,maxabs=2.799e-02,p99=1.324e-02,rel=1.822e-04
+INT8,LUT,U(-1,1),2048,7168,7168,16x128x32_w8,OK,ms=41.315,tflops=5.09,gbps=4.2,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+INT8,BITSHIFT,U(-1,1),2048,7168,7168,16x128x32_w8,OK,ms=75.174,tflops=2.80,gbps=2.3,maxabs=2.799e-02,p99=1.324e-02,rel=1.822e-04
+INT8,LUT,U(-1,1),2048,7168,7168,16x128x32_w4f2,OK,ms=37.562,tflops=5.60,gbps=4.6,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+INT8,BITSHIFT,U(-1,1),2048,7168,7168,16x128x32_w4f2,SKIP,MF path-B not implemented
+INT8,LUT,U(-1,1),2048,7168,7168,16x256x32_w4f4,OK,ms=57.503,tflops=3.66,gbps=3.0,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+INT8,BITSHIFT,U(-1,1),2048,7168,7168,16x256x32_w4f4,SKIP,MF path-B not implemented
+INT8,LUT,U(-1,1),2048,7168,7168,128x64x32_w4_v1,OK,ms=16.982,tflops=12.39,gbps=10.1,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+INT8,BITSHIFT,U(-1,1),2048,7168,7168,128x64x32_w4_v1,SKIP,v1 path-B not implemented
+INT8,LUT,U(-1,1),2048,7168,7168,128x128x32_w4_v1,OK,ms=21.691,tflops=9.70,gbps=7.9,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+INT8,BITSHIFT,U(-1,1),2048,7168,7168,128x128x32_w4_v1,SKIP,v1 path-B not implemented
+INT8,LUT,U(-1,1),2048,7168,7168,128x256x32_w4_v1,OK,ms=37.267,tflops=5.65,gbps=4.6,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+INT8,BITSHIFT,U(-1,1),2048,7168,7168,128x256x32_w4_v1,SKIP,v1 path-B not implemented
+INT8,LUT,U(-1,1),2048,7168,7168,128x256x32_w8_v1,OK,ms=20.229,tflops=10.40,gbps=8.5,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+INT8,BITSHIFT,U(-1,1),2048,7168,7168,128x256x32_w8_v1,SKIP,v1 path-B not implemented
+INT8,LUT,U(-1,1),2048,7168,7168,64x64x32_w4_v1,OK,ms=19.176,tflops=10.97,gbps=9.0,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+INT8,BITSHIFT,U(-1,1),2048,7168,7168,64x64x32_w4_v1,SKIP,v1 path-B not implemented
+INT8,LUT,U(-1,1),2048,7168,7168,64x128x32_w4_v1,OK,ms=24.386,tflops=8.63,gbps=7.1,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+INT8,BITSHIFT,U(-1,1),2048,7168,7168,64x128x32_w4_v1,SKIP,v1 path-B not implemented
+INT8,LUT,U(-1,1),2048,7168,7168,128x64x32_w4_v2,OK,ms=12.919,tflops=16.29,gbps=13.3,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+INT8,BITSHIFT,U(-1,1),2048,7168,7168,128x64x32_w4_v2,SKIP,v2 path-B not implemented
+INT8,LUT,U(-1,1),2048,7168,7168,128x128x32_w4_v2,OK,ms=11.579,tflops=18.18,gbps=14.9,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+INT8,BITSHIFT,U(-1,1),2048,7168,7168,128x128x32_w4_v2,SKIP,v2 path-B not implemented
+INT8,LUT,U(-1,1),2048,7168,7168,128x256x32_w4_v2,OK,ms=19.736,tflops=10.66,gbps=8.7,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+INT8,BITSHIFT,U(-1,1),2048,7168,7168,128x256x32_w4_v2,SKIP,v2 path-B not implemented
+INT8,LUT,U(-1,1),2048,7168,7168,128x256x32_w8_v2,OK,ms=9.836,tflops=21.40,gbps=17.5,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+INT8,BITSHIFT,U(-1,1),2048,7168,7168,128x256x32_w8_v2,SKIP,v2 path-B not implemented
+INT8,LUT,U(-1,1),2048,7168,7168,64x64x32_w4_v2,OK,ms=13.315,tflops=15.81,gbps=12.9,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+INT8,BITSHIFT,U(-1,1),2048,7168,7168,64x64x32_w4_v2,SKIP,v2 path-B not implemented
+INT8,LUT,U(-1,1),2048,7168,7168,64x128x32_w4_v2,OK,ms=9.817,tflops=21.44,gbps=17.5,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+INT8,BITSHIFT,U(-1,1),2048,7168,7168,64x128x32_w4_v2,SKIP,v2 path-B not implemented
+INT4,LUT,U(-1,1),1,4096,4096,16x64x32_w4,OK,ms=0.653,tflops=0.05,gbps=14.5,maxabs=1.898e-02,p99=1.403e-02,rel=2.504e-04
+INT4,BITSHIFT,U(-1,1),1,4096,4096,16x64x32_w4,OK,ms=0.476,tflops=0.07,gbps=19.9,maxabs=1.329e-02,p99=1.013e-02,rel=1.838e-04
+INT4,LUT,U(-1,1),1,4096,4096,16x128x32_w8,OK,ms=0.772,tflops=0.04,gbps=12.3,maxabs=1.898e-02,p99=1.403e-02,rel=2.504e-04
+INT4,BITSHIFT,U(-1,1),1,4096,4096,16x128x32_w8,OK,ms=0.526,tflops=0.06,gbps=18.0,maxabs=1.329e-02,p99=1.013e-02,rel=1.838e-04
+INT4,LUT,U(-1,1),1,4096,4096,16x128x32_w4f2,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),1,4096,4096,16x128x32_w4f2,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),1,4096,4096,16x256x32_w4f4,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),1,4096,4096,16x256x32_w4f4,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),1,4096,4096,128x64x32_w4_v1,SKIP,no template instantiation for this tile
+INT4,BITSHIFT,U(-1,1),1,4096,4096,128x64x32_w4_v1,SKIP,opt only LUT path
+INT4,LUT,U(-1,1),1,4096,4096,128x128x32_w4_v1,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),1,4096,4096,128x128x32_w4_v1,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),1,4096,4096,128x256x32_w4_v1,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),1,4096,4096,128x256x32_w4_v1,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),1,4096,4096,128x256x32_w8_v1,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),1,4096,4096,128x256x32_w8_v1,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),1,4096,4096,64x64x32_w4_v1,SKIP,no template instantiation for this tile
+INT4,BITSHIFT,U(-1,1),1,4096,4096,64x64x32_w4_v1,SKIP,opt only LUT path
+INT4,LUT,U(-1,1),1,4096,4096,64x128x32_w4_v1,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),1,4096,4096,64x128x32_w4_v1,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),1,4096,4096,128x64x32_w4_v2,OK,ms=0.543,tflops=0.06,gbps=17.4,maxabs=1.898e-02,p99=1.403e-02,rel=2.504e-04
+INT4,BITSHIFT,U(-1,1),1,4096,4096,128x64x32_w4_v2,SKIP,opt only LUT path
+INT4,LUT,U(-1,1),1,4096,4096,128x128x32_w4_v2,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),1,4096,4096,128x128x32_w4_v2,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),1,4096,4096,128x256x32_w4_v2,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),1,4096,4096,128x256x32_w4_v2,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),1,4096,4096,128x256x32_w8_v2,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),1,4096,4096,128x256x32_w8_v2,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),1,4096,4096,64x64x32_w4_v2,OK,ms=0.422,tflops=0.08,gbps=22.4,maxabs=1.898e-02,p99=1.403e-02,rel=2.504e-04
+INT4,BITSHIFT,U(-1,1),1,4096,4096,64x64x32_w4_v2,SKIP,opt only LUT path
+INT4,LUT,U(-1,1),1,4096,4096,64x128x32_w4_v2,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),1,4096,4096,64x128x32_w4_v2,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),16,4096,4096,16x64x32_w4,OK,ms=0.674,tflops=0.80,gbps=14.8,maxabs=4.807e-04,p99=1.450e-04,rel=1.454e-06
+INT4,BITSHIFT,U(-1,1),16,4096,4096,16x64x32_w4,OK,ms=0.689,tflops=0.78,gbps=14.5,maxabs=1.680e-02,p99=9.844e-03,rel=1.776e-04
+INT4,LUT,U(-1,1),16,4096,4096,16x128x32_w8,OK,ms=0.818,tflops=0.66,gbps=12.2,maxabs=4.807e-04,p99=1.450e-04,rel=1.454e-06
+INT4,BITSHIFT,U(-1,1),16,4096,4096,16x128x32_w8,OK,ms=0.815,tflops=0.66,gbps=12.2,maxabs=1.680e-02,p99=9.844e-03,rel=1.776e-04
+INT4,LUT,U(-1,1),16,4096,4096,16x128x32_w4f2,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),16,4096,4096,16x128x32_w4f2,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),16,4096,4096,16x256x32_w4f4,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),16,4096,4096,16x256x32_w4f4,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),16,4096,4096,128x64x32_w4_v1,SKIP,no template instantiation for this tile
+INT4,BITSHIFT,U(-1,1),16,4096,4096,128x64x32_w4_v1,SKIP,opt only LUT path
+INT4,LUT,U(-1,1),16,4096,4096,128x128x32_w4_v1,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),16,4096,4096,128x128x32_w4_v1,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),16,4096,4096,128x256x32_w4_v1,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),16,4096,4096,128x256x32_w4_v1,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),16,4096,4096,128x256x32_w8_v1,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),16,4096,4096,128x256x32_w8_v1,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),16,4096,4096,64x64x32_w4_v1,SKIP,no template instantiation for this tile
+INT4,BITSHIFT,U(-1,1),16,4096,4096,64x64x32_w4_v1,SKIP,opt only LUT path
+INT4,LUT,U(-1,1),16,4096,4096,64x128x32_w4_v1,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),16,4096,4096,64x128x32_w4_v1,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),16,4096,4096,128x64x32_w4_v2,OK,ms=0.576,tflops=0.93,gbps=17.3,maxabs=4.807e-04,p99=1.450e-04,rel=1.454e-06
+INT4,BITSHIFT,U(-1,1),16,4096,4096,128x64x32_w4_v2,SKIP,opt only LUT path
+INT4,LUT,U(-1,1),16,4096,4096,128x128x32_w4_v2,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),16,4096,4096,128x128x32_w4_v2,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),16,4096,4096,128x256x32_w4_v2,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),16,4096,4096,128x256x32_w4_v2,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),16,4096,4096,128x256x32_w8_v2,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),16,4096,4096,128x256x32_w8_v2,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),16,4096,4096,64x64x32_w4_v2,OK,ms=0.443,tflops=1.21,gbps=22.5,maxabs=4.807e-04,p99=1.450e-04,rel=1.454e-06
+INT4,BITSHIFT,U(-1,1),16,4096,4096,64x64x32_w4_v2,SKIP,opt only LUT path
+INT4,LUT,U(-1,1),16,4096,4096,64x128x32_w4_v2,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),16,4096,4096,64x128x32_w4_v2,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),64,4096,4096,16x64x32_w4,OK,ms=0.809,tflops=2.65,gbps=14.3,maxabs=4.807e-04,p99=1.450e-04,rel=1.464e-06
+INT4,BITSHIFT,U(-1,1),64,4096,4096,16x64x32_w4,OK,ms=0.978,tflops=2.20,gbps=11.8,maxabs=1.795e-02,p99=9.797e-03,rel=1.771e-04
+INT4,LUT,U(-1,1),64,4096,4096,16x128x32_w8,OK,ms=0.824,tflops=2.61,gbps=14.0,maxabs=4.807e-04,p99=1.450e-04,rel=1.464e-06
+INT4,BITSHIFT,U(-1,1),64,4096,4096,16x128x32_w8,OK,ms=1.022,tflops=2.10,gbps=11.3,maxabs=1.795e-02,p99=9.797e-03,rel=1.771e-04
+INT4,LUT,U(-1,1),64,4096,4096,16x128x32_w4f2,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),64,4096,4096,16x128x32_w4f2,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),64,4096,4096,16x256x32_w4f4,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),64,4096,4096,16x256x32_w4f4,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),64,4096,4096,128x64x32_w4_v1,SKIP,no template instantiation for this tile
+INT4,BITSHIFT,U(-1,1),64,4096,4096,128x64x32_w4_v1,SKIP,opt only LUT path
+INT4,LUT,U(-1,1),64,4096,4096,128x128x32_w4_v1,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),64,4096,4096,128x128x32_w4_v1,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),64,4096,4096,128x256x32_w4_v1,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),64,4096,4096,128x256x32_w4_v1,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),64,4096,4096,128x256x32_w8_v1,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),64,4096,4096,128x256x32_w8_v1,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),64,4096,4096,64x64x32_w4_v1,SKIP,no template instantiation for this tile
+INT4,BITSHIFT,U(-1,1),64,4096,4096,64x64x32_w4_v1,SKIP,opt only LUT path
+INT4,LUT,U(-1,1),64,4096,4096,64x128x32_w4_v1,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),64,4096,4096,64x128x32_w4_v1,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),64,4096,4096,128x64x32_w4_v2,OK,ms=0.609,tflops=3.53,gbps=18.9,maxabs=4.807e-04,p99=1.450e-04,rel=1.464e-06
+INT4,BITSHIFT,U(-1,1),64,4096,4096,128x64x32_w4_v2,SKIP,opt only LUT path
+INT4,LUT,U(-1,1),64,4096,4096,128x128x32_w4_v2,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),64,4096,4096,128x128x32_w4_v2,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),64,4096,4096,128x256x32_w4_v2,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),64,4096,4096,128x256x32_w4_v2,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),64,4096,4096,128x256x32_w8_v2,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),64,4096,4096,128x256x32_w8_v2,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),64,4096,4096,64x64x32_w4_v2,OK,ms=0.495,tflops=4.34,gbps=23.3,maxabs=4.807e-04,p99=1.450e-04,rel=1.464e-06
+INT4,BITSHIFT,U(-1,1),64,4096,4096,64x64x32_w4_v2,SKIP,opt only LUT path
+INT4,LUT,U(-1,1),64,4096,4096,64x128x32_w4_v2,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),64,4096,4096,64x128x32_w4_v2,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),128,4096,4096,16x64x32_w4,OK,ms=0.929,tflops=4.62,gbps=14.7,maxabs=4.196e-04,p99=1.221e-04,rel=1.260e-06
+INT4,BITSHIFT,U(-1,1),128,4096,4096,16x64x32_w4,OK,ms=1.510,tflops=2.84,gbps=9.0,maxabs=1.828e-02,p99=9.782e-03,rel=1.771e-04
+INT4,LUT,U(-1,1),128,4096,4096,16x128x32_w8,OK,ms=0.998,tflops=4.30,gbps=13.7,maxabs=4.196e-04,p99=1.221e-04,rel=1.260e-06
+INT4,BITSHIFT,U(-1,1),128,4096,4096,16x128x32_w8,OK,ms=2.149,tflops=2.00,gbps=6.3,maxabs=1.828e-02,p99=9.782e-03,rel=1.771e-04
+INT4,LUT,U(-1,1),128,4096,4096,16x128x32_w4f2,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),128,4096,4096,16x128x32_w4f2,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),128,4096,4096,16x256x32_w4f4,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),128,4096,4096,16x256x32_w4f4,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),128,4096,4096,128x64x32_w4_v1,SKIP,no template instantiation for this tile
+INT4,BITSHIFT,U(-1,1),128,4096,4096,128x64x32_w4_v1,SKIP,opt only LUT path
+INT4,LUT,U(-1,1),128,4096,4096,128x128x32_w4_v1,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),128,4096,4096,128x128x32_w4_v1,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),128,4096,4096,128x256x32_w4_v1,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),128,4096,4096,128x256x32_w4_v1,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),128,4096,4096,128x256x32_w8_v1,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),128,4096,4096,128x256x32_w8_v1,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),128,4096,4096,64x64x32_w4_v1,SKIP,no template instantiation for this tile
+INT4,BITSHIFT,U(-1,1),128,4096,4096,64x64x32_w4_v1,SKIP,opt only LUT path
+INT4,LUT,U(-1,1),128,4096,4096,64x128x32_w4_v1,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),128,4096,4096,64x128x32_w4_v1,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),128,4096,4096,128x64x32_w4_v2,OK,ms=0.674,tflops=6.37,gbps=20.2,maxabs=4.196e-04,p99=1.221e-04,rel=1.260e-06
+INT4,BITSHIFT,U(-1,1),128,4096,4096,128x64x32_w4_v2,SKIP,opt only LUT path
+INT4,LUT,U(-1,1),128,4096,4096,128x128x32_w4_v2,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),128,4096,4096,128x128x32_w4_v2,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),128,4096,4096,128x256x32_w4_v2,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),128,4096,4096,128x256x32_w4_v2,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),128,4096,4096,128x256x32_w8_v2,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),128,4096,4096,128x256x32_w8_v2,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),128,4096,4096,64x64x32_w4_v2,OK,ms=0.516,tflops=8.32,gbps=26.4,maxabs=4.196e-04,p99=1.221e-04,rel=1.260e-06
+INT4,BITSHIFT,U(-1,1),128,4096,4096,64x64x32_w4_v2,SKIP,opt only LUT path
+INT4,LUT,U(-1,1),128,4096,4096,64x128x32_w4_v2,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),128,4096,4096,64x128x32_w4_v2,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),256,4096,4096,16x64x32_w4,OK,ms=1.936,tflops=4.44,gbps=9.2,maxabs=5.493e-04,p99=1.411e-04,rel=1.426e-06
+INT4,BITSHIFT,U(-1,1),256,4096,4096,16x64x32_w4,OK,ms=3.022,tflops=2.84,gbps=5.9,maxabs=1.936e-02,p99=9.787e-03,rel=1.769e-04
+INT4,LUT,U(-1,1),256,4096,4096,16x128x32_w8,OK,ms=1.985,tflops=4.33,gbps=9.0,maxabs=5.493e-04,p99=1.411e-04,rel=1.426e-06
+INT4,BITSHIFT,U(-1,1),256,4096,4096,16x128x32_w8,OK,ms=3.739,tflops=2.30,gbps=4.8,maxabs=1.936e-02,p99=9.787e-03,rel=1.769e-04
+INT4,LUT,U(-1,1),256,4096,4096,16x128x32_w4f2,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),256,4096,4096,16x128x32_w4f2,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),256,4096,4096,16x256x32_w4f4,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),256,4096,4096,16x256x32_w4f4,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),256,4096,4096,128x64x32_w4_v1,SKIP,no template instantiation for this tile
+INT4,BITSHIFT,U(-1,1),256,4096,4096,128x64x32_w4_v1,SKIP,opt only LUT path
+INT4,LUT,U(-1,1),256,4096,4096,128x128x32_w4_v1,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),256,4096,4096,128x128x32_w4_v1,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),256,4096,4096,128x256x32_w4_v1,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),256,4096,4096,128x256x32_w4_v1,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),256,4096,4096,128x256x32_w8_v1,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),256,4096,4096,128x256x32_w8_v1,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),256,4096,4096,64x64x32_w4_v1,SKIP,no template instantiation for this tile
+INT4,BITSHIFT,U(-1,1),256,4096,4096,64x64x32_w4_v1,SKIP,opt only LUT path
+INT4,LUT,U(-1,1),256,4096,4096,64x128x32_w4_v1,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),256,4096,4096,64x128x32_w4_v1,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),256,4096,4096,128x64x32_w4_v2,OK,ms=0.811,tflops=10.60,gbps=22.0,maxabs=5.493e-04,p99=1.411e-04,rel=1.426e-06
+INT4,BITSHIFT,U(-1,1),256,4096,4096,128x64x32_w4_v2,SKIP,opt only LUT path
+INT4,LUT,U(-1,1),256,4096,4096,128x128x32_w4_v2,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),256,4096,4096,128x128x32_w4_v2,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),256,4096,4096,128x256x32_w4_v2,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),256,4096,4096,128x256x32_w4_v2,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),256,4096,4096,128x256x32_w8_v2,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),256,4096,4096,128x256x32_w8_v2,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),256,4096,4096,64x64x32_w4_v2,OK,ms=0.662,tflops=12.99,gbps=26.9,maxabs=5.493e-04,p99=1.411e-04,rel=1.426e-06
+INT4,BITSHIFT,U(-1,1),256,4096,4096,64x64x32_w4_v2,SKIP,opt only LUT path
+INT4,LUT,U(-1,1),256,4096,4096,64x128x32_w4_v2,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),256,4096,4096,64x128x32_w4_v2,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),512,4096,4096,16x64x32_w4,OK,ms=3.781,tflops=4.54,gbps=6.9,maxabs=5.112e-04,p99=1.221e-04,rel=1.261e-06
+INT4,BITSHIFT,U(-1,1),512,4096,4096,16x64x32_w4,OK,ms=5.874,tflops=2.92,gbps=4.5,maxabs=1.960e-02,p99=9.790e-03,rel=1.770e-04
+INT4,LUT,U(-1,1),512,4096,4096,16x128x32_w8,OK,ms=3.906,tflops=4.40,gbps=6.7,maxabs=5.112e-04,p99=1.221e-04,rel=1.261e-06
+INT4,BITSHIFT,U(-1,1),512,4096,4096,16x128x32_w8,OK,ms=6.505,tflops=2.64,gbps=4.0,maxabs=1.960e-02,p99=9.790e-03,rel=1.770e-04
+INT4,LUT,U(-1,1),512,4096,4096,16x128x32_w4f2,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),512,4096,4096,16x128x32_w4f2,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),512,4096,4096,16x256x32_w4f4,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),512,4096,4096,16x256x32_w4f4,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),512,4096,4096,128x64x32_w4_v1,SKIP,no template instantiation for this tile
+INT4,BITSHIFT,U(-1,1),512,4096,4096,128x64x32_w4_v1,SKIP,opt only LUT path
+INT4,LUT,U(-1,1),512,4096,4096,128x128x32_w4_v1,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),512,4096,4096,128x128x32_w4_v1,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),512,4096,4096,128x256x32_w4_v1,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),512,4096,4096,128x256x32_w4_v1,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),512,4096,4096,128x256x32_w8_v1,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),512,4096,4096,128x256x32_w8_v1,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),512,4096,4096,64x64x32_w4_v1,SKIP,no template instantiation for this tile
+INT4,BITSHIFT,U(-1,1),512,4096,4096,64x64x32_w4_v1,SKIP,opt only LUT path
+INT4,LUT,U(-1,1),512,4096,4096,64x128x32_w4_v1,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),512,4096,4096,64x128x32_w4_v1,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),512,4096,4096,128x64x32_w4_v2,OK,ms=1.055,tflops=16.28,gbps=24.8,maxabs=5.112e-04,p99=1.221e-04,rel=1.261e-06
+INT4,BITSHIFT,U(-1,1),512,4096,4096,128x64x32_w4_v2,SKIP,opt only LUT path
+INT4,LUT,U(-1,1),512,4096,4096,128x128x32_w4_v2,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),512,4096,4096,128x128x32_w4_v2,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),512,4096,4096,128x256x32_w4_v2,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),512,4096,4096,128x256x32_w4_v2,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),512,4096,4096,128x256x32_w8_v2,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),512,4096,4096,128x256x32_w8_v2,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),512,4096,4096,64x64x32_w4_v2,OK,ms=1.372,tflops=12.52,gbps=19.1,maxabs=5.112e-04,p99=1.221e-04,rel=1.261e-06
+INT4,BITSHIFT,U(-1,1),512,4096,4096,64x64x32_w4_v2,SKIP,opt only LUT path
+INT4,LUT,U(-1,1),512,4096,4096,64x128x32_w4_v2,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),512,4096,4096,64x128x32_w4_v2,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),1024,4096,4096,16x64x32_w4,OK,ms=6.808,tflops=5.05,gbps=6.3,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+INT4,BITSHIFT,U(-1,1),1024,4096,4096,16x64x32_w4,OK,ms=11.651,tflops=2.95,gbps=3.7,maxabs=2.059e-02,p99=9.796e-03,rel=1.772e-04
+INT4,LUT,U(-1,1),1024,4096,4096,16x128x32_w8,OK,ms=6.952,tflops=4.94,gbps=6.2,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+INT4,BITSHIFT,U(-1,1),1024,4096,4096,16x128x32_w8,OK,ms=12.146,tflops=2.83,gbps=3.5,maxabs=2.059e-02,p99=9.796e-03,rel=1.772e-04
+INT4,LUT,U(-1,1),1024,4096,4096,16x128x32_w4f2,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),1024,4096,4096,16x128x32_w4f2,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),1024,4096,4096,16x256x32_w4f4,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),1024,4096,4096,16x256x32_w4f4,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),1024,4096,4096,128x64x32_w4_v1,SKIP,no template instantiation for this tile
+INT4,BITSHIFT,U(-1,1),1024,4096,4096,128x64x32_w4_v1,SKIP,opt only LUT path
+INT4,LUT,U(-1,1),1024,4096,4096,128x128x32_w4_v1,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),1024,4096,4096,128x128x32_w4_v1,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),1024,4096,4096,128x256x32_w4_v1,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),1024,4096,4096,128x256x32_w4_v1,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),1024,4096,4096,128x256x32_w8_v1,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),1024,4096,4096,128x256x32_w8_v1,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),1024,4096,4096,64x64x32_w4_v1,SKIP,no template instantiation for this tile
+INT4,BITSHIFT,U(-1,1),1024,4096,4096,64x64x32_w4_v1,SKIP,opt only LUT path
+INT4,LUT,U(-1,1),1024,4096,4096,64x128x32_w4_v1,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),1024,4096,4096,64x128x32_w4_v1,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),1024,4096,4096,128x64x32_w4_v2,OK,ms=2.090,tflops=16.44,gbps=20.6,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+INT4,BITSHIFT,U(-1,1),1024,4096,4096,128x64x32_w4_v2,SKIP,opt only LUT path
+INT4,LUT,U(-1,1),1024,4096,4096,128x128x32_w4_v2,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),1024,4096,4096,128x128x32_w4_v2,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),1024,4096,4096,128x256x32_w4_v2,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),1024,4096,4096,128x256x32_w4_v2,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),1024,4096,4096,128x256x32_w8_v2,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),1024,4096,4096,128x256x32_w8_v2,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),1024,4096,4096,64x64x32_w4_v2,OK,ms=2.720,tflops=12.63,gbps=15.8,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+INT4,BITSHIFT,U(-1,1),1024,4096,4096,64x64x32_w4_v2,SKIP,opt only LUT path
+INT4,LUT,U(-1,1),1024,4096,4096,64x128x32_w4_v2,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),1024,4096,4096,64x128x32_w4_v2,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),2048,4096,4096,16x64x32_w4,OK,ms=12.924,tflops=5.32,gbps=5.9,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+INT4,BITSHIFT,U(-1,1),2048,4096,4096,16x64x32_w4,OK,ms=22.667,tflops=3.03,gbps=3.4,maxabs=2.059e-02,p99=9.799e-03,rel=1.772e-04
+INT4,LUT,U(-1,1),2048,4096,4096,16x128x32_w8,OK,ms=13.253,tflops=5.19,gbps=5.8,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+INT4,BITSHIFT,U(-1,1),2048,4096,4096,16x128x32_w8,OK,ms=23.866,tflops=2.88,gbps=3.2,maxabs=2.059e-02,p99=9.799e-03,rel=1.772e-04
+INT4,LUT,U(-1,1),2048,4096,4096,16x128x32_w4f2,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),2048,4096,4096,16x128x32_w4f2,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),2048,4096,4096,16x256x32_w4f4,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),2048,4096,4096,16x256x32_w4f4,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),2048,4096,4096,128x64x32_w4_v1,SKIP,no template instantiation for this tile
+INT4,BITSHIFT,U(-1,1),2048,4096,4096,128x64x32_w4_v1,SKIP,opt only LUT path
+INT4,LUT,U(-1,1),2048,4096,4096,128x128x32_w4_v1,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),2048,4096,4096,128x128x32_w4_v1,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),2048,4096,4096,128x256x32_w4_v1,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),2048,4096,4096,128x256x32_w4_v1,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),2048,4096,4096,128x256x32_w8_v1,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),2048,4096,4096,128x256x32_w8_v1,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),2048,4096,4096,64x64x32_w4_v1,SKIP,no template instantiation for this tile
+INT4,BITSHIFT,U(-1,1),2048,4096,4096,64x64x32_w4_v1,SKIP,opt only LUT path
+INT4,LUT,U(-1,1),2048,4096,4096,64x128x32_w4_v1,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),2048,4096,4096,64x128x32_w4_v1,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),2048,4096,4096,128x64x32_w4_v2,OK,ms=4.194,tflops=16.38,gbps=18.3,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+INT4,BITSHIFT,U(-1,1),2048,4096,4096,128x64x32_w4_v2,SKIP,opt only LUT path
+INT4,LUT,U(-1,1),2048,4096,4096,128x128x32_w4_v2,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),2048,4096,4096,128x128x32_w4_v2,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),2048,4096,4096,128x256x32_w4_v2,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),2048,4096,4096,128x256x32_w4_v2,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),2048,4096,4096,128x256x32_w8_v2,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),2048,4096,4096,128x256x32_w8_v2,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),2048,4096,4096,64x64x32_w4_v2,OK,ms=4.766,tflops=14.42,gbps=16.1,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+INT4,BITSHIFT,U(-1,1),2048,4096,4096,64x64x32_w4_v2,SKIP,opt only LUT path
+INT4,LUT,U(-1,1),2048,4096,4096,64x128x32_w4_v2,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),2048,4096,4096,64x128x32_w4_v2,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),1,7168,7168,16x64x32_w4,OK,ms=1.347,tflops=0.08,gbps=21.5,maxabs=2.849e-02,p99=1.838e-02,rel=2.533e-04
+INT4,BITSHIFT,U(-1,1),1,7168,7168,16x64x32_w4,OK,ms=0.886,tflops=0.12,gbps=32.7,maxabs=1.848e-02,p99=1.350e-02,rel=1.814e-04
+INT4,LUT,U(-1,1),1,7168,7168,16x128x32_w8,OK,ms=1.353,tflops=0.08,gbps=21.4,maxabs=2.849e-02,p99=1.838e-02,rel=2.533e-04
+INT4,BITSHIFT,U(-1,1),1,7168,7168,16x128x32_w8,OK,ms=0.923,tflops=0.11,gbps=31.4,maxabs=1.848e-02,p99=1.350e-02,rel=1.814e-04
+INT4,LUT,U(-1,1),1,7168,7168,16x128x32_w4f2,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),1,7168,7168,16x128x32_w4f2,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),1,7168,7168,16x256x32_w4f4,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),1,7168,7168,16x256x32_w4f4,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),1,7168,7168,128x64x32_w4_v1,SKIP,no template instantiation for this tile
+INT4,BITSHIFT,U(-1,1),1,7168,7168,128x64x32_w4_v1,SKIP,opt only LUT path
+INT4,LUT,U(-1,1),1,7168,7168,128x128x32_w4_v1,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),1,7168,7168,128x128x32_w4_v1,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),1,7168,7168,128x256x32_w4_v1,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),1,7168,7168,128x256x32_w4_v1,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),1,7168,7168,128x256x32_w8_v1,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),1,7168,7168,128x256x32_w8_v1,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),1,7168,7168,64x64x32_w4_v1,SKIP,no template instantiation for this tile
+INT4,BITSHIFT,U(-1,1),1,7168,7168,64x64x32_w4_v1,SKIP,opt only LUT path
+INT4,LUT,U(-1,1),1,7168,7168,64x128x32_w4_v1,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),1,7168,7168,64x128x32_w4_v1,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),1,7168,7168,128x64x32_w4_v2,OK,ms=1.370,tflops=0.08,gbps=21.1,maxabs=2.849e-02,p99=1.838e-02,rel=2.533e-04
+INT4,BITSHIFT,U(-1,1),1,7168,7168,128x64x32_w4_v2,SKIP,opt only LUT path
+INT4,LUT,U(-1,1),1,7168,7168,128x128x32_w4_v2,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),1,7168,7168,128x128x32_w4_v2,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),1,7168,7168,128x256x32_w4_v2,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),1,7168,7168,128x256x32_w4_v2,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),1,7168,7168,128x256x32_w8_v2,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),1,7168,7168,128x256x32_w8_v2,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),1,7168,7168,64x64x32_w4_v2,OK,ms=0.861,tflops=0.12,gbps=33.6,maxabs=2.849e-02,p99=1.838e-02,rel=2.533e-04
+INT4,BITSHIFT,U(-1,1),1,7168,7168,64x64x32_w4_v2,SKIP,opt only LUT path
+INT4,LUT,U(-1,1),1,7168,7168,64x128x32_w4_v2,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),1,7168,7168,64x128x32_w4_v2,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),16,7168,7168,16x64x32_w4,OK,ms=1.391,tflops=1.18,gbps=21.4,maxabs=8.087e-04,p99=2.480e-04,rel=1.930e-06
+INT4,BITSHIFT,U(-1,1),16,7168,7168,16x64x32_w4,OK,ms=1.315,tflops=1.25,gbps=22.7,maxabs=2.320e-02,p99=1.296e-02,rel=1.773e-04
+INT4,LUT,U(-1,1),16,7168,7168,16x128x32_w8,OK,ms=1.429,tflops=1.15,gbps=20.9,maxabs=8.087e-04,p99=2.480e-04,rel=1.930e-06
+INT4,BITSHIFT,U(-1,1),16,7168,7168,16x128x32_w8,OK,ms=1.425,tflops=1.15,gbps=20.9,maxabs=2.320e-02,p99=1.296e-02,rel=1.773e-04
+INT4,LUT,U(-1,1),16,7168,7168,16x128x32_w4f2,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),16,7168,7168,16x128x32_w4f2,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),16,7168,7168,16x256x32_w4f4,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),16,7168,7168,16x256x32_w4f4,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),16,7168,7168,128x64x32_w4_v1,SKIP,no template instantiation for this tile
+INT4,BITSHIFT,U(-1,1),16,7168,7168,128x64x32_w4_v1,SKIP,opt only LUT path
+INT4,LUT,U(-1,1),16,7168,7168,128x128x32_w4_v1,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),16,7168,7168,128x128x32_w4_v1,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),16,7168,7168,128x256x32_w4_v1,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),16,7168,7168,128x256x32_w4_v1,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),16,7168,7168,128x256x32_w8_v1,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),16,7168,7168,128x256x32_w8_v1,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),16,7168,7168,64x64x32_w4_v1,SKIP,no template instantiation for this tile
+INT4,BITSHIFT,U(-1,1),16,7168,7168,64x64x32_w4_v1,SKIP,opt only LUT path
+INT4,LUT,U(-1,1),16,7168,7168,64x128x32_w4_v1,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),16,7168,7168,64x128x32_w4_v1,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),16,7168,7168,128x64x32_w4_v2,OK,ms=1.382,tflops=1.19,gbps=21.6,maxabs=8.087e-04,p99=2.480e-04,rel=1.930e-06
+INT4,BITSHIFT,U(-1,1),16,7168,7168,128x64x32_w4_v2,SKIP,opt only LUT path
+INT4,LUT,U(-1,1),16,7168,7168,128x128x32_w4_v2,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),16,7168,7168,128x128x32_w4_v2,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),16,7168,7168,128x256x32_w4_v2,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),16,7168,7168,128x256x32_w4_v2,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),16,7168,7168,128x256x32_w8_v2,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),16,7168,7168,128x256x32_w8_v2,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),16,7168,7168,64x64x32_w4_v2,OK,ms=0.924,tflops=1.78,gbps=32.3,maxabs=8.087e-04,p99=2.480e-04,rel=1.930e-06
+INT4,BITSHIFT,U(-1,1),16,7168,7168,64x64x32_w4_v2,SKIP,opt only LUT path
+INT4,LUT,U(-1,1),16,7168,7168,64x128x32_w4_v2,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),16,7168,7168,64x128x32_w4_v2,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),64,7168,7168,16x64x32_w4,OK,ms=1.565,tflops=4.20,gbps=20.8,maxabs=9.003e-04,p99=2.346e-04,rel=1.838e-06
+INT4,BITSHIFT,U(-1,1),64,7168,7168,16x64x32_w4,OK,ms=2.229,tflops=2.95,gbps=14.6,maxabs=2.349e-02,p99=1.297e-02,rel=1.774e-04
+INT4,LUT,U(-1,1),64,7168,7168,16x128x32_w8,OK,ms=1.609,tflops=4.09,gbps=20.2,maxabs=9.003e-04,p99=2.346e-04,rel=1.838e-06
+INT4,BITSHIFT,U(-1,1),64,7168,7168,16x128x32_w8,OK,ms=2.296,tflops=2.86,gbps=14.2,maxabs=2.349e-02,p99=1.297e-02,rel=1.774e-04
+INT4,LUT,U(-1,1),64,7168,7168,16x128x32_w4f2,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),64,7168,7168,16x128x32_w4f2,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),64,7168,7168,16x256x32_w4f4,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),64,7168,7168,16x256x32_w4f4,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),64,7168,7168,128x64x32_w4_v1,SKIP,no template instantiation for this tile
+INT4,BITSHIFT,U(-1,1),64,7168,7168,128x64x32_w4_v1,SKIP,opt only LUT path
+INT4,LUT,U(-1,1),64,7168,7168,128x128x32_w4_v1,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),64,7168,7168,128x128x32_w4_v1,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),64,7168,7168,128x256x32_w4_v1,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),64,7168,7168,128x256x32_w4_v1,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),64,7168,7168,128x256x32_w8_v1,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),64,7168,7168,128x256x32_w8_v1,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),64,7168,7168,64x64x32_w4_v1,SKIP,no template instantiation for this tile
+INT4,BITSHIFT,U(-1,1),64,7168,7168,64x64x32_w4_v1,SKIP,opt only LUT path
+INT4,LUT,U(-1,1),64,7168,7168,64x128x32_w4_v1,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),64,7168,7168,64x128x32_w4_v1,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),64,7168,7168,128x64x32_w4_v2,OK,ms=1.408,tflops=4.67,gbps=23.1,maxabs=9.003e-04,p99=2.346e-04,rel=1.838e-06
+INT4,BITSHIFT,U(-1,1),64,7168,7168,128x64x32_w4_v2,SKIP,opt only LUT path
+INT4,LUT,U(-1,1),64,7168,7168,128x128x32_w4_v2,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),64,7168,7168,128x128x32_w4_v2,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),64,7168,7168,128x256x32_w4_v2,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),64,7168,7168,128x256x32_w4_v2,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),64,7168,7168,128x256x32_w8_v2,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),64,7168,7168,128x256x32_w8_v2,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),64,7168,7168,64x64x32_w4_v2,OK,ms=1.011,tflops=6.51,gbps=32.2,maxabs=9.003e-04,p99=2.346e-04,rel=1.838e-06
+INT4,BITSHIFT,U(-1,1),64,7168,7168,64x64x32_w4_v2,SKIP,opt only LUT path
+INT4,LUT,U(-1,1),64,7168,7168,64x128x32_w4_v2,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),64,7168,7168,64x128x32_w4_v2,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),128,7168,7168,16x64x32_w4,OK,ms=3.280,tflops=4.01,gbps=11.0,maxabs=9.003e-04,p99=2.365e-04,rel=1.838e-06
+INT4,BITSHIFT,U(-1,1),128,7168,7168,16x64x32_w4,OK,ms=4.787,tflops=2.75,gbps=7.6,maxabs=2.577e-02,p99=1.295e-02,rel=1.772e-04
+INT4,LUT,U(-1,1),128,7168,7168,16x128x32_w8,OK,ms=3.416,tflops=3.85,gbps=10.6,maxabs=9.003e-04,p99=2.365e-04,rel=1.838e-06
+INT4,BITSHIFT,U(-1,1),128,7168,7168,16x128x32_w8,OK,ms=4.591,tflops=2.87,gbps=7.9,maxabs=2.577e-02,p99=1.295e-02,rel=1.772e-04
+INT4,LUT,U(-1,1),128,7168,7168,16x128x32_w4f2,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),128,7168,7168,16x128x32_w4f2,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),128,7168,7168,16x256x32_w4f4,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),128,7168,7168,16x256x32_w4f4,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),128,7168,7168,128x64x32_w4_v1,SKIP,no template instantiation for this tile
+INT4,BITSHIFT,U(-1,1),128,7168,7168,128x64x32_w4_v1,SKIP,opt only LUT path
+INT4,LUT,U(-1,1),128,7168,7168,128x128x32_w4_v1,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),128,7168,7168,128x128x32_w4_v1,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),128,7168,7168,128x256x32_w4_v1,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),128,7168,7168,128x256x32_w4_v1,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),128,7168,7168,128x256x32_w8_v1,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),128,7168,7168,128x256x32_w8_v1,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),128,7168,7168,64x64x32_w4_v1,SKIP,no template instantiation for this tile
+INT4,BITSHIFT,U(-1,1),128,7168,7168,64x64x32_w4_v1,SKIP,opt only LUT path
+INT4,LUT,U(-1,1),128,7168,7168,64x128x32_w4_v1,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),128,7168,7168,64x128x32_w4_v1,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),128,7168,7168,128x64x32_w4_v2,OK,ms=1.474,tflops=8.92,gbps=24.6,maxabs=9.003e-04,p99=2.365e-04,rel=1.838e-06
+INT4,BITSHIFT,U(-1,1),128,7168,7168,128x64x32_w4_v2,SKIP,opt only LUT path
+INT4,LUT,U(-1,1),128,7168,7168,128x128x32_w4_v2,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),128,7168,7168,128x128x32_w4_v2,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),128,7168,7168,128x256x32_w4_v2,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),128,7168,7168,128x256x32_w4_v2,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),128,7168,7168,128x256x32_w8_v2,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),128,7168,7168,128x256x32_w8_v2,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),128,7168,7168,64x64x32_w4_v2,OK,ms=1.101,tflops=11.94,gbps=32.9,maxabs=9.003e-04,p99=2.365e-04,rel=1.838e-06
+INT4,BITSHIFT,U(-1,1),128,7168,7168,64x64x32_w4_v2,SKIP,opt only LUT path
+INT4,LUT,U(-1,1),128,7168,7168,64x128x32_w4_v2,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),128,7168,7168,64x128x32_w4_v2,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),256,7168,7168,16x64x32_w4,OK,ms=5.271,tflops=4.99,gbps=8.3,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+INT4,BITSHIFT,U(-1,1),256,7168,7168,16x64x32_w4,OK,ms=9.098,tflops=2.89,gbps=4.8,maxabs=2.576e-02,p99=1.295e-02,rel=1.773e-04
+INT4,LUT,U(-1,1),256,7168,7168,16x128x32_w8,OK,ms=5.357,tflops=4.91,gbps=8.1,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+INT4,BITSHIFT,U(-1,1),256,7168,7168,16x128x32_w8,OK,ms=9.164,tflops=2.87,gbps=4.8,maxabs=2.576e-02,p99=1.295e-02,rel=1.773e-04
+INT4,LUT,U(-1,1),256,7168,7168,16x128x32_w4f2,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),256,7168,7168,16x128x32_w4f2,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),256,7168,7168,16x256x32_w4f4,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),256,7168,7168,16x256x32_w4f4,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),256,7168,7168,128x64x32_w4_v1,SKIP,no template instantiation for this tile
+INT4,BITSHIFT,U(-1,1),256,7168,7168,128x64x32_w4_v1,SKIP,opt only LUT path
+INT4,LUT,U(-1,1),256,7168,7168,128x128x32_w4_v1,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),256,7168,7168,128x128x32_w4_v1,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),256,7168,7168,128x256x32_w4_v1,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),256,7168,7168,128x256x32_w4_v1,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),256,7168,7168,128x256x32_w8_v1,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),256,7168,7168,128x256x32_w8_v1,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),256,7168,7168,64x64x32_w4_v1,SKIP,no template instantiation for this tile
+INT4,BITSHIFT,U(-1,1),256,7168,7168,64x64x32_w4_v1,SKIP,opt only LUT path
+INT4,LUT,U(-1,1),256,7168,7168,64x128x32_w4_v1,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),256,7168,7168,64x128x32_w4_v1,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),256,7168,7168,128x64x32_w4_v2,OK,ms=1.603,tflops=16.42,gbps=27.2,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+INT4,BITSHIFT,U(-1,1),256,7168,7168,128x64x32_w4_v2,SKIP,opt only LUT path
+INT4,LUT,U(-1,1),256,7168,7168,128x128x32_w4_v2,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),256,7168,7168,128x128x32_w4_v2,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),256,7168,7168,128x256x32_w4_v2,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),256,7168,7168,128x256x32_w4_v2,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),256,7168,7168,128x256x32_w8_v2,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),256,7168,7168,128x256x32_w8_v2,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),256,7168,7168,64x64x32_w4_v2,OK,ms=2.432,tflops=10.82,gbps=17.9,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+INT4,BITSHIFT,U(-1,1),256,7168,7168,64x64x32_w4_v2,SKIP,opt only LUT path
+INT4,LUT,U(-1,1),256,7168,7168,64x128x32_w4_v2,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),256,7168,7168,64x128x32_w4_v2,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),512,7168,7168,16x64x32_w4,OK,ms=10.545,tflops=4.99,gbps=5.5,maxabs=9.460e-04,p99=1.831e-04,rel=1.460e-06
+INT4,BITSHIFT,U(-1,1),512,7168,7168,16x64x32_w4,OK,ms=17.300,tflops=3.04,gbps=3.4,maxabs=2.574e-02,p99=1.296e-02,rel=1.772e-04
+INT4,LUT,U(-1,1),512,7168,7168,16x128x32_w8,OK,ms=10.852,tflops=4.85,gbps=5.4,maxabs=9.460e-04,p99=1.831e-04,rel=1.460e-06
+INT4,BITSHIFT,U(-1,1),512,7168,7168,16x128x32_w8,OK,ms=18.298,tflops=2.88,gbps=3.2,maxabs=2.574e-02,p99=1.296e-02,rel=1.772e-04
+INT4,LUT,U(-1,1),512,7168,7168,16x128x32_w4f2,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),512,7168,7168,16x128x32_w4f2,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),512,7168,7168,16x256x32_w4f4,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),512,7168,7168,16x256x32_w4f4,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),512,7168,7168,128x64x32_w4_v1,SKIP,no template instantiation for this tile
+INT4,BITSHIFT,U(-1,1),512,7168,7168,128x64x32_w4_v1,SKIP,opt only LUT path
+INT4,LUT,U(-1,1),512,7168,7168,128x128x32_w4_v1,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),512,7168,7168,128x128x32_w4_v1,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),512,7168,7168,128x256x32_w4_v1,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),512,7168,7168,128x256x32_w4_v1,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),512,7168,7168,128x256x32_w8_v1,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),512,7168,7168,128x256x32_w8_v1,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),512,7168,7168,64x64x32_w4_v1,SKIP,no template instantiation for this tile
+INT4,BITSHIFT,U(-1,1),512,7168,7168,64x64x32_w4_v1,SKIP,opt only LUT path
+INT4,LUT,U(-1,1),512,7168,7168,64x128x32_w4_v1,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),512,7168,7168,64x128x32_w4_v1,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),512,7168,7168,128x64x32_w4_v2,OK,ms=3.705,tflops=14.20,gbps=15.7,maxabs=9.460e-04,p99=1.831e-04,rel=1.460e-06
+INT4,BITSHIFT,U(-1,1),512,7168,7168,128x64x32_w4_v2,SKIP,opt only LUT path
+INT4,LUT,U(-1,1),512,7168,7168,128x128x32_w4_v2,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),512,7168,7168,128x128x32_w4_v2,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),512,7168,7168,128x256x32_w4_v2,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),512,7168,7168,128x256x32_w4_v2,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),512,7168,7168,128x256x32_w8_v2,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),512,7168,7168,128x256x32_w8_v2,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),512,7168,7168,64x64x32_w4_v2,OK,ms=3.605,tflops=14.60,gbps=16.2,maxabs=9.460e-04,p99=1.831e-04,rel=1.460e-06
+INT4,BITSHIFT,U(-1,1),512,7168,7168,64x64x32_w4_v2,SKIP,opt only LUT path
+INT4,LUT,U(-1,1),512,7168,7168,64x128x32_w4_v2,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),512,7168,7168,64x128x32_w4_v2,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),1024,7168,7168,16x64x32_w4,OK,ms=21.197,tflops=4.96,gbps=4.1,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+INT4,BITSHIFT,U(-1,1),1024,7168,7168,16x64x32_w4,OK,ms=33.923,tflops=3.10,gbps=2.6,maxabs=2.688e-02,p99=1.296e-02,rel=1.772e-04
+INT4,LUT,U(-1,1),1024,7168,7168,16x128x32_w8,OK,ms=21.521,tflops=4.89,gbps=4.1,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+INT4,BITSHIFT,U(-1,1),1024,7168,7168,16x128x32_w8,OK,ms=34.240,tflops=3.07,gbps=2.6,maxabs=2.688e-02,p99=1.296e-02,rel=1.772e-04
+INT4,LUT,U(-1,1),1024,7168,7168,16x128x32_w4f2,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),1024,7168,7168,16x128x32_w4f2,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),1024,7168,7168,16x256x32_w4f4,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),1024,7168,7168,16x256x32_w4f4,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),1024,7168,7168,128x64x32_w4_v1,SKIP,no template instantiation for this tile
+INT4,BITSHIFT,U(-1,1),1024,7168,7168,128x64x32_w4_v1,SKIP,opt only LUT path
+INT4,LUT,U(-1,1),1024,7168,7168,128x128x32_w4_v1,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),1024,7168,7168,128x128x32_w4_v1,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),1024,7168,7168,128x256x32_w4_v1,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),1024,7168,7168,128x256x32_w4_v1,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),1024,7168,7168,128x256x32_w8_v1,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),1024,7168,7168,128x256x32_w8_v1,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),1024,7168,7168,64x64x32_w4_v1,SKIP,no template instantiation for this tile
+INT4,BITSHIFT,U(-1,1),1024,7168,7168,64x64x32_w4_v1,SKIP,opt only LUT path
+INT4,LUT,U(-1,1),1024,7168,7168,64x128x32_w4_v1,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),1024,7168,7168,64x128x32_w4_v1,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),1024,7168,7168,128x64x32_w4_v2,OK,ms=5.489,tflops=19.17,gbps=16.0,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+INT4,BITSHIFT,U(-1,1),1024,7168,7168,128x64x32_w4_v2,SKIP,opt only LUT path
+INT4,LUT,U(-1,1),1024,7168,7168,128x128x32_w4_v2,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),1024,7168,7168,128x128x32_w4_v2,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),1024,7168,7168,128x256x32_w4_v2,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),1024,7168,7168,128x256x32_w4_v2,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),1024,7168,7168,128x256x32_w8_v2,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),1024,7168,7168,128x256x32_w8_v2,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),1024,7168,7168,64x64x32_w4_v2,OK,ms=7.192,tflops=14.63,gbps=12.2,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+INT4,BITSHIFT,U(-1,1),1024,7168,7168,64x64x32_w4_v2,SKIP,opt only LUT path
+INT4,LUT,U(-1,1),1024,7168,7168,64x128x32_w4_v2,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),1024,7168,7168,64x128x32_w4_v2,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),2048,7168,7168,16x64x32_w4,OK,ms=40.754,tflops=5.16,gbps=3.6,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+INT4,BITSHIFT,U(-1,1),2048,7168,7168,16x64x32_w4,OK,ms=67.521,tflops=3.12,gbps=2.2,maxabs=2.688e-02,p99=1.296e-02,rel=1.772e-04
+INT4,LUT,U(-1,1),2048,7168,7168,16x128x32_w8,OK,ms=41.292,tflops=5.10,gbps=3.5,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+INT4,BITSHIFT,U(-1,1),2048,7168,7168,16x128x32_w8,OK,ms=68.474,tflops=3.07,gbps=2.1,maxabs=2.688e-02,p99=1.296e-02,rel=1.772e-04
+INT4,LUT,U(-1,1),2048,7168,7168,16x128x32_w4f2,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),2048,7168,7168,16x128x32_w4f2,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),2048,7168,7168,16x256x32_w4f4,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),2048,7168,7168,16x256x32_w4f4,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),2048,7168,7168,128x64x32_w4_v1,SKIP,no template instantiation for this tile
+INT4,BITSHIFT,U(-1,1),2048,7168,7168,128x64x32_w4_v1,SKIP,opt only LUT path
+INT4,LUT,U(-1,1),2048,7168,7168,128x128x32_w4_v1,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),2048,7168,7168,128x128x32_w4_v1,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),2048,7168,7168,128x256x32_w4_v1,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),2048,7168,7168,128x256x32_w4_v1,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),2048,7168,7168,128x256x32_w8_v1,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),2048,7168,7168,128x256x32_w8_v1,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),2048,7168,7168,64x64x32_w4_v1,SKIP,no template instantiation for this tile
+INT4,BITSHIFT,U(-1,1),2048,7168,7168,64x64x32_w4_v1,SKIP,opt only LUT path
+INT4,LUT,U(-1,1),2048,7168,7168,64x128x32_w4_v1,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),2048,7168,7168,64x128x32_w4_v1,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),2048,7168,7168,128x64x32_w4_v2,OK,ms=10.970,tflops=19.19,gbps=13.3,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+INT4,BITSHIFT,U(-1,1),2048,7168,7168,128x64x32_w4_v2,SKIP,opt only LUT path
+INT4,LUT,U(-1,1),2048,7168,7168,128x128x32_w4_v2,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),2048,7168,7168,128x128x32_w4_v2,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),2048,7168,7168,128x256x32_w4_v2,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),2048,7168,7168,128x256x32_w4_v2,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),2048,7168,7168,128x256x32_w8_v2,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),2048,7168,7168,128x256x32_w8_v2,SKIP,BN/WARPS != 16
+INT4,LUT,U(-1,1),2048,7168,7168,64x64x32_w4_v2,OK,ms=14.268,tflops=14.75,gbps=10.3,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+INT4,BITSHIFT,U(-1,1),2048,7168,7168,64x64x32_w4_v2,SKIP,opt only LUT path
+INT4,LUT,U(-1,1),2048,7168,7168,64x128x32_w4_v2,SKIP,BN/WARPS != 16
+INT4,BITSHIFT,U(-1,1),2048,7168,7168,64x128x32_w4_v2,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),1,4096,4096,16x64x32_w4,OK,ms=0.678,tflops=0.05,gbps=13.2,maxabs=1.194e-02,p99=9.323e-03,rel=1.840e-04
+MXFP4,BITSHIFT,U(-1,1),1,4096,4096,16x64x32_w4,OK,ms=0.762,tflops=0.04,gbps=11.7,maxabs=1.194e-02,p99=9.315e-03,rel=1.840e-04
+MXFP4,LUT,U(-1,1),1,4096,4096,16x128x32_w8,OK,ms=0.727,tflops=0.05,gbps=12.3,maxabs=1.194e-02,p99=9.323e-03,rel=1.840e-04
+MXFP4,BITSHIFT,U(-1,1),1,4096,4096,16x128x32_w8,OK,ms=0.866,tflops=0.04,gbps=10.3,maxabs=1.194e-02,p99=9.315e-03,rel=1.840e-04
+MXFP4,LUT,U(-1,1),1,4096,4096,16x128x32_w4f2,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),1,4096,4096,16x128x32_w4f2,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),1,4096,4096,16x256x32_w4f4,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),1,4096,4096,16x256x32_w4f4,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),1,4096,4096,128x64x32_w4_v1,SKIP,no template
+MXFP4,BITSHIFT,U(-1,1),1,4096,4096,128x64x32_w4_v1,SKIP,opt only LUT path
+MXFP4,LUT,U(-1,1),1,4096,4096,128x128x32_w4_v1,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),1,4096,4096,128x128x32_w4_v1,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),1,4096,4096,128x256x32_w4_v1,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),1,4096,4096,128x256x32_w4_v1,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),1,4096,4096,128x256x32_w8_v1,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),1,4096,4096,128x256x32_w8_v1,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),1,4096,4096,64x64x32_w4_v1,SKIP,no template
+MXFP4,BITSHIFT,U(-1,1),1,4096,4096,64x64x32_w4_v1,SKIP,opt only LUT path
+MXFP4,LUT,U(-1,1),1,4096,4096,64x128x32_w4_v1,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),1,4096,4096,64x128x32_w4_v1,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),1,4096,4096,128x64x32_w4_v2,OK,ms=0.591,tflops=0.06,gbps=15.1,maxabs=1.194e-02,p99=9.323e-03,rel=1.840e-04
+MXFP4,BITSHIFT,U(-1,1),1,4096,4096,128x64x32_w4_v2,SKIP,opt only LUT path
+MXFP4,LUT,U(-1,1),1,4096,4096,128x128x32_w4_v2,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),1,4096,4096,128x128x32_w4_v2,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),1,4096,4096,128x256x32_w4_v2,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),1,4096,4096,128x256x32_w4_v2,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),1,4096,4096,128x256x32_w8_v2,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),1,4096,4096,128x256x32_w8_v2,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),1,4096,4096,64x64x32_w4_v2,OK,ms=0.474,tflops=0.07,gbps=18.9,maxabs=1.194e-02,p99=9.323e-03,rel=1.840e-04
+MXFP4,BITSHIFT,U(-1,1),1,4096,4096,64x64x32_w4_v2,SKIP,opt only LUT path
+MXFP4,LUT,U(-1,1),1,4096,4096,64x128x32_w4_v2,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),1,4096,4096,64x128x32_w4_v2,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),16,4096,4096,16x64x32_w4,OK,ms=0.668,tflops=0.80,gbps=14.1,maxabs=4.578e-05,p99=1.907e-05,rel=2.004e-07
+MXFP4,BITSHIFT,U(-1,1),16,4096,4096,16x64x32_w4,OK,ms=0.812,tflops=0.66,gbps=11.6,maxabs=3.815e-05,p99=1.144e-05,rel=1.425e-07
+MXFP4,LUT,U(-1,1),16,4096,4096,16x128x32_w8,OK,ms=0.785,tflops=0.68,gbps=12.0,maxabs=4.578e-05,p99=1.907e-05,rel=2.004e-07
+MXFP4,BITSHIFT,U(-1,1),16,4096,4096,16x128x32_w8,OK,ms=1.055,tflops=0.51,gbps=8.9,maxabs=3.815e-05,p99=1.144e-05,rel=1.425e-07
+MXFP4,LUT,U(-1,1),16,4096,4096,16x128x32_w4f2,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),16,4096,4096,16x128x32_w4f2,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),16,4096,4096,16x256x32_w4f4,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),16,4096,4096,16x256x32_w4f4,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),16,4096,4096,128x64x32_w4_v1,SKIP,no template
+MXFP4,BITSHIFT,U(-1,1),16,4096,4096,128x64x32_w4_v1,SKIP,opt only LUT path
+MXFP4,LUT,U(-1,1),16,4096,4096,128x128x32_w4_v1,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),16,4096,4096,128x128x32_w4_v1,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),16,4096,4096,128x256x32_w4_v1,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),16,4096,4096,128x256x32_w4_v1,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),16,4096,4096,128x256x32_w8_v1,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),16,4096,4096,128x256x32_w8_v1,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),16,4096,4096,64x64x32_w4_v1,SKIP,no template
+MXFP4,BITSHIFT,U(-1,1),16,4096,4096,64x64x32_w4_v1,SKIP,opt only LUT path
+MXFP4,LUT,U(-1,1),16,4096,4096,64x128x32_w4_v1,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),16,4096,4096,64x128x32_w4_v1,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),16,4096,4096,128x64x32_w4_v2,OK,ms=0.613,tflops=0.88,gbps=15.4,maxabs=4.578e-05,p99=1.907e-05,rel=2.004e-07
+MXFP4,BITSHIFT,U(-1,1),16,4096,4096,128x64x32_w4_v2,SKIP,opt only LUT path
+MXFP4,LUT,U(-1,1),16,4096,4096,128x128x32_w4_v2,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),16,4096,4096,128x128x32_w4_v2,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),16,4096,4096,128x256x32_w4_v2,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),16,4096,4096,128x256x32_w4_v2,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),16,4096,4096,128x256x32_w8_v2,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),16,4096,4096,128x256x32_w8_v2,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),16,4096,4096,64x64x32_w4_v2,OK,ms=0.489,tflops=1.10,gbps=19.3,maxabs=4.578e-05,p99=1.907e-05,rel=2.004e-07
+MXFP4,BITSHIFT,U(-1,1),16,4096,4096,64x64x32_w4_v2,SKIP,opt only LUT path
+MXFP4,LUT,U(-1,1),16,4096,4096,64x128x32_w4_v2,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),16,4096,4096,64x128x32_w4_v2,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),64,4096,4096,16x64x32_w4,OK,ms=0.800,tflops=2.68,gbps=13.8,maxabs=9.155e-05,p99=1.907e-05,rel=2.030e-07
+MXFP4,BITSHIFT,U(-1,1),64,4096,4096,16x64x32_w4,OK,ms=1.127,tflops=1.91,gbps=9.8,maxabs=5.341e-05,p99=1.144e-05,rel=1.456e-07
+MXFP4,LUT,U(-1,1),64,4096,4096,16x128x32_w8,OK,ms=0.829,tflops=2.59,gbps=13.3,maxabs=9.155e-05,p99=1.907e-05,rel=2.030e-07
+MXFP4,BITSHIFT,U(-1,1),64,4096,4096,16x128x32_w8,OK,ms=1.259,tflops=1.71,gbps=8.7,maxabs=5.341e-05,p99=1.144e-05,rel=1.456e-07
+MXFP4,LUT,U(-1,1),64,4096,4096,16x128x32_w4f2,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),64,4096,4096,16x128x32_w4f2,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),64,4096,4096,16x256x32_w4f4,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),64,4096,4096,16x256x32_w4f4,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),64,4096,4096,128x64x32_w4_v1,SKIP,no template
+MXFP4,BITSHIFT,U(-1,1),64,4096,4096,128x64x32_w4_v1,SKIP,opt only LUT path
+MXFP4,LUT,U(-1,1),64,4096,4096,128x128x32_w4_v1,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),64,4096,4096,128x128x32_w4_v1,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),64,4096,4096,128x256x32_w4_v1,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),64,4096,4096,128x256x32_w4_v1,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),64,4096,4096,128x256x32_w8_v1,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),64,4096,4096,128x256x32_w8_v1,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),64,4096,4096,64x64x32_w4_v1,SKIP,no template
+MXFP4,BITSHIFT,U(-1,1),64,4096,4096,64x64x32_w4_v1,SKIP,opt only LUT path
+MXFP4,LUT,U(-1,1),64,4096,4096,64x128x32_w4_v1,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),64,4096,4096,64x128x32_w4_v1,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),64,4096,4096,128x64x32_w4_v2,OK,ms=0.636,tflops=3.38,gbps=17.3,maxabs=9.155e-05,p99=1.907e-05,rel=2.030e-07
+MXFP4,BITSHIFT,U(-1,1),64,4096,4096,128x64x32_w4_v2,SKIP,opt only LUT path
+MXFP4,LUT,U(-1,1),64,4096,4096,128x128x32_w4_v2,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),64,4096,4096,128x128x32_w4_v2,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),64,4096,4096,128x256x32_w4_v2,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),64,4096,4096,128x256x32_w4_v2,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),64,4096,4096,128x256x32_w8_v2,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),64,4096,4096,128x256x32_w8_v2,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),64,4096,4096,64x64x32_w4_v2,OK,ms=0.510,tflops=4.21,gbps=21.6,maxabs=9.155e-05,p99=1.907e-05,rel=2.030e-07
+MXFP4,BITSHIFT,U(-1,1),64,4096,4096,64x64x32_w4_v2,SKIP,opt only LUT path
+MXFP4,LUT,U(-1,1),64,4096,4096,64x128x32_w4_v2,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),64,4096,4096,64x128x32_w4_v2,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),128,4096,4096,16x64x32_w4,OK,ms=1.007,tflops=4.27,gbps=13.0,maxabs=8.392e-05,p99=1.526e-05,rel=1.796e-07
+MXFP4,BITSHIFT,U(-1,1),128,4096,4096,16x64x32_w4,OK,ms=1.537,tflops=2.79,gbps=8.5,maxabs=4.578e-05,p99=1.335e-05,rel=1.733e-07
+MXFP4,LUT,U(-1,1),128,4096,4096,16x128x32_w8,OK,ms=1.118,tflops=3.84,gbps=11.7,maxabs=8.392e-05,p99=1.526e-05,rel=1.796e-07
+MXFP4,BITSHIFT,U(-1,1),128,4096,4096,16x128x32_w8,OK,ms=1.820,tflops=2.36,gbps=7.2,maxabs=4.578e-05,p99=1.335e-05,rel=1.733e-07
+MXFP4,LUT,U(-1,1),128,4096,4096,16x128x32_w4f2,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),128,4096,4096,16x128x32_w4f2,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),128,4096,4096,16x256x32_w4f4,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),128,4096,4096,16x256x32_w4f4,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),128,4096,4096,128x64x32_w4_v1,SKIP,no template
+MXFP4,BITSHIFT,U(-1,1),128,4096,4096,128x64x32_w4_v1,SKIP,opt only LUT path
+MXFP4,LUT,U(-1,1),128,4096,4096,128x128x32_w4_v1,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),128,4096,4096,128x128x32_w4_v1,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),128,4096,4096,128x256x32_w4_v1,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),128,4096,4096,128x256x32_w4_v1,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),128,4096,4096,128x256x32_w8_v1,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),128,4096,4096,128x256x32_w8_v1,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),128,4096,4096,64x64x32_w4_v1,SKIP,no template
+MXFP4,BITSHIFT,U(-1,1),128,4096,4096,64x64x32_w4_v1,SKIP,opt only LUT path
+MXFP4,LUT,U(-1,1),128,4096,4096,64x128x32_w4_v1,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),128,4096,4096,64x128x32_w4_v1,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),128,4096,4096,128x64x32_w4_v2,OK,ms=0.690,tflops=6.23,gbps=19.0,maxabs=8.392e-05,p99=1.526e-05,rel=1.796e-07
+MXFP4,BITSHIFT,U(-1,1),128,4096,4096,128x64x32_w4_v2,SKIP,opt only LUT path
+MXFP4,LUT,U(-1,1),128,4096,4096,128x128x32_w4_v2,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),128,4096,4096,128x128x32_w4_v2,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),128,4096,4096,128x256x32_w4_v2,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),128,4096,4096,128x256x32_w4_v2,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),128,4096,4096,128x256x32_w8_v2,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),128,4096,4096,128x256x32_w8_v2,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),128,4096,4096,64x64x32_w4_v2,OK,ms=0.578,tflops=7.43,gbps=22.7,maxabs=8.392e-05,p99=1.526e-05,rel=1.796e-07
+MXFP4,BITSHIFT,U(-1,1),128,4096,4096,64x64x32_w4_v2,SKIP,opt only LUT path
+MXFP4,LUT,U(-1,1),128,4096,4096,64x128x32_w4_v2,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),128,4096,4096,64x128x32_w4_v2,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),256,4096,4096,16x64x32_w4,OK,ms=2.117,tflops=4.06,gbps=8.2,maxabs=9.155e-05,p99=1.717e-05,rel=1.988e-07
+MXFP4,BITSHIFT,U(-1,1),256,4096,4096,16x64x32_w4,OK,ms=3.374,tflops=2.55,gbps=5.1,maxabs=5.341e-05,p99=1.144e-05,rel=1.500e-07
+MXFP4,LUT,U(-1,1),256,4096,4096,16x128x32_w8,OK,ms=2.250,tflops=3.82,gbps=7.7,maxabs=9.155e-05,p99=1.717e-05,rel=1.988e-07
+MXFP4,BITSHIFT,U(-1,1),256,4096,4096,16x128x32_w8,OK,ms=3.663,tflops=2.34,gbps=4.7,maxabs=5.341e-05,p99=1.144e-05,rel=1.500e-07
+MXFP4,LUT,U(-1,1),256,4096,4096,16x128x32_w4f2,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),256,4096,4096,16x128x32_w4f2,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),256,4096,4096,16x256x32_w4f4,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),256,4096,4096,16x256x32_w4f4,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),256,4096,4096,128x64x32_w4_v1,SKIP,no template
+MXFP4,BITSHIFT,U(-1,1),256,4096,4096,128x64x32_w4_v1,SKIP,opt only LUT path
+MXFP4,LUT,U(-1,1),256,4096,4096,128x128x32_w4_v1,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),256,4096,4096,128x128x32_w4_v1,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),256,4096,4096,128x256x32_w4_v1,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),256,4096,4096,128x256x32_w4_v1,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),256,4096,4096,128x256x32_w8_v1,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),256,4096,4096,128x256x32_w8_v1,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),256,4096,4096,64x64x32_w4_v1,SKIP,no template
+MXFP4,BITSHIFT,U(-1,1),256,4096,4096,64x64x32_w4_v1,SKIP,opt only LUT path
+MXFP4,LUT,U(-1,1),256,4096,4096,64x128x32_w4_v1,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),256,4096,4096,64x128x32_w4_v1,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),256,4096,4096,128x64x32_w4_v2,OK,ms=0.836,tflops=10.27,gbps=20.7,maxabs=9.155e-05,p99=1.717e-05,rel=1.988e-07
+MXFP4,BITSHIFT,U(-1,1),256,4096,4096,128x64x32_w4_v2,SKIP,opt only LUT path
+MXFP4,LUT,U(-1,1),256,4096,4096,128x128x32_w4_v2,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),256,4096,4096,128x128x32_w4_v2,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),256,4096,4096,128x256x32_w4_v2,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),256,4096,4096,128x256x32_w4_v2,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),256,4096,4096,128x256x32_w8_v2,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),256,4096,4096,128x256x32_w8_v2,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),256,4096,4096,64x64x32_w4_v2,OK,ms=0.716,tflops=11.99,gbps=24.1,maxabs=9.155e-05,p99=1.717e-05,rel=1.988e-07
+MXFP4,BITSHIFT,U(-1,1),256,4096,4096,64x64x32_w4_v2,SKIP,opt only LUT path
+MXFP4,LUT,U(-1,1),256,4096,4096,64x128x32_w4_v2,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),256,4096,4096,64x128x32_w4_v2,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),512,4096,4096,16x64x32_w4,OK,ms=3.593,tflops=4.78,gbps=7.1,maxabs=8.392e-05,p99=1.526e-05,rel=1.786e-07
+MXFP4,BITSHIFT,U(-1,1),512,4096,4096,16x64x32_w4,OK,ms=6.242,tflops=2.75,gbps=4.1,maxabs=6.104e-05,p99=1.335e-05,rel=1.722e-07
+MXFP4,LUT,U(-1,1),512,4096,4096,16x128x32_w8,OK,ms=4.296,tflops=4.00,gbps=6.0,maxabs=8.392e-05,p99=1.526e-05,rel=1.786e-07
+MXFP4,BITSHIFT,U(-1,1),512,4096,4096,16x128x32_w8,OK,ms=7.014,tflops=2.45,gbps=3.7,maxabs=6.104e-05,p99=1.335e-05,rel=1.722e-07
+MXFP4,LUT,U(-1,1),512,4096,4096,16x128x32_w4f2,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),512,4096,4096,16x128x32_w4f2,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),512,4096,4096,16x256x32_w4f4,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),512,4096,4096,16x256x32_w4f4,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),512,4096,4096,128x64x32_w4_v1,SKIP,no template
+MXFP4,BITSHIFT,U(-1,1),512,4096,4096,128x64x32_w4_v1,SKIP,opt only LUT path
+MXFP4,LUT,U(-1,1),512,4096,4096,128x128x32_w4_v1,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),512,4096,4096,128x128x32_w4_v1,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),512,4096,4096,128x256x32_w4_v1,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),512,4096,4096,128x256x32_w4_v1,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),512,4096,4096,128x256x32_w8_v1,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),512,4096,4096,128x256x32_w8_v1,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),512,4096,4096,64x64x32_w4_v1,SKIP,no template
+MXFP4,BITSHIFT,U(-1,1),512,4096,4096,64x64x32_w4_v1,SKIP,opt only LUT path
+MXFP4,LUT,U(-1,1),512,4096,4096,64x128x32_w4_v1,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),512,4096,4096,64x128x32_w4_v1,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),512,4096,4096,128x64x32_w4_v2,OK,ms=1.083,tflops=15.86,gbps=23.7,maxabs=8.392e-05,p99=1.526e-05,rel=1.786e-07
+MXFP4,BITSHIFT,U(-1,1),512,4096,4096,128x64x32_w4_v2,SKIP,opt only LUT path
+MXFP4,LUT,U(-1,1),512,4096,4096,128x128x32_w4_v2,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),512,4096,4096,128x128x32_w4_v2,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),512,4096,4096,128x256x32_w4_v2,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),512,4096,4096,128x256x32_w4_v2,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),512,4096,4096,128x256x32_w8_v2,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),512,4096,4096,128x256x32_w8_v2,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),512,4096,4096,64x64x32_w4_v2,OK,ms=1.423,tflops=12.07,gbps=18.1,maxabs=8.392e-05,p99=1.526e-05,rel=1.786e-07
+MXFP4,BITSHIFT,U(-1,1),512,4096,4096,64x64x32_w4_v2,SKIP,opt only LUT path
+MXFP4,LUT,U(-1,1),512,4096,4096,64x128x32_w4_v2,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),512,4096,4096,64x128x32_w4_v2,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),1024,4096,4096,16x64x32_w4,OK,ms=7.189,tflops=4.78,gbps=5.9,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+MXFP4,BITSHIFT,U(-1,1),1024,4096,4096,16x64x32_w4,OK,ms=11.772,tflops=2.92,gbps=3.6,maxabs=1.526e-04,p99=2.289e-05,rel=2.490e-07
+MXFP4,LUT,U(-1,1),1024,4096,4096,16x128x32_w8,OK,ms=7.895,tflops=4.35,gbps=5.4,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+MXFP4,BITSHIFT,U(-1,1),1024,4096,4096,16x128x32_w8,OK,ms=12.834,tflops=2.68,gbps=3.3,maxabs=1.526e-04,p99=2.289e-05,rel=2.490e-07
+MXFP4,LUT,U(-1,1),1024,4096,4096,16x128x32_w4f2,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),1024,4096,4096,16x128x32_w4f2,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),1024,4096,4096,16x256x32_w4f4,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),1024,4096,4096,16x256x32_w4f4,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),1024,4096,4096,128x64x32_w4_v1,SKIP,no template
+MXFP4,BITSHIFT,U(-1,1),1024,4096,4096,128x64x32_w4_v1,SKIP,opt only LUT path
+MXFP4,LUT,U(-1,1),1024,4096,4096,128x128x32_w4_v1,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),1024,4096,4096,128x128x32_w4_v1,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),1024,4096,4096,128x256x32_w4_v1,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),1024,4096,4096,128x256x32_w4_v1,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),1024,4096,4096,128x256x32_w8_v1,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),1024,4096,4096,128x256x32_w8_v1,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),1024,4096,4096,64x64x32_w4_v1,SKIP,no template
+MXFP4,BITSHIFT,U(-1,1),1024,4096,4096,64x64x32_w4_v1,SKIP,opt only LUT path
+MXFP4,LUT,U(-1,1),1024,4096,4096,64x128x32_w4_v1,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),1024,4096,4096,64x128x32_w4_v1,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),1024,4096,4096,128x64x32_w4_v2,OK,ms=2.158,tflops=15.92,gbps=19.7,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+MXFP4,BITSHIFT,U(-1,1),1024,4096,4096,128x64x32_w4_v2,SKIP,opt only LUT path
+MXFP4,LUT,U(-1,1),1024,4096,4096,128x128x32_w4_v2,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),1024,4096,4096,128x128x32_w4_v2,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),1024,4096,4096,128x256x32_w4_v2,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),1024,4096,4096,128x256x32_w4_v2,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),1024,4096,4096,128x256x32_w8_v2,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),1024,4096,4096,128x256x32_w8_v2,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),1024,4096,4096,64x64x32_w4_v2,OK,ms=2.464,tflops=13.95,gbps=17.2,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+MXFP4,BITSHIFT,U(-1,1),1024,4096,4096,64x64x32_w4_v2,SKIP,opt only LUT path
+MXFP4,LUT,U(-1,1),1024,4096,4096,64x128x32_w4_v2,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),1024,4096,4096,64x128x32_w4_v2,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),2048,4096,4096,16x64x32_w4,OK,ms=14.130,tflops=4.86,gbps=5.4,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+MXFP4,BITSHIFT,U(-1,1),2048,4096,4096,16x64x32_w4,OK,ms=22.101,tflops=3.11,gbps=3.4,maxabs=1.526e-04,p99=2.289e-05,rel=2.498e-07
+MXFP4,LUT,U(-1,1),2048,4096,4096,16x128x32_w8,OK,ms=14.844,tflops=4.63,gbps=5.1,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+MXFP4,BITSHIFT,U(-1,1),2048,4096,4096,16x128x32_w8,OK,ms=23.961,tflops=2.87,gbps=3.2,maxabs=1.526e-04,p99=2.289e-05,rel=2.498e-07
+MXFP4,LUT,U(-1,1),2048,4096,4096,16x128x32_w4f2,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),2048,4096,4096,16x128x32_w4f2,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),2048,4096,4096,16x256x32_w4f4,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),2048,4096,4096,16x256x32_w4f4,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),2048,4096,4096,128x64x32_w4_v1,SKIP,no template
+MXFP4,BITSHIFT,U(-1,1),2048,4096,4096,128x64x32_w4_v1,SKIP,opt only LUT path
+MXFP4,LUT,U(-1,1),2048,4096,4096,128x128x32_w4_v1,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),2048,4096,4096,128x128x32_w4_v1,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),2048,4096,4096,128x256x32_w4_v1,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),2048,4096,4096,128x256x32_w4_v1,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),2048,4096,4096,128x256x32_w8_v1,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),2048,4096,4096,128x256x32_w8_v1,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),2048,4096,4096,64x64x32_w4_v1,SKIP,no template
+MXFP4,BITSHIFT,U(-1,1),2048,4096,4096,64x64x32_w4_v1,SKIP,opt only LUT path
+MXFP4,LUT,U(-1,1),2048,4096,4096,64x128x32_w4_v1,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),2048,4096,4096,64x128x32_w4_v1,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),2048,4096,4096,128x64x32_w4_v2,OK,ms=4.335,tflops=15.85,gbps=17.5,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+MXFP4,BITSHIFT,U(-1,1),2048,4096,4096,128x64x32_w4_v2,SKIP,opt only LUT path
+MXFP4,LUT,U(-1,1),2048,4096,4096,128x128x32_w4_v2,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),2048,4096,4096,128x128x32_w4_v2,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),2048,4096,4096,128x256x32_w4_v2,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),2048,4096,4096,128x256x32_w4_v2,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),2048,4096,4096,128x256x32_w8_v2,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),2048,4096,4096,128x256x32_w8_v2,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),2048,4096,4096,64x64x32_w4_v2,OK,ms=4.722,tflops=14.55,gbps=16.1,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+MXFP4,BITSHIFT,U(-1,1),2048,4096,4096,64x64x32_w4_v2,SKIP,opt only LUT path
+MXFP4,LUT,U(-1,1),2048,4096,4096,64x128x32_w4_v2,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),2048,4096,4096,64x128x32_w4_v2,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),1,7168,7168,16x64x32_w4,OK,ms=1.376,tflops=0.07,gbps=19.9,maxabs=1.681e-02,p99=1.249e-02,rel=1.828e-04
+MXFP4,BITSHIFT,U(-1,1),1,7168,7168,16x64x32_w4,OK,ms=1.582,tflops=0.06,gbps=17.3,maxabs=1.681e-02,p99=1.248e-02,rel=1.828e-04
+MXFP4,LUT,U(-1,1),1,7168,7168,16x128x32_w8,OK,ms=1.392,tflops=0.07,gbps=19.6,maxabs=1.681e-02,p99=1.249e-02,rel=1.828e-04
+MXFP4,BITSHIFT,U(-1,1),1,7168,7168,16x128x32_w8,OK,ms=1.627,tflops=0.06,gbps=16.8,maxabs=1.681e-02,p99=1.248e-02,rel=1.828e-04
+MXFP4,LUT,U(-1,1),1,7168,7168,16x128x32_w4f2,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),1,7168,7168,16x128x32_w4f2,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),1,7168,7168,16x256x32_w4f4,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),1,7168,7168,16x256x32_w4f4,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),1,7168,7168,128x64x32_w4_v1,SKIP,no template
+MXFP4,BITSHIFT,U(-1,1),1,7168,7168,128x64x32_w4_v1,SKIP,opt only LUT path
+MXFP4,LUT,U(-1,1),1,7168,7168,128x128x32_w4_v1,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),1,7168,7168,128x128x32_w4_v1,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),1,7168,7168,128x256x32_w4_v1,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),1,7168,7168,128x256x32_w4_v1,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),1,7168,7168,128x256x32_w8_v1,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),1,7168,7168,128x256x32_w8_v1,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),1,7168,7168,64x64x32_w4_v1,SKIP,no template
+MXFP4,BITSHIFT,U(-1,1),1,7168,7168,64x64x32_w4_v1,SKIP,opt only LUT path
+MXFP4,LUT,U(-1,1),1,7168,7168,64x128x32_w4_v1,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),1,7168,7168,64x128x32_w4_v1,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),1,7168,7168,128x64x32_w4_v2,OK,ms=1.435,tflops=0.07,gbps=19.1,maxabs=1.681e-02,p99=1.249e-02,rel=1.828e-04
+MXFP4,BITSHIFT,U(-1,1),1,7168,7168,128x64x32_w4_v2,SKIP,opt only LUT path
+MXFP4,LUT,U(-1,1),1,7168,7168,128x128x32_w4_v2,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),1,7168,7168,128x128x32_w4_v2,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),1,7168,7168,128x256x32_w4_v2,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),1,7168,7168,128x256x32_w4_v2,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),1,7168,7168,128x256x32_w8_v2,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),1,7168,7168,128x256x32_w8_v2,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),1,7168,7168,64x64x32_w4_v2,OK,ms=1.026,tflops=0.10,gbps=26.7,maxabs=1.681e-02,p99=1.249e-02,rel=1.828e-04
+MXFP4,BITSHIFT,U(-1,1),1,7168,7168,64x64x32_w4_v2,SKIP,opt only LUT path
+MXFP4,LUT,U(-1,1),1,7168,7168,64x128x32_w4_v2,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),1,7168,7168,64x128x32_w4_v2,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),16,7168,7168,16x64x32_w4,OK,ms=1.427,tflops=1.15,gbps=19.8,maxabs=1.144e-04,p99=3.052e-05,rel=2.870e-07
+MXFP4,BITSHIFT,U(-1,1),16,7168,7168,16x64x32_w4,OK,ms=1.742,tflops=0.94,gbps=16.2,maxabs=7.629e-05,p99=2.289e-05,rel=2.063e-07
+MXFP4,LUT,U(-1,1),16,7168,7168,16x128x32_w8,OK,ms=1.490,tflops=1.10,gbps=18.9,maxabs=1.144e-04,p99=3.052e-05,rel=2.870e-07
+MXFP4,BITSHIFT,U(-1,1),16,7168,7168,16x128x32_w8,OK,ms=1.818,tflops=0.90,gbps=15.5,maxabs=7.629e-05,p99=2.289e-05,rel=2.063e-07
+MXFP4,LUT,U(-1,1),16,7168,7168,16x128x32_w4f2,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),16,7168,7168,16x128x32_w4f2,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),16,7168,7168,16x256x32_w4f4,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),16,7168,7168,16x256x32_w4f4,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),16,7168,7168,128x64x32_w4_v1,SKIP,no template
+MXFP4,BITSHIFT,U(-1,1),16,7168,7168,128x64x32_w4_v1,SKIP,opt only LUT path
+MXFP4,LUT,U(-1,1),16,7168,7168,128x128x32_w4_v1,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),16,7168,7168,128x128x32_w4_v1,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),16,7168,7168,128x256x32_w4_v1,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),16,7168,7168,128x256x32_w4_v1,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),16,7168,7168,128x256x32_w8_v1,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),16,7168,7168,128x256x32_w8_v1,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),16,7168,7168,64x64x32_w4_v1,SKIP,no template
+MXFP4,BITSHIFT,U(-1,1),16,7168,7168,64x64x32_w4_v1,SKIP,opt only LUT path
+MXFP4,LUT,U(-1,1),16,7168,7168,64x128x32_w4_v1,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),16,7168,7168,64x128x32_w4_v1,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),16,7168,7168,128x64x32_w4_v2,OK,ms=1.475,tflops=1.11,gbps=19.1,maxabs=1.144e-04,p99=3.052e-05,rel=2.870e-07
+MXFP4,BITSHIFT,U(-1,1),16,7168,7168,128x64x32_w4_v2,SKIP,opt only LUT path
+MXFP4,LUT,U(-1,1),16,7168,7168,128x128x32_w4_v2,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),16,7168,7168,128x128x32_w4_v2,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),16,7168,7168,128x256x32_w4_v2,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),16,7168,7168,128x256x32_w4_v2,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),16,7168,7168,128x256x32_w8_v2,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),16,7168,7168,128x256x32_w8_v2,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),16,7168,7168,64x64x32_w4_v2,OK,ms=1.065,tflops=1.54,gbps=26.5,maxabs=1.144e-04,p99=3.052e-05,rel=2.870e-07
+MXFP4,BITSHIFT,U(-1,1),16,7168,7168,64x64x32_w4_v2,SKIP,opt only LUT path
+MXFP4,LUT,U(-1,1),16,7168,7168,64x128x32_w4_v2,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),16,7168,7168,64x128x32_w4_v2,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),64,7168,7168,16x64x32_w4,OK,ms=1.797,tflops=3.66,gbps=17.2,maxabs=1.297e-04,p99=3.052e-05,rel=2.799e-07
+MXFP4,BITSHIFT,U(-1,1),64,7168,7168,16x64x32_w4,OK,ms=2.249,tflops=2.92,gbps=13.8,maxabs=9.155e-05,p99=2.289e-05,rel=2.216e-07
+MXFP4,LUT,U(-1,1),64,7168,7168,16x128x32_w8,OK,ms=1.856,tflops=3.54,gbps=16.7,maxabs=1.297e-04,p99=3.052e-05,rel=2.799e-07
+MXFP4,BITSHIFT,U(-1,1),64,7168,7168,16x128x32_w8,OK,ms=2.445,tflops=2.69,gbps=12.7,maxabs=9.155e-05,p99=2.289e-05,rel=2.216e-07
+MXFP4,LUT,U(-1,1),64,7168,7168,16x128x32_w4f2,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),64,7168,7168,16x128x32_w4f2,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),64,7168,7168,16x256x32_w4f4,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),64,7168,7168,16x256x32_w4f4,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),64,7168,7168,128x64x32_w4_v1,SKIP,no template
+MXFP4,BITSHIFT,U(-1,1),64,7168,7168,128x64x32_w4_v1,SKIP,opt only LUT path
+MXFP4,LUT,U(-1,1),64,7168,7168,128x128x32_w4_v1,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),64,7168,7168,128x128x32_w4_v1,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),64,7168,7168,128x256x32_w4_v1,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),64,7168,7168,128x256x32_w4_v1,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),64,7168,7168,128x256x32_w8_v1,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),64,7168,7168,128x256x32_w8_v1,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),64,7168,7168,64x64x32_w4_v1,SKIP,no template
+MXFP4,BITSHIFT,U(-1,1),64,7168,7168,64x64x32_w4_v1,SKIP,opt only LUT path
+MXFP4,LUT,U(-1,1),64,7168,7168,64x128x32_w4_v1,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),64,7168,7168,64x128x32_w4_v1,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),64,7168,7168,128x64x32_w4_v2,OK,ms=1.536,tflops=4.28,gbps=20.2,maxabs=1.297e-04,p99=3.052e-05,rel=2.799e-07
+MXFP4,BITSHIFT,U(-1,1),64,7168,7168,128x64x32_w4_v2,SKIP,opt only LUT path
+MXFP4,LUT,U(-1,1),64,7168,7168,128x128x32_w4_v2,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),64,7168,7168,128x128x32_w4_v2,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),64,7168,7168,128x256x32_w4_v2,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),64,7168,7168,128x256x32_w4_v2,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),64,7168,7168,128x256x32_w8_v2,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),64,7168,7168,128x256x32_w8_v2,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),64,7168,7168,64x64x32_w4_v2,OK,ms=1.140,tflops=5.77,gbps=27.2,maxabs=1.297e-04,p99=3.052e-05,rel=2.799e-07
+MXFP4,BITSHIFT,U(-1,1),64,7168,7168,64x64x32_w4_v2,SKIP,opt only LUT path
+MXFP4,LUT,U(-1,1),64,7168,7168,64x128x32_w4_v2,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),64,7168,7168,64x128x32_w4_v2,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),128,7168,7168,16x64x32_w4,OK,ms=4.065,tflops=3.24,gbps=8.5,maxabs=1.297e-04,p99=3.052e-05,rel=2.800e-07
+MXFP4,BITSHIFT,U(-1,1),128,7168,7168,16x64x32_w4,OK,ms=4.761,tflops=2.76,gbps=7.3,maxabs=9.155e-05,p99=2.289e-05,rel=2.218e-07
+MXFP4,LUT,U(-1,1),128,7168,7168,16x128x32_w8,OK,ms=4.126,tflops=3.19,gbps=8.4,maxabs=1.297e-04,p99=3.052e-05,rel=2.800e-07
+MXFP4,BITSHIFT,U(-1,1),128,7168,7168,16x128x32_w8,OK,ms=5.849,tflops=2.25,gbps=5.9,maxabs=9.155e-05,p99=2.289e-05,rel=2.218e-07
+MXFP4,LUT,U(-1,1),128,7168,7168,16x128x32_w4f2,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),128,7168,7168,16x128x32_w4f2,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),128,7168,7168,16x256x32_w4f4,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),128,7168,7168,16x256x32_w4f4,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),128,7168,7168,128x64x32_w4_v1,SKIP,no template
+MXFP4,BITSHIFT,U(-1,1),128,7168,7168,128x64x32_w4_v1,SKIP,opt only LUT path
+MXFP4,LUT,U(-1,1),128,7168,7168,128x128x32_w4_v1,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),128,7168,7168,128x128x32_w4_v1,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),128,7168,7168,128x256x32_w4_v1,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),128,7168,7168,128x256x32_w4_v1,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),128,7168,7168,128x256x32_w8_v1,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),128,7168,7168,128x256x32_w8_v1,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),128,7168,7168,64x64x32_w4_v1,SKIP,no template
+MXFP4,BITSHIFT,U(-1,1),128,7168,7168,64x64x32_w4_v1,SKIP,opt only LUT path
+MXFP4,LUT,U(-1,1),128,7168,7168,64x128x32_w4_v1,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),128,7168,7168,64x128x32_w4_v1,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),128,7168,7168,128x64x32_w4_v2,OK,ms=1.608,tflops=8.18,gbps=21.5,maxabs=1.297e-04,p99=3.052e-05,rel=2.800e-07
+MXFP4,BITSHIFT,U(-1,1),128,7168,7168,128x64x32_w4_v2,SKIP,opt only LUT path
+MXFP4,LUT,U(-1,1),128,7168,7168,128x128x32_w4_v2,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),128,7168,7168,128x128x32_w4_v2,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),128,7168,7168,128x256x32_w4_v2,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),128,7168,7168,128x256x32_w4_v2,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),128,7168,7168,128x256x32_w8_v2,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),128,7168,7168,128x256x32_w8_v2,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),128,7168,7168,64x64x32_w4_v2,OK,ms=1.212,tflops=10.85,gbps=28.6,maxabs=1.297e-04,p99=3.052e-05,rel=2.800e-07
+MXFP4,BITSHIFT,U(-1,1),128,7168,7168,64x64x32_w4_v2,SKIP,opt only LUT path
+MXFP4,LUT,U(-1,1),128,7168,7168,64x128x32_w4_v2,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),128,7168,7168,64x128x32_w4_v2,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),256,7168,7168,16x64x32_w4,OK,ms=6.150,tflops=4.28,gbps=6.8,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+MXFP4,BITSHIFT,U(-1,1),256,7168,7168,16x64x32_w4,OK,ms=8.048,tflops=3.27,gbps=5.2,maxabs=1.831e-04,p99=4.196e-05,rel=3.665e-07
+MXFP4,LUT,U(-1,1),256,7168,7168,16x128x32_w8,OK,ms=6.229,tflops=4.22,gbps=6.7,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+MXFP4,BITSHIFT,U(-1,1),256,7168,7168,16x128x32_w8,OK,ms=8.620,tflops=3.05,gbps=4.9,maxabs=1.831e-04,p99=4.196e-05,rel=3.665e-07
+MXFP4,LUT,U(-1,1),256,7168,7168,16x128x32_w4f2,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),256,7168,7168,16x128x32_w4f2,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),256,7168,7168,16x256x32_w4f4,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),256,7168,7168,16x256x32_w4f4,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),256,7168,7168,128x64x32_w4_v1,SKIP,no template
+MXFP4,BITSHIFT,U(-1,1),256,7168,7168,128x64x32_w4_v1,SKIP,opt only LUT path
+MXFP4,LUT,U(-1,1),256,7168,7168,128x128x32_w4_v1,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),256,7168,7168,128x128x32_w4_v1,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),256,7168,7168,128x256x32_w4_v1,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),256,7168,7168,128x256x32_w4_v1,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),256,7168,7168,128x256x32_w8_v1,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),256,7168,7168,128x256x32_w8_v1,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),256,7168,7168,64x64x32_w4_v1,SKIP,no template
+MXFP4,BITSHIFT,U(-1,1),256,7168,7168,64x64x32_w4_v1,SKIP,opt only LUT path
+MXFP4,LUT,U(-1,1),256,7168,7168,64x128x32_w4_v1,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),256,7168,7168,64x128x32_w4_v1,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),256,7168,7168,128x64x32_w4_v2,OK,ms=1.695,tflops=15.52,gbps=24.8,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+MXFP4,BITSHIFT,U(-1,1),256,7168,7168,128x64x32_w4_v2,SKIP,opt only LUT path
+MXFP4,LUT,U(-1,1),256,7168,7168,128x128x32_w4_v2,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),256,7168,7168,128x128x32_w4_v2,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),256,7168,7168,128x256x32_w4_v2,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),256,7168,7168,128x256x32_w4_v2,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),256,7168,7168,128x256x32_w8_v2,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),256,7168,7168,128x256x32_w8_v2,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),256,7168,7168,64x64x32_w4_v2,OK,ms=2.658,tflops=9.90,gbps=15.8,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+MXFP4,BITSHIFT,U(-1,1),256,7168,7168,64x64x32_w4_v2,SKIP,opt only LUT path
+MXFP4,LUT,U(-1,1),256,7168,7168,64x128x32_w4_v2,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),256,7168,7168,64x128x32_w4_v2,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),512,7168,7168,16x64x32_w4,OK,ms=10.891,tflops=4.83,gbps=5.2,maxabs=1.526e-04,p99=2.670e-05,rel=2.328e-07
+MXFP4,BITSHIFT,U(-1,1),512,7168,7168,16x64x32_w4,OK,ms=16.116,tflops=3.26,gbps=3.5,maxabs=1.221e-04,p99=3.052e-05,rel=2.806e-07
+MXFP4,LUT,U(-1,1),512,7168,7168,16x128x32_w8,OK,ms=12.477,tflops=4.22,gbps=4.5,maxabs=1.526e-04,p99=2.670e-05,rel=2.328e-07
+MXFP4,BITSHIFT,U(-1,1),512,7168,7168,16x128x32_w8,OK,ms=17.284,tflops=3.04,gbps=3.3,maxabs=1.221e-04,p99=3.052e-05,rel=2.806e-07
+MXFP4,LUT,U(-1,1),512,7168,7168,16x128x32_w4f2,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),512,7168,7168,16x128x32_w4f2,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),512,7168,7168,16x256x32_w4f4,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),512,7168,7168,16x256x32_w4f4,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),512,7168,7168,128x64x32_w4_v1,SKIP,no template
+MXFP4,BITSHIFT,U(-1,1),512,7168,7168,128x64x32_w4_v1,SKIP,opt only LUT path
+MXFP4,LUT,U(-1,1),512,7168,7168,128x128x32_w4_v1,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),512,7168,7168,128x128x32_w4_v1,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),512,7168,7168,128x256x32_w4_v1,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),512,7168,7168,128x256x32_w4_v1,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),512,7168,7168,128x256x32_w8_v1,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),512,7168,7168,128x256x32_w8_v1,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),512,7168,7168,64x64x32_w4_v1,SKIP,no template
+MXFP4,BITSHIFT,U(-1,1),512,7168,7168,64x64x32_w4_v1,SKIP,opt only LUT path
+MXFP4,LUT,U(-1,1),512,7168,7168,64x128x32_w4_v1,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),512,7168,7168,64x128x32_w4_v1,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),512,7168,7168,128x64x32_w4_v2,OK,ms=3.878,tflops=13.57,gbps=14.6,maxabs=1.526e-04,p99=2.670e-05,rel=2.328e-07
+MXFP4,BITSHIFT,U(-1,1),512,7168,7168,128x64x32_w4_v2,SKIP,opt only LUT path
+MXFP4,LUT,U(-1,1),512,7168,7168,128x128x32_w4_v2,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),512,7168,7168,128x128x32_w4_v2,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),512,7168,7168,128x256x32_w4_v2,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),512,7168,7168,128x256x32_w4_v2,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),512,7168,7168,128x256x32_w8_v2,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),512,7168,7168,128x256x32_w8_v2,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),512,7168,7168,64x64x32_w4_v2,OK,ms=4.327,tflops=12.16,gbps=13.1,maxabs=1.526e-04,p99=2.670e-05,rel=2.328e-07
+MXFP4,BITSHIFT,U(-1,1),512,7168,7168,64x64x32_w4_v2,SKIP,opt only LUT path
+MXFP4,LUT,U(-1,1),512,7168,7168,64x128x32_w4_v2,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),512,7168,7168,64x128x32_w4_v2,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),1024,7168,7168,16x64x32_w4,OK,ms=21.766,tflops=4.83,gbps=4.0,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+MXFP4,BITSHIFT,U(-1,1),1024,7168,7168,16x64x32_w4,OK,ms=31.887,tflops=3.30,gbps=2.7,maxabs=2.289e-04,p99=4.196e-05,rel=3.672e-07
+MXFP4,LUT,U(-1,1),1024,7168,7168,16x128x32_w8,OK,ms=25.051,tflops=4.20,gbps=3.4,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+MXFP4,BITSHIFT,U(-1,1),1024,7168,7168,16x128x32_w8,OK,ms=34.232,tflops=3.07,gbps=2.5,maxabs=2.289e-04,p99=4.196e-05,rel=3.672e-07
+MXFP4,LUT,U(-1,1),1024,7168,7168,16x128x32_w4f2,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),1024,7168,7168,16x128x32_w4f2,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),1024,7168,7168,16x256x32_w4f4,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),1024,7168,7168,16x256x32_w4f4,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),1024,7168,7168,128x64x32_w4_v1,SKIP,no template
+MXFP4,BITSHIFT,U(-1,1),1024,7168,7168,128x64x32_w4_v1,SKIP,opt only LUT path
+MXFP4,LUT,U(-1,1),1024,7168,7168,128x128x32_w4_v1,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),1024,7168,7168,128x128x32_w4_v1,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),1024,7168,7168,128x256x32_w4_v1,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),1024,7168,7168,128x256x32_w4_v1,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),1024,7168,7168,128x256x32_w8_v1,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),1024,7168,7168,128x256x32_w8_v1,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),1024,7168,7168,64x64x32_w4_v1,SKIP,no template
+MXFP4,BITSHIFT,U(-1,1),1024,7168,7168,64x64x32_w4_v1,SKIP,opt only LUT path
+MXFP4,LUT,U(-1,1),1024,7168,7168,64x128x32_w4_v1,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),1024,7168,7168,64x128x32_w4_v1,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),1024,7168,7168,128x64x32_w4_v2,OK,ms=5.716,tflops=18.41,gbps=15.0,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+MXFP4,BITSHIFT,U(-1,1),1024,7168,7168,128x64x32_w4_v2,SKIP,opt only LUT path
+MXFP4,LUT,U(-1,1),1024,7168,7168,128x128x32_w4_v2,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),1024,7168,7168,128x128x32_w4_v2,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),1024,7168,7168,128x256x32_w4_v2,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),1024,7168,7168,128x256x32_w4_v2,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),1024,7168,7168,128x256x32_w8_v2,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),1024,7168,7168,128x256x32_w8_v2,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),1024,7168,7168,64x64x32_w4_v2,OK,ms=7.350,tflops=14.32,gbps=11.7,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+MXFP4,BITSHIFT,U(-1,1),1024,7168,7168,64x64x32_w4_v2,SKIP,opt only LUT path
+MXFP4,LUT,U(-1,1),1024,7168,7168,64x128x32_w4_v2,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),1024,7168,7168,64x128x32_w4_v2,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),2048,7168,7168,16x64x32_w4,OK,ms=43.533,tflops=4.83,gbps=3.3,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+MXFP4,BITSHIFT,U(-1,1),2048,7168,7168,16x64x32_w4,OK,ms=61.564,tflops=3.42,gbps=2.4,maxabs=2.289e-04,p99=4.196e-05,rel=3.674e-07
+MXFP4,LUT,U(-1,1),2048,7168,7168,16x128x32_w8,OK,ms=47.960,tflops=4.39,gbps=3.0,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+MXFP4,BITSHIFT,U(-1,1),2048,7168,7168,16x128x32_w8,OK,ms=66.054,tflops=3.19,gbps=2.2,maxabs=2.289e-04,p99=4.196e-05,rel=3.674e-07
+MXFP4,LUT,U(-1,1),2048,7168,7168,16x128x32_w4f2,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),2048,7168,7168,16x128x32_w4f2,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),2048,7168,7168,16x256x32_w4f4,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),2048,7168,7168,16x256x32_w4f4,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),2048,7168,7168,128x64x32_w4_v1,SKIP,no template
+MXFP4,BITSHIFT,U(-1,1),2048,7168,7168,128x64x32_w4_v1,SKIP,opt only LUT path
+MXFP4,LUT,U(-1,1),2048,7168,7168,128x128x32_w4_v1,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),2048,7168,7168,128x128x32_w4_v1,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),2048,7168,7168,128x256x32_w4_v1,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),2048,7168,7168,128x256x32_w4_v1,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),2048,7168,7168,128x256x32_w8_v1,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),2048,7168,7168,128x256x32_w8_v1,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),2048,7168,7168,64x64x32_w4_v1,SKIP,no template
+MXFP4,BITSHIFT,U(-1,1),2048,7168,7168,64x64x32_w4_v1,SKIP,opt only LUT path
+MXFP4,LUT,U(-1,1),2048,7168,7168,64x128x32_w4_v1,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),2048,7168,7168,64x128x32_w4_v1,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),2048,7168,7168,128x64x32_w4_v2,OK,ms=11.464,tflops=18.36,gbps=12.6,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+MXFP4,BITSHIFT,U(-1,1),2048,7168,7168,128x64x32_w4_v2,SKIP,opt only LUT path
+MXFP4,LUT,U(-1,1),2048,7168,7168,128x128x32_w4_v2,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),2048,7168,7168,128x128x32_w4_v2,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),2048,7168,7168,128x256x32_w4_v2,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),2048,7168,7168,128x256x32_w4_v2,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),2048,7168,7168,128x256x32_w8_v2,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),2048,7168,7168,128x256x32_w8_v2,SKIP,BN/WARPS != 16
+MXFP4,LUT,U(-1,1),2048,7168,7168,64x64x32_w4_v2,OK,ms=13.144,tflops=16.01,gbps=11.0,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+MXFP4,BITSHIFT,U(-1,1),2048,7168,7168,64x64x32_w4_v2,SKIP,opt only LUT path
+MXFP4,LUT,U(-1,1),2048,7168,7168,64x128x32_w4_v2,SKIP,BN/WARPS != 16
+MXFP4,BITSHIFT,U(-1,1),2048,7168,7168,64x128x32_w4_v2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),1,4096,4096,16x64x32_w4,OK,ms=1.249,tflops=0.03,gbps=13.6,maxabs=1.289e-02,p99=9.838e-03,rel=1.839e-04
+F8_E4M3_B128,BITSHIFT,U(-1,1),1,4096,4096,16x64x32_w4,OK,ms=1.252,tflops=0.03,gbps=13.5,maxabs=1.288e-02,p99=9.842e-03,rel=1.839e-04
+F8_E4M3_B128,LUT,U(-1,1),1,4096,4096,16x128x32_w8,OK,ms=1.243,tflops=0.03,gbps=13.6,maxabs=1.289e-02,p99=9.838e-03,rel=1.839e-04
+F8_E4M3_B128,BITSHIFT,U(-1,1),1,4096,4096,16x128x32_w8,OK,ms=1.354,tflops=0.02,gbps=12.5,maxabs=1.288e-02,p99=9.842e-03,rel=1.839e-04
+F8_E4M3_B128,LUT,U(-1,1),1,4096,4096,16x128x32_w4f2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),1,4096,4096,16x128x32_w4f2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),1,4096,4096,16x256x32_w4f4,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),1,4096,4096,16x256x32_w4f4,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),1,4096,4096,128x64x32_w4_v1,SKIP,no template
+F8_E4M3_B128,BITSHIFT,U(-1,1),1,4096,4096,128x64x32_w4_v1,SKIP,opt only LUT path
+F8_E4M3_B128,LUT,U(-1,1),1,4096,4096,128x128x32_w4_v1,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),1,4096,4096,128x128x32_w4_v1,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),1,4096,4096,128x256x32_w4_v1,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),1,4096,4096,128x256x32_w4_v1,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),1,4096,4096,128x256x32_w8_v1,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),1,4096,4096,128x256x32_w8_v1,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),1,4096,4096,64x64x32_w4_v1,SKIP,no template
+F8_E4M3_B128,BITSHIFT,U(-1,1),1,4096,4096,64x64x32_w4_v1,SKIP,opt only LUT path
+F8_E4M3_B128,LUT,U(-1,1),1,4096,4096,64x128x32_w4_v1,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),1,4096,4096,64x128x32_w4_v1,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),1,4096,4096,128x64x32_w4_v2,OK,ms=1.348,tflops=0.02,gbps=12.6,maxabs=1.289e-02,p99=9.838e-03,rel=1.839e-04
+F8_E4M3_B128,BITSHIFT,U(-1,1),1,4096,4096,128x64x32_w4_v2,SKIP,opt only LUT path
+F8_E4M3_B128,LUT,U(-1,1),1,4096,4096,128x128x32_w4_v2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),1,4096,4096,128x128x32_w4_v2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),1,4096,4096,128x256x32_w4_v2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),1,4096,4096,128x256x32_w4_v2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),1,4096,4096,128x256x32_w8_v2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),1,4096,4096,128x256x32_w8_v2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),1,4096,4096,64x64x32_w4_v2,OK,ms=1.253,tflops=0.03,gbps=13.5,maxabs=1.289e-02,p99=9.838e-03,rel=1.839e-04
+F8_E4M3_B128,BITSHIFT,U(-1,1),1,4096,4096,64x64x32_w4_v2,SKIP,opt only LUT path
+F8_E4M3_B128,LUT,U(-1,1),1,4096,4096,64x128x32_w4_v2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),1,4096,4096,64x128x32_w4_v2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),16,4096,4096,16x64x32_w4,OK,ms=1.191,tflops=0.45,gbps=14.6,maxabs=2.289e-04,p99=4.578e-05,rel=4.783e-07
+F8_E4M3_B128,BITSHIFT,U(-1,1),16,4096,4096,16x64x32_w4,OK,ms=1.282,tflops=0.42,gbps=13.6,maxabs=6.485e-05,p99=2.289e-05,rel=2.708e-07
+F8_E4M3_B128,LUT,U(-1,1),16,4096,4096,16x128x32_w8,OK,ms=1.275,tflops=0.42,gbps=13.7,maxabs=2.289e-04,p99=4.578e-05,rel=4.783e-07
+F8_E4M3_B128,BITSHIFT,U(-1,1),16,4096,4096,16x128x32_w8,OK,ms=1.452,tflops=0.37,gbps=12.0,maxabs=6.485e-05,p99=2.289e-05,rel=2.708e-07
+F8_E4M3_B128,LUT,U(-1,1),16,4096,4096,16x128x32_w4f2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),16,4096,4096,16x128x32_w4f2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),16,4096,4096,16x256x32_w4f4,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),16,4096,4096,16x256x32_w4f4,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),16,4096,4096,128x64x32_w4_v1,SKIP,no template
+F8_E4M3_B128,BITSHIFT,U(-1,1),16,4096,4096,128x64x32_w4_v1,SKIP,opt only LUT path
+F8_E4M3_B128,LUT,U(-1,1),16,4096,4096,128x128x32_w4_v1,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),16,4096,4096,128x128x32_w4_v1,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),16,4096,4096,128x256x32_w4_v1,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),16,4096,4096,128x256x32_w4_v1,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),16,4096,4096,128x256x32_w8_v1,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),16,4096,4096,128x256x32_w8_v1,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),16,4096,4096,64x64x32_w4_v1,SKIP,no template
+F8_E4M3_B128,BITSHIFT,U(-1,1),16,4096,4096,64x64x32_w4_v1,SKIP,opt only LUT path
+F8_E4M3_B128,LUT,U(-1,1),16,4096,4096,64x128x32_w4_v1,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),16,4096,4096,64x128x32_w4_v1,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),16,4096,4096,128x64x32_w4_v2,OK,ms=1.364,tflops=0.39,gbps=12.8,maxabs=2.289e-04,p99=4.578e-05,rel=4.783e-07
+F8_E4M3_B128,BITSHIFT,U(-1,1),16,4096,4096,128x64x32_w4_v2,SKIP,opt only LUT path
+F8_E4M3_B128,LUT,U(-1,1),16,4096,4096,128x128x32_w4_v2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),16,4096,4096,128x128x32_w4_v2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),16,4096,4096,128x256x32_w4_v2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),16,4096,4096,128x256x32_w4_v2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),16,4096,4096,128x256x32_w8_v2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),16,4096,4096,128x256x32_w8_v2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),16,4096,4096,64x64x32_w4_v2,OK,ms=1.264,tflops=0.42,gbps=13.8,maxabs=2.289e-04,p99=4.578e-05,rel=4.783e-07
+F8_E4M3_B128,BITSHIFT,U(-1,1),16,4096,4096,64x64x32_w4_v2,SKIP,opt only LUT path
+F8_E4M3_B128,LUT,U(-1,1),16,4096,4096,64x128x32_w4_v2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),16,4096,4096,64x128x32_w4_v2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),64,4096,4096,16x64x32_w4,OK,ms=1.212,tflops=1.77,gbps=15.7,maxabs=2.289e-04,p99=4.578e-05,rel=4.819e-07
+F8_E4M3_B128,BITSHIFT,U(-1,1),64,4096,4096,16x64x32_w4,OK,ms=1.365,tflops=1.57,gbps=13.9,maxabs=6.866e-05,p99=2.289e-05,rel=2.733e-07
+F8_E4M3_B128,LUT,U(-1,1),64,4096,4096,16x128x32_w8,OK,ms=1.255,tflops=1.71,gbps=15.1,maxabs=2.289e-04,p99=4.578e-05,rel=4.819e-07
+F8_E4M3_B128,BITSHIFT,U(-1,1),64,4096,4096,16x128x32_w8,OK,ms=1.438,tflops=1.49,gbps=13.2,maxabs=6.866e-05,p99=2.289e-05,rel=2.733e-07
+F8_E4M3_B128,LUT,U(-1,1),64,4096,4096,16x128x32_w4f2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),64,4096,4096,16x128x32_w4f2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),64,4096,4096,16x256x32_w4f4,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),64,4096,4096,16x256x32_w4f4,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),64,4096,4096,128x64x32_w4_v1,SKIP,no template
+F8_E4M3_B128,BITSHIFT,U(-1,1),64,4096,4096,128x64x32_w4_v1,SKIP,opt only LUT path
+F8_E4M3_B128,LUT,U(-1,1),64,4096,4096,128x128x32_w4_v1,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),64,4096,4096,128x128x32_w4_v1,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),64,4096,4096,128x256x32_w4_v1,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),64,4096,4096,128x256x32_w4_v1,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),64,4096,4096,128x256x32_w8_v1,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),64,4096,4096,128x256x32_w8_v1,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),64,4096,4096,64x64x32_w4_v1,SKIP,no template
+F8_E4M3_B128,BITSHIFT,U(-1,1),64,4096,4096,64x64x32_w4_v1,SKIP,opt only LUT path
+F8_E4M3_B128,LUT,U(-1,1),64,4096,4096,64x128x32_w4_v1,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),64,4096,4096,64x128x32_w4_v1,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),64,4096,4096,128x64x32_w4_v2,OK,ms=1.375,tflops=1.56,gbps=13.8,maxabs=2.289e-04,p99=4.578e-05,rel=4.819e-07
+F8_E4M3_B128,BITSHIFT,U(-1,1),64,4096,4096,128x64x32_w4_v2,SKIP,opt only LUT path
+F8_E4M3_B128,LUT,U(-1,1),64,4096,4096,128x128x32_w4_v2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),64,4096,4096,128x128x32_w4_v2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),64,4096,4096,128x256x32_w4_v2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),64,4096,4096,128x256x32_w4_v2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),64,4096,4096,128x256x32_w8_v2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),64,4096,4096,128x256x32_w8_v2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),64,4096,4096,64x64x32_w4_v2,OK,ms=1.288,tflops=1.67,gbps=14.8,maxabs=2.289e-04,p99=4.578e-05,rel=4.819e-07
+F8_E4M3_B128,BITSHIFT,U(-1,1),64,4096,4096,64x64x32_w4_v2,SKIP,opt only LUT path
+F8_E4M3_B128,LUT,U(-1,1),64,4096,4096,64x128x32_w4_v2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),64,4096,4096,64x128x32_w4_v2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),128,4096,4096,16x64x32_w4,OK,ms=1.326,tflops=3.24,gbps=15.9,maxabs=2.213e-04,p99=4.196e-05,rel=4.318e-07
+F8_E4M3_B128,BITSHIFT,U(-1,1),128,4096,4096,16x64x32_w4,OK,ms=1.541,tflops=2.79,gbps=13.7,maxabs=8.392e-05,p99=2.670e-05,rel=3.636e-07
+F8_E4M3_B128,LUT,U(-1,1),128,4096,4096,16x128x32_w8,OK,ms=1.382,tflops=3.11,gbps=15.3,maxabs=2.213e-04,p99=4.196e-05,rel=4.318e-07
+F8_E4M3_B128,BITSHIFT,U(-1,1),128,4096,4096,16x128x32_w8,OK,ms=1.683,tflops=2.55,gbps=12.5,maxabs=8.392e-05,p99=2.670e-05,rel=3.636e-07
+F8_E4M3_B128,LUT,U(-1,1),128,4096,4096,16x128x32_w4f2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),128,4096,4096,16x128x32_w4f2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),128,4096,4096,16x256x32_w4f4,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),128,4096,4096,16x256x32_w4f4,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),128,4096,4096,128x64x32_w4_v1,SKIP,no template
+F8_E4M3_B128,BITSHIFT,U(-1,1),128,4096,4096,128x64x32_w4_v1,SKIP,opt only LUT path
+F8_E4M3_B128,LUT,U(-1,1),128,4096,4096,128x128x32_w4_v1,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),128,4096,4096,128x128x32_w4_v1,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),128,4096,4096,128x256x32_w4_v1,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),128,4096,4096,128x256x32_w4_v1,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),128,4096,4096,128x256x32_w8_v1,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),128,4096,4096,128x256x32_w8_v1,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),128,4096,4096,64x64x32_w4_v1,SKIP,no template
+F8_E4M3_B128,BITSHIFT,U(-1,1),128,4096,4096,64x64x32_w4_v1,SKIP,opt only LUT path
+F8_E4M3_B128,LUT,U(-1,1),128,4096,4096,64x128x32_w4_v1,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),128,4096,4096,64x128x32_w4_v1,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),128,4096,4096,128x64x32_w4_v2,OK,ms=1.400,tflops=3.07,gbps=15.1,maxabs=2.213e-04,p99=4.196e-05,rel=4.318e-07
+F8_E4M3_B128,BITSHIFT,U(-1,1),128,4096,4096,128x64x32_w4_v2,SKIP,opt only LUT path
+F8_E4M3_B128,LUT,U(-1,1),128,4096,4096,128x128x32_w4_v2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),128,4096,4096,128x128x32_w4_v2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),128,4096,4096,128x256x32_w4_v2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),128,4096,4096,128x256x32_w4_v2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),128,4096,4096,128x256x32_w8_v2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),128,4096,4096,128x256x32_w8_v2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),128,4096,4096,64x64x32_w4_v2,OK,ms=1.294,tflops=3.32,gbps=16.3,maxabs=2.213e-04,p99=4.196e-05,rel=4.318e-07
+F8_E4M3_B128,BITSHIFT,U(-1,1),128,4096,4096,64x64x32_w4_v2,SKIP,opt only LUT path
+F8_E4M3_B128,LUT,U(-1,1),128,4096,4096,64x128x32_w4_v2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),128,4096,4096,64x128x32_w4_v2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),256,4096,4096,16x64x32_w4,OK,ms=2.717,tflops=3.16,gbps=9.3,maxabs=2.136e-04,p99=4.387e-05,rel=4.731e-07
+F8_E4M3_B128,BITSHIFT,U(-1,1),256,4096,4096,16x64x32_w4,OK,ms=3.246,tflops=2.65,gbps=7.8,maxabs=7.629e-05,p99=2.289e-05,rel=2.899e-07
+F8_E4M3_B128,LUT,U(-1,1),256,4096,4096,16x128x32_w8,OK,ms=2.799,tflops=3.07,gbps=9.0,maxabs=2.136e-04,p99=4.387e-05,rel=4.731e-07
+F8_E4M3_B128,BITSHIFT,U(-1,1),256,4096,4096,16x128x32_w8,OK,ms=3.436,tflops=2.50,gbps=7.4,maxabs=7.629e-05,p99=2.289e-05,rel=2.899e-07
+F8_E4M3_B128,LUT,U(-1,1),256,4096,4096,16x128x32_w4f2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),256,4096,4096,16x128x32_w4f2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),256,4096,4096,16x256x32_w4f4,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),256,4096,4096,16x256x32_w4f4,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),256,4096,4096,128x64x32_w4_v1,SKIP,no template
+F8_E4M3_B128,BITSHIFT,U(-1,1),256,4096,4096,128x64x32_w4_v1,SKIP,opt only LUT path
+F8_E4M3_B128,LUT,U(-1,1),256,4096,4096,128x128x32_w4_v1,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),256,4096,4096,128x128x32_w4_v1,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),256,4096,4096,128x256x32_w4_v1,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),256,4096,4096,128x256x32_w4_v1,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),256,4096,4096,128x256x32_w8_v1,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),256,4096,4096,128x256x32_w8_v1,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),256,4096,4096,64x64x32_w4_v1,SKIP,no template
+F8_E4M3_B128,BITSHIFT,U(-1,1),256,4096,4096,64x64x32_w4_v1,SKIP,opt only LUT path
+F8_E4M3_B128,LUT,U(-1,1),256,4096,4096,64x128x32_w4_v1,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),256,4096,4096,64x128x32_w4_v1,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),256,4096,4096,128x64x32_w4_v2,OK,ms=1.438,tflops=5.97,gbps=17.6,maxabs=2.136e-04,p99=4.387e-05,rel=4.731e-07
+F8_E4M3_B128,BITSHIFT,U(-1,1),256,4096,4096,128x64x32_w4_v2,SKIP,opt only LUT path
+F8_E4M3_B128,LUT,U(-1,1),256,4096,4096,128x128x32_w4_v2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),256,4096,4096,128x128x32_w4_v2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),256,4096,4096,128x256x32_w4_v2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),256,4096,4096,128x256x32_w4_v2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),256,4096,4096,128x256x32_w8_v2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),256,4096,4096,128x256x32_w8_v2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),256,4096,4096,64x64x32_w4_v2,OK,ms=1.341,tflops=6.41,gbps=18.9,maxabs=2.136e-04,p99=4.387e-05,rel=4.731e-07
+F8_E4M3_B128,BITSHIFT,U(-1,1),256,4096,4096,64x64x32_w4_v2,SKIP,opt only LUT path
+F8_E4M3_B128,LUT,U(-1,1),256,4096,4096,64x128x32_w4_v2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),256,4096,4096,64x128x32_w4_v2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),512,4096,4096,16x64x32_w4,OK,ms=4.413,tflops=3.89,gbps=7.6,maxabs=2.213e-04,p99=4.196e-05,rel=4.310e-07
+F8_E4M3_B128,BITSHIFT,U(-1,1),512,4096,4096,16x64x32_w4,OK,ms=6.290,tflops=2.73,gbps=5.4,maxabs=1.068e-04,p99=2.670e-05,rel=3.623e-07
+F8_E4M3_B128,LUT,U(-1,1),512,4096,4096,16x128x32_w8,OK,ms=5.573,tflops=3.08,gbps=6.0,maxabs=2.213e-04,p99=4.196e-05,rel=4.310e-07
+F8_E4M3_B128,BITSHIFT,U(-1,1),512,4096,4096,16x128x32_w8,OK,ms=6.721,tflops=2.56,gbps=5.0,maxabs=1.068e-04,p99=2.670e-05,rel=3.623e-07
+F8_E4M3_B128,LUT,U(-1,1),512,4096,4096,16x128x32_w4f2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),512,4096,4096,16x128x32_w4f2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),512,4096,4096,16x256x32_w4f4,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),512,4096,4096,16x256x32_w4f4,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),512,4096,4096,128x64x32_w4_v1,SKIP,no template
+F8_E4M3_B128,BITSHIFT,U(-1,1),512,4096,4096,128x64x32_w4_v1,SKIP,opt only LUT path
+F8_E4M3_B128,LUT,U(-1,1),512,4096,4096,128x128x32_w4_v1,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),512,4096,4096,128x128x32_w4_v1,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),512,4096,4096,128x256x32_w4_v1,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),512,4096,4096,128x256x32_w4_v1,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),512,4096,4096,128x256x32_w8_v1,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),512,4096,4096,128x256x32_w8_v1,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),512,4096,4096,64x64x32_w4_v1,SKIP,no template
+F8_E4M3_B128,BITSHIFT,U(-1,1),512,4096,4096,64x64x32_w4_v1,SKIP,opt only LUT path
+F8_E4M3_B128,LUT,U(-1,1),512,4096,4096,64x128x32_w4_v1,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),512,4096,4096,64x128x32_w4_v1,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),512,4096,4096,128x64x32_w4_v2,OK,ms=1.596,tflops=10.77,gbps=21.1,maxabs=2.213e-04,p99=4.196e-05,rel=4.310e-07
+F8_E4M3_B128,BITSHIFT,U(-1,1),512,4096,4096,128x64x32_w4_v2,SKIP,opt only LUT path
+F8_E4M3_B128,LUT,U(-1,1),512,4096,4096,128x128x32_w4_v2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),512,4096,4096,128x128x32_w4_v2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),512,4096,4096,128x256x32_w4_v2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),512,4096,4096,128x256x32_w4_v2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),512,4096,4096,128x256x32_w8_v2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),512,4096,4096,128x256x32_w8_v2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),512,4096,4096,64x64x32_w4_v2,OK,ms=2.804,tflops=6.13,gbps=12.0,maxabs=2.213e-04,p99=4.196e-05,rel=4.310e-07
+F8_E4M3_B128,BITSHIFT,U(-1,1),512,4096,4096,64x64x32_w4_v2,SKIP,opt only LUT path
+F8_E4M3_B128,LUT,U(-1,1),512,4096,4096,64x128x32_w4_v2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),512,4096,4096,64x128x32_w4_v2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),1024,4096,4096,16x64x32_w4,OK,ms=8.827,tflops=3.89,gbps=5.7,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+F8_E4M3_B128,BITSHIFT,U(-1,1),1024,4096,4096,16x64x32_w4,OK,ms=11.171,tflops=3.08,gbps=4.5,maxabs=2.975e-04,p99=4.959e-05,rel=5.638e-07
+F8_E4M3_B128,LUT,U(-1,1),1024,4096,4096,16x128x32_w8,OK,ms=9.827,tflops=3.50,gbps=5.1,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+F8_E4M3_B128,BITSHIFT,U(-1,1),1024,4096,4096,16x128x32_w8,OK,ms=11.968,tflops=2.87,gbps=4.2,maxabs=2.975e-04,p99=4.959e-05,rel=5.638e-07
+F8_E4M3_B128,LUT,U(-1,1),1024,4096,4096,16x128x32_w4f2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),1024,4096,4096,16x128x32_w4f2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),1024,4096,4096,16x256x32_w4f4,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),1024,4096,4096,16x256x32_w4f4,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),1024,4096,4096,128x64x32_w4_v1,SKIP,no template
+F8_E4M3_B128,BITSHIFT,U(-1,1),1024,4096,4096,128x64x32_w4_v1,SKIP,opt only LUT path
+F8_E4M3_B128,LUT,U(-1,1),1024,4096,4096,128x128x32_w4_v1,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),1024,4096,4096,128x128x32_w4_v1,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),1024,4096,4096,128x256x32_w4_v1,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),1024,4096,4096,128x256x32_w4_v1,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),1024,4096,4096,128x256x32_w8_v1,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),1024,4096,4096,128x256x32_w8_v1,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),1024,4096,4096,64x64x32_w4_v1,SKIP,no template
+F8_E4M3_B128,BITSHIFT,U(-1,1),1024,4096,4096,64x64x32_w4_v1,SKIP,opt only LUT path
+F8_E4M3_B128,LUT,U(-1,1),1024,4096,4096,64x128x32_w4_v1,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),1024,4096,4096,64x128x32_w4_v1,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),1024,4096,4096,128x64x32_w4_v2,OK,ms=3.243,tflops=10.59,gbps=15.6,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+F8_E4M3_B128,BITSHIFT,U(-1,1),1024,4096,4096,128x64x32_w4_v2,SKIP,opt only LUT path
+F8_E4M3_B128,LUT,U(-1,1),1024,4096,4096,128x128x32_w4_v2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),1024,4096,4096,128x128x32_w4_v2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),1024,4096,4096,128x256x32_w4_v2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),1024,4096,4096,128x256x32_w4_v2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),1024,4096,4096,128x256x32_w8_v2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),1024,4096,4096,128x256x32_w8_v2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),1024,4096,4096,64x64x32_w4_v2,OK,ms=4.223,tflops=8.14,gbps=12.0,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+F8_E4M3_B128,BITSHIFT,U(-1,1),1024,4096,4096,64x64x32_w4_v2,SKIP,opt only LUT path
+F8_E4M3_B128,LUT,U(-1,1),1024,4096,4096,64x128x32_w4_v2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),1024,4096,4096,64x128x32_w4_v2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),2048,4096,4096,16x64x32_w4,OK,ms=17.598,tflops=3.90,gbps=4.8,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+F8_E4M3_B128,BITSHIFT,U(-1,1),2048,4096,4096,16x64x32_w4,OK,ms=21.113,tflops=3.25,gbps=4.0,maxabs=2.975e-04,p99=4.959e-05,rel=5.641e-07
+F8_E4M3_B128,LUT,U(-1,1),2048,4096,4096,16x128x32_w8,OK,ms=18.395,tflops=3.74,gbps=4.6,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+F8_E4M3_B128,BITSHIFT,U(-1,1),2048,4096,4096,16x128x32_w8,OK,ms=22.355,tflops=3.07,gbps=3.8,maxabs=2.975e-04,p99=4.959e-05,rel=5.641e-07
+F8_E4M3_B128,LUT,U(-1,1),2048,4096,4096,16x128x32_w4f2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),2048,4096,4096,16x128x32_w4f2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),2048,4096,4096,16x256x32_w4f4,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),2048,4096,4096,16x256x32_w4f4,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),2048,4096,4096,128x64x32_w4_v1,SKIP,no template
+F8_E4M3_B128,BITSHIFT,U(-1,1),2048,4096,4096,128x64x32_w4_v1,SKIP,opt only LUT path
+F8_E4M3_B128,LUT,U(-1,1),2048,4096,4096,128x128x32_w4_v1,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),2048,4096,4096,128x128x32_w4_v1,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),2048,4096,4096,128x256x32_w4_v1,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),2048,4096,4096,128x256x32_w4_v1,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),2048,4096,4096,128x256x32_w8_v1,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),2048,4096,4096,128x256x32_w8_v1,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),2048,4096,4096,64x64x32_w4_v1,SKIP,no template
+F8_E4M3_B128,BITSHIFT,U(-1,1),2048,4096,4096,64x64x32_w4_v1,SKIP,opt only LUT path
+F8_E4M3_B128,LUT,U(-1,1),2048,4096,4096,64x128x32_w4_v1,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),2048,4096,4096,64x128x32_w4_v1,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),2048,4096,4096,128x64x32_w4_v2,OK,ms=6.462,tflops=10.63,gbps=13.0,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+F8_E4M3_B128,BITSHIFT,U(-1,1),2048,4096,4096,128x64x32_w4_v2,SKIP,opt only LUT path
+F8_E4M3_B128,LUT,U(-1,1),2048,4096,4096,128x128x32_w4_v2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),2048,4096,4096,128x128x32_w4_v2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),2048,4096,4096,128x256x32_w4_v2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),2048,4096,4096,128x256x32_w4_v2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),2048,4096,4096,128x256x32_w8_v2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),2048,4096,4096,128x256x32_w8_v2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),2048,4096,4096,64x64x32_w4_v2,OK,ms=8.388,tflops=8.19,gbps=10.0,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+F8_E4M3_B128,BITSHIFT,U(-1,1),2048,4096,4096,64x64x32_w4_v2,SKIP,opt only LUT path
+F8_E4M3_B128,LUT,U(-1,1),2048,4096,4096,64x128x32_w4_v2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),2048,4096,4096,64x128x32_w4_v2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),1,7168,7168,16x64x32_w4,OK,ms=2.014,tflops=0.05,gbps=25.7,maxabs=1.831e-02,p99=1.308e-02,rel=1.819e-04
+F8_E4M3_B128,BITSHIFT,U(-1,1),1,7168,7168,16x64x32_w4,OK,ms=2.224,tflops=0.05,gbps=23.3,maxabs=1.832e-02,p99=1.310e-02,rel=1.819e-04
+F8_E4M3_B128,LUT,U(-1,1),1,7168,7168,16x128x32_w8,OK,ms=2.203,tflops=0.05,gbps=23.5,maxabs=1.831e-02,p99=1.308e-02,rel=1.819e-04
+F8_E4M3_B128,BITSHIFT,U(-1,1),1,7168,7168,16x128x32_w8,OK,ms=2.408,tflops=0.04,gbps=21.5,maxabs=1.832e-02,p99=1.310e-02,rel=1.819e-04
+F8_E4M3_B128,LUT,U(-1,1),1,7168,7168,16x128x32_w4f2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),1,7168,7168,16x128x32_w4f2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),1,7168,7168,16x256x32_w4f4,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),1,7168,7168,16x256x32_w4f4,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),1,7168,7168,128x64x32_w4_v1,SKIP,no template
+F8_E4M3_B128,BITSHIFT,U(-1,1),1,7168,7168,128x64x32_w4_v1,SKIP,opt only LUT path
+F8_E4M3_B128,LUT,U(-1,1),1,7168,7168,128x128x32_w4_v1,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),1,7168,7168,128x128x32_w4_v1,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),1,7168,7168,128x256x32_w4_v1,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),1,7168,7168,128x256x32_w4_v1,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),1,7168,7168,128x256x32_w8_v1,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),1,7168,7168,128x256x32_w8_v1,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),1,7168,7168,64x64x32_w4_v1,SKIP,no template
+F8_E4M3_B128,BITSHIFT,U(-1,1),1,7168,7168,64x64x32_w4_v1,SKIP,opt only LUT path
+F8_E4M3_B128,LUT,U(-1,1),1,7168,7168,64x128x32_w4_v1,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),1,7168,7168,64x128x32_w4_v1,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),1,7168,7168,128x64x32_w4_v2,OK,ms=2.602,tflops=0.04,gbps=19.9,maxabs=1.831e-02,p99=1.308e-02,rel=1.819e-04
+F8_E4M3_B128,BITSHIFT,U(-1,1),1,7168,7168,128x64x32_w4_v2,SKIP,opt only LUT path
+F8_E4M3_B128,LUT,U(-1,1),1,7168,7168,128x128x32_w4_v2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),1,7168,7168,128x128x32_w4_v2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),1,7168,7168,128x256x32_w4_v2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),1,7168,7168,128x256x32_w4_v2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),1,7168,7168,128x256x32_w8_v2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),1,7168,7168,128x256x32_w8_v2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),1,7168,7168,64x64x32_w4_v2,OK,ms=2.211,tflops=0.05,gbps=23.4,maxabs=1.831e-02,p99=1.308e-02,rel=1.819e-04
+F8_E4M3_B128,BITSHIFT,U(-1,1),1,7168,7168,64x64x32_w4_v2,SKIP,opt only LUT path
+F8_E4M3_B128,LUT,U(-1,1),1,7168,7168,64x128x32_w4_v2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),1,7168,7168,64x128x32_w4_v2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),16,7168,7168,16x64x32_w4,OK,ms=2.030,tflops=0.81,gbps=26.0,maxabs=3.052e-04,p99=8.202e-05,rel=6.882e-07
+F8_E4M3_B128,BITSHIFT,U(-1,1),16,7168,7168,16x64x32_w4,OK,ms=2.310,tflops=0.71,gbps=22.8,maxabs=1.221e-04,p99=3.815e-05,rel=3.888e-07
+F8_E4M3_B128,LUT,U(-1,1),16,7168,7168,16x128x32_w8,OK,ms=2.267,tflops=0.73,gbps=23.3,maxabs=3.052e-04,p99=8.202e-05,rel=6.882e-07
+F8_E4M3_B128,BITSHIFT,U(-1,1),16,7168,7168,16x128x32_w8,OK,ms=2.557,tflops=0.64,gbps=20.6,maxabs=1.221e-04,p99=3.815e-05,rel=3.888e-07
+F8_E4M3_B128,LUT,U(-1,1),16,7168,7168,16x128x32_w4f2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),16,7168,7168,16x128x32_w4f2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),16,7168,7168,16x256x32_w4f4,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),16,7168,7168,16x256x32_w4f4,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),16,7168,7168,128x64x32_w4_v1,SKIP,no template
+F8_E4M3_B128,BITSHIFT,U(-1,1),16,7168,7168,128x64x32_w4_v1,SKIP,opt only LUT path
+F8_E4M3_B128,LUT,U(-1,1),16,7168,7168,128x128x32_w4_v1,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),16,7168,7168,128x128x32_w4_v1,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),16,7168,7168,128x256x32_w4_v1,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),16,7168,7168,128x256x32_w4_v1,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),16,7168,7168,128x256x32_w8_v1,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),16,7168,7168,128x256x32_w8_v1,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),16,7168,7168,64x64x32_w4_v1,SKIP,no template
+F8_E4M3_B128,BITSHIFT,U(-1,1),16,7168,7168,64x64x32_w4_v1,SKIP,opt only LUT path
+F8_E4M3_B128,LUT,U(-1,1),16,7168,7168,64x128x32_w4_v1,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),16,7168,7168,64x128x32_w4_v1,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),16,7168,7168,128x64x32_w4_v2,OK,ms=2.611,tflops=0.63,gbps=20.2,maxabs=3.052e-04,p99=8.202e-05,rel=6.882e-07
+F8_E4M3_B128,BITSHIFT,U(-1,1),16,7168,7168,128x64x32_w4_v2,SKIP,opt only LUT path
+F8_E4M3_B128,LUT,U(-1,1),16,7168,7168,128x128x32_w4_v2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),16,7168,7168,128x128x32_w4_v2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),16,7168,7168,128x256x32_w4_v2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),16,7168,7168,128x256x32_w4_v2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),16,7168,7168,128x256x32_w8_v2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),16,7168,7168,128x256x32_w8_v2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),16,7168,7168,64x64x32_w4_v2,OK,ms=2.236,tflops=0.74,gbps=23.6,maxabs=3.052e-04,p99=8.202e-05,rel=6.882e-07
+F8_E4M3_B128,BITSHIFT,U(-1,1),16,7168,7168,64x64x32_w4_v2,SKIP,opt only LUT path
+F8_E4M3_B128,LUT,U(-1,1),16,7168,7168,64x128x32_w4_v2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),16,7168,7168,64x128x32_w4_v2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),64,7168,7168,16x64x32_w4,OK,ms=2.174,tflops=3.02,gbps=25.5,maxabs=3.281e-04,p99=8.011e-05,rel=6.657e-07
+F8_E4M3_B128,BITSHIFT,U(-1,1),64,7168,7168,16x64x32_w4,OK,ms=2.528,tflops=2.60,gbps=21.9,maxabs=1.526e-04,p99=4.196e-05,rel=4.351e-07
+F8_E4M3_B128,LUT,U(-1,1),64,7168,7168,16x128x32_w8,OK,ms=2.401,tflops=2.74,gbps=23.1,maxabs=3.281e-04,p99=8.011e-05,rel=6.657e-07
+F8_E4M3_B128,BITSHIFT,U(-1,1),64,7168,7168,16x128x32_w8,OK,ms=2.835,tflops=2.32,gbps=19.6,maxabs=1.526e-04,p99=4.196e-05,rel=4.351e-07
+F8_E4M3_B128,LUT,U(-1,1),64,7168,7168,16x128x32_w4f2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),64,7168,7168,16x128x32_w4f2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),64,7168,7168,16x256x32_w4f4,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),64,7168,7168,16x256x32_w4f4,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),64,7168,7168,128x64x32_w4_v1,SKIP,no template
+F8_E4M3_B128,BITSHIFT,U(-1,1),64,7168,7168,128x64x32_w4_v1,SKIP,opt only LUT path
+F8_E4M3_B128,LUT,U(-1,1),64,7168,7168,128x128x32_w4_v1,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),64,7168,7168,128x128x32_w4_v1,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),64,7168,7168,128x256x32_w4_v1,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),64,7168,7168,128x256x32_w4_v1,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),64,7168,7168,128x256x32_w8_v1,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),64,7168,7168,128x256x32_w8_v1,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),64,7168,7168,64x64x32_w4_v1,SKIP,no template
+F8_E4M3_B128,BITSHIFT,U(-1,1),64,7168,7168,64x64x32_w4_v1,SKIP,opt only LUT path
+F8_E4M3_B128,LUT,U(-1,1),64,7168,7168,64x128x32_w4_v1,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),64,7168,7168,64x128x32_w4_v1,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),64,7168,7168,128x64x32_w4_v2,OK,ms=2.619,tflops=2.51,gbps=21.2,maxabs=3.281e-04,p99=8.011e-05,rel=6.657e-07
+F8_E4M3_B128,BITSHIFT,U(-1,1),64,7168,7168,128x64x32_w4_v2,SKIP,opt only LUT path
+F8_E4M3_B128,LUT,U(-1,1),64,7168,7168,128x128x32_w4_v2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),64,7168,7168,128x128x32_w4_v2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),64,7168,7168,128x256x32_w4_v2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),64,7168,7168,128x256x32_w4_v2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),64,7168,7168,128x256x32_w8_v2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),64,7168,7168,128x256x32_w8_v2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),64,7168,7168,64x64x32_w4_v2,OK,ms=2.274,tflops=2.89,gbps=24.4,maxabs=3.281e-04,p99=8.011e-05,rel=6.657e-07
+F8_E4M3_B128,BITSHIFT,U(-1,1),64,7168,7168,64x64x32_w4_v2,SKIP,opt only LUT path
+F8_E4M3_B128,LUT,U(-1,1),64,7168,7168,64x128x32_w4_v2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),64,7168,7168,64x128x32_w4_v2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),128,7168,7168,16x64x32_w4,OK,ms=4.894,tflops=2.69,gbps=12.1,maxabs=3.281e-04,p99=8.011e-05,rel=6.660e-07
+F8_E4M3_B128,BITSHIFT,U(-1,1),128,7168,7168,16x64x32_w4,OK,ms=5.637,tflops=2.33,gbps=10.5,maxabs=1.526e-04,p99=4.196e-05,rel=4.353e-07
+F8_E4M3_B128,LUT,U(-1,1),128,7168,7168,16x128x32_w8,OK,ms=5.156,tflops=2.55,gbps=11.5,maxabs=3.281e-04,p99=8.011e-05,rel=6.660e-07
+F8_E4M3_B128,BITSHIFT,U(-1,1),128,7168,7168,16x128x32_w8,OK,ms=6.282,tflops=2.09,gbps=9.4,maxabs=1.526e-04,p99=4.196e-05,rel=4.353e-07
+F8_E4M3_B128,LUT,U(-1,1),128,7168,7168,16x128x32_w4f2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),128,7168,7168,16x128x32_w4f2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),128,7168,7168,16x256x32_w4f4,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),128,7168,7168,16x256x32_w4f4,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),128,7168,7168,128x64x32_w4_v1,SKIP,no template
+F8_E4M3_B128,BITSHIFT,U(-1,1),128,7168,7168,128x64x32_w4_v1,SKIP,opt only LUT path
+F8_E4M3_B128,LUT,U(-1,1),128,7168,7168,128x128x32_w4_v1,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),128,7168,7168,128x128x32_w4_v1,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),128,7168,7168,128x256x32_w4_v1,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),128,7168,7168,128x256x32_w4_v1,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),128,7168,7168,128x256x32_w8_v1,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),128,7168,7168,128x256x32_w8_v1,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),128,7168,7168,64x64x32_w4_v1,SKIP,no template
+F8_E4M3_B128,BITSHIFT,U(-1,1),128,7168,7168,64x64x32_w4_v1,SKIP,opt only LUT path
+F8_E4M3_B128,LUT,U(-1,1),128,7168,7168,64x128x32_w4_v1,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),128,7168,7168,64x128x32_w4_v1,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),128,7168,7168,128x64x32_w4_v2,OK,ms=2.650,tflops=4.96,gbps=22.3,maxabs=3.281e-04,p99=8.011e-05,rel=6.660e-07
+F8_E4M3_B128,BITSHIFT,U(-1,1),128,7168,7168,128x64x32_w4_v2,SKIP,opt only LUT path
+F8_E4M3_B128,LUT,U(-1,1),128,7168,7168,128x128x32_w4_v2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),128,7168,7168,128x128x32_w4_v2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),128,7168,7168,128x256x32_w4_v2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),128,7168,7168,128x256x32_w4_v2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),128,7168,7168,128x256x32_w8_v2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),128,7168,7168,128x256x32_w8_v2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),128,7168,7168,64x64x32_w4_v2,OK,ms=2.288,tflops=5.75,gbps=25.8,maxabs=3.281e-04,p99=8.011e-05,rel=6.660e-07
+F8_E4M3_B128,BITSHIFT,U(-1,1),128,7168,7168,64x64x32_w4_v2,SKIP,opt only LUT path
+F8_E4M3_B128,LUT,U(-1,1),128,7168,7168,64x128x32_w4_v2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),128,7168,7168,64x128x32_w4_v2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),256,7168,7168,16x64x32_w4,OK,ms=7.413,tflops=3.55,gbps=9.0,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+F8_E4M3_B128,BITSHIFT,U(-1,1),256,7168,7168,16x64x32_w4,OK,ms=8.537,tflops=3.08,gbps=7.8,maxabs=4.044e-04,p99=9.155e-05,rel=8.087e-07
+F8_E4M3_B128,LUT,U(-1,1),256,7168,7168,16x128x32_w8,OK,ms=7.676,tflops=3.43,gbps=8.7,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+F8_E4M3_B128,BITSHIFT,U(-1,1),256,7168,7168,16x128x32_w8,OK,ms=9.277,tflops=2.84,gbps=7.2,maxabs=4.044e-04,p99=9.155e-05,rel=8.087e-07
+F8_E4M3_B128,LUT,U(-1,1),256,7168,7168,16x128x32_w4f2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),256,7168,7168,16x128x32_w4f2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),256,7168,7168,16x256x32_w4f4,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),256,7168,7168,16x256x32_w4f4,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),256,7168,7168,128x64x32_w4_v1,SKIP,no template
+F8_E4M3_B128,BITSHIFT,U(-1,1),256,7168,7168,128x64x32_w4_v1,SKIP,opt only LUT path
+F8_E4M3_B128,LUT,U(-1,1),256,7168,7168,128x128x32_w4_v1,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),256,7168,7168,128x128x32_w4_v1,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),256,7168,7168,128x256x32_w4_v1,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),256,7168,7168,128x256x32_w4_v1,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),256,7168,7168,128x256x32_w8_v1,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),256,7168,7168,128x256x32_w8_v1,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),256,7168,7168,64x64x32_w4_v1,SKIP,no template
+F8_E4M3_B128,BITSHIFT,U(-1,1),256,7168,7168,64x64x32_w4_v1,SKIP,opt only LUT path
+F8_E4M3_B128,LUT,U(-1,1),256,7168,7168,64x128x32_w4_v1,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),256,7168,7168,64x128x32_w4_v1,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),256,7168,7168,128x64x32_w4_v2,OK,ms=2.730,tflops=9.63,gbps=24.3,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+F8_E4M3_B128,BITSHIFT,U(-1,1),256,7168,7168,128x64x32_w4_v2,SKIP,opt only LUT path
+F8_E4M3_B128,LUT,U(-1,1),256,7168,7168,128x128x32_w4_v2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),256,7168,7168,128x128x32_w4_v2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),256,7168,7168,128x256x32_w4_v2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),256,7168,7168,128x256x32_w4_v2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),256,7168,7168,128x256x32_w8_v2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),256,7168,7168,128x256x32_w8_v2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),256,7168,7168,64x64x32_w4_v2,OK,ms=4.648,tflops=5.66,gbps=14.3,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+F8_E4M3_B128,BITSHIFT,U(-1,1),256,7168,7168,64x64x32_w4_v2,SKIP,opt only LUT path
+F8_E4M3_B128,LUT,U(-1,1),256,7168,7168,64x128x32_w4_v2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),256,7168,7168,64x128x32_w4_v2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),512,7168,7168,16x64x32_w4,OK,ms=13.021,tflops=4.04,gbps=6.2,maxabs=3.052e-04,p99=6.866e-05,rel=5.507e-07
+F8_E4M3_B128,BITSHIFT,U(-1,1),512,7168,7168,16x64x32_w4,OK,ms=17.224,tflops=3.05,gbps=4.7,maxabs=2.213e-04,p99=6.104e-05,rel=5.997e-07
+F8_E4M3_B128,LUT,U(-1,1),512,7168,7168,16x128x32_w8,OK,ms=15.322,tflops=3.43,gbps=5.3,maxabs=3.052e-04,p99=6.866e-05,rel=5.507e-07
+F8_E4M3_B128,BITSHIFT,U(-1,1),512,7168,7168,16x128x32_w8,OK,ms=18.670,tflops=2.82,gbps=4.3,maxabs=2.213e-04,p99=6.104e-05,rel=5.997e-07
+F8_E4M3_B128,LUT,U(-1,1),512,7168,7168,16x128x32_w4f2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),512,7168,7168,16x128x32_w4f2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),512,7168,7168,16x256x32_w4f4,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),512,7168,7168,16x256x32_w4f4,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),512,7168,7168,128x64x32_w4_v1,SKIP,no template
+F8_E4M3_B128,BITSHIFT,U(-1,1),512,7168,7168,128x64x32_w4_v1,SKIP,opt only LUT path
+F8_E4M3_B128,LUT,U(-1,1),512,7168,7168,128x128x32_w4_v1,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),512,7168,7168,128x128x32_w4_v1,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),512,7168,7168,128x256x32_w4_v1,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),512,7168,7168,128x256x32_w4_v1,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),512,7168,7168,128x256x32_w8_v1,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),512,7168,7168,128x256x32_w8_v1,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),512,7168,7168,64x64x32_w4_v1,SKIP,no template
+F8_E4M3_B128,BITSHIFT,U(-1,1),512,7168,7168,64x64x32_w4_v1,SKIP,opt only LUT path
+F8_E4M3_B128,LUT,U(-1,1),512,7168,7168,64x128x32_w4_v1,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),512,7168,7168,64x128x32_w4_v1,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),512,7168,7168,128x64x32_w4_v2,OK,ms=5.871,tflops=8.96,gbps=13.8,maxabs=3.052e-04,p99=6.866e-05,rel=5.507e-07
+F8_E4M3_B128,BITSHIFT,U(-1,1),512,7168,7168,128x64x32_w4_v2,SKIP,opt only LUT path
+F8_E4M3_B128,LUT,U(-1,1),512,7168,7168,128x128x32_w4_v2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),512,7168,7168,128x128x32_w4_v2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),512,7168,7168,128x256x32_w4_v2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),512,7168,7168,128x256x32_w4_v2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),512,7168,7168,128x256x32_w8_v2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),512,7168,7168,128x256x32_w8_v2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),512,7168,7168,64x64x32_w4_v2,OK,ms=7.279,tflops=7.23,gbps=11.1,maxabs=3.052e-04,p99=6.866e-05,rel=5.507e-07
+F8_E4M3_B128,BITSHIFT,U(-1,1),512,7168,7168,64x64x32_w4_v2,SKIP,opt only LUT path
+F8_E4M3_B128,LUT,U(-1,1),512,7168,7168,64x128x32_w4_v2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),512,7168,7168,64x128x32_w4_v2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),1024,7168,7168,16x64x32_w4,OK,ms=26.023,tflops=4.04,gbps=4.2,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+F8_E4M3_B128,BITSHIFT,U(-1,1),1024,7168,7168,16x64x32_w4,OK,ms=34.267,tflops=3.07,gbps=3.2,maxabs=4.196e-04,p99=9.251e-05,rel=8.096e-07
+F8_E4M3_B128,LUT,U(-1,1),1024,7168,7168,16x128x32_w8,OK,ms=30.752,tflops=3.42,gbps=3.6,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+F8_E4M3_B128,BITSHIFT,U(-1,1),1024,7168,7168,16x128x32_w8,OK,ms=37.190,tflops=2.83,gbps=3.0,maxabs=4.196e-04,p99=9.251e-05,rel=8.096e-07
+F8_E4M3_B128,LUT,U(-1,1),1024,7168,7168,16x128x32_w4f2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),1024,7168,7168,16x128x32_w4f2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),1024,7168,7168,16x256x32_w4f4,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),1024,7168,7168,16x256x32_w4f4,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),1024,7168,7168,128x64x32_w4_v1,SKIP,no template
+F8_E4M3_B128,BITSHIFT,U(-1,1),1024,7168,7168,128x64x32_w4_v1,SKIP,opt only LUT path
+F8_E4M3_B128,LUT,U(-1,1),1024,7168,7168,128x128x32_w4_v1,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),1024,7168,7168,128x128x32_w4_v1,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),1024,7168,7168,128x256x32_w4_v1,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),1024,7168,7168,128x256x32_w4_v1,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),1024,7168,7168,128x256x32_w8_v1,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),1024,7168,7168,128x256x32_w8_v1,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),1024,7168,7168,64x64x32_w4_v1,SKIP,no template
+F8_E4M3_B128,BITSHIFT,U(-1,1),1024,7168,7168,64x64x32_w4_v1,SKIP,opt only LUT path
+F8_E4M3_B128,LUT,U(-1,1),1024,7168,7168,64x128x32_w4_v1,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),1024,7168,7168,64x128x32_w4_v1,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),1024,7168,7168,128x64x32_w4_v2,OK,ms=8.533,tflops=12.33,gbps=12.9,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+F8_E4M3_B128,BITSHIFT,U(-1,1),1024,7168,7168,128x64x32_w4_v2,SKIP,opt only LUT path
+F8_E4M3_B128,LUT,U(-1,1),1024,7168,7168,128x128x32_w4_v2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),1024,7168,7168,128x128x32_w4_v2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),1024,7168,7168,128x256x32_w4_v2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),1024,7168,7168,128x256x32_w4_v2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),1024,7168,7168,128x256x32_w8_v2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),1024,7168,7168,128x256x32_w8_v2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),1024,7168,7168,64x64x32_w4_v2,OK,ms=12.145,tflops=8.66,gbps=9.1,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+F8_E4M3_B128,BITSHIFT,U(-1,1),1024,7168,7168,64x64x32_w4_v2,SKIP,opt only LUT path
+F8_E4M3_B128,LUT,U(-1,1),1024,7168,7168,64x128x32_w4_v2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),1024,7168,7168,64x128x32_w4_v2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),2048,7168,7168,16x64x32_w4,OK,ms=52.064,tflops=4.04,gbps=3.3,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+F8_E4M3_B128,BITSHIFT,U(-1,1),2048,7168,7168,16x64x32_w4,OK,ms=65.874,tflops=3.19,gbps=2.6,maxabs=5.341e-04,p99=9.346e-05,rel=8.101e-07
+F8_E4M3_B128,LUT,U(-1,1),2048,7168,7168,16x128x32_w8,OK,ms=58.802,tflops=3.58,gbps=2.9,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+F8_E4M3_B128,BITSHIFT,U(-1,1),2048,7168,7168,16x128x32_w8,OK,ms=71.295,tflops=2.95,gbps=2.4,maxabs=5.341e-04,p99=9.346e-05,rel=8.101e-07
+F8_E4M3_B128,LUT,U(-1,1),2048,7168,7168,16x128x32_w4f2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),2048,7168,7168,16x128x32_w4f2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),2048,7168,7168,16x256x32_w4f4,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),2048,7168,7168,16x256x32_w4f4,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),2048,7168,7168,128x64x32_w4_v1,SKIP,no template
+F8_E4M3_B128,BITSHIFT,U(-1,1),2048,7168,7168,128x64x32_w4_v1,SKIP,opt only LUT path
+F8_E4M3_B128,LUT,U(-1,1),2048,7168,7168,128x128x32_w4_v1,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),2048,7168,7168,128x128x32_w4_v1,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),2048,7168,7168,128x256x32_w4_v1,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),2048,7168,7168,128x256x32_w4_v1,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),2048,7168,7168,128x256x32_w8_v1,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),2048,7168,7168,128x256x32_w8_v1,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),2048,7168,7168,64x64x32_w4_v1,SKIP,no template
+F8_E4M3_B128,BITSHIFT,U(-1,1),2048,7168,7168,64x64x32_w4_v1,SKIP,opt only LUT path
+F8_E4M3_B128,LUT,U(-1,1),2048,7168,7168,64x128x32_w4_v1,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),2048,7168,7168,64x128x32_w4_v1,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),2048,7168,7168,128x64x32_w4_v2,OK,ms=17.019,tflops=12.37,gbps=9.9,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+F8_E4M3_B128,BITSHIFT,U(-1,1),2048,7168,7168,128x64x32_w4_v2,SKIP,opt only LUT path
+F8_E4M3_B128,LUT,U(-1,1),2048,7168,7168,128x128x32_w4_v2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),2048,7168,7168,128x128x32_w4_v2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),2048,7168,7168,128x256x32_w4_v2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),2048,7168,7168,128x256x32_w4_v2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),2048,7168,7168,128x256x32_w8_v2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),2048,7168,7168,128x256x32_w8_v2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,LUT,U(-1,1),2048,7168,7168,64x64x32_w4_v2,OK,ms=21.704,tflops=9.70,gbps=7.8,maxabs=0.000e+00,p99=0.000e+00,rel=0.000e+00
+F8_E4M3_B128,BITSHIFT,U(-1,1),2048,7168,7168,64x64x32_w4_v2,SKIP,opt only LUT path
+F8_E4M3_B128,LUT,U(-1,1),2048,7168,7168,64x128x32_w4_v2,SKIP,BN/WARPS != 16
+F8_E4M3_B128,BITSHIFT,U(-1,1),2048,7168,7168,64x128x32_w4_v2,SKIP,BN/WARPS != 16

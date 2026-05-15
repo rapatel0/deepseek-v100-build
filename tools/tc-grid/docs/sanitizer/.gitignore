@@ -1,0 +1,3 @@
+# compute-sanitizer outputs are committed as sprint evidence — override the
+# repo-root *.log ignore.
+!*.log
