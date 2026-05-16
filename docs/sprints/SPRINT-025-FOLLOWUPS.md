@@ -69,45 +69,57 @@ captures items explicitly scoped out during planning).
   copies — use `kubectl cp` rather than tar-pipe.
 - **Files**: Operational, no code change.
 
-## 4. llama-server "Invalid input batch." 500 on certain prompts
+## 4. llama-server "Invalid input batch." — slot KV-position desync
 
-- **What**: 256e on 6 GPUs returns HTTP 500 `Invalid input batch.` on
-  certain `/completion` requests with multi-word ASCII content prompts
-  (`"Hello world! My name is"`, `"Once upon a time, there was a"`).
-  Reproduces deterministically. Code/identifier prompts
-  (`"def fibonacci(n):"`) and prompts with leading punctuation work.
-  No backtrace in server log — error returned at request validation.
-- **Why discovered**: P4 ship-gate coherence checks. 3/5 prompts decoded
-  fine; 2/5 returned the 500 error. The two passing real-content prompts
-  (`"The capital of France is"`, `"def fibonacci(n):"`) confirm the model
-  weights are healthy.
-- **Severity**: Important. Not a ship blocker for the SPRINT-025 ship gate
-  (which only requires decode coherence on _some_ prompts), but a real
-  bug that affects ~half of natural prompts.
-- **Suggested sprint**: SPRINT-026 P0 sanity-check phase or earlier. Reproduce
-  with `--verbose`, look at the request validation path in
-  `tools/server/server.cpp` for the "Invalid input batch" string.
-- **Files**: `tools/server/server.cpp` (request validation), possibly
-  `src/llama-batch.cpp` (input batch construction).
+- **What**: HTTP 500 `Invalid input batch.` on `/completion` requests when
+  `cache_prompt:false` is passed AND the chosen slot has prior state.
+  Actual error from the server log (8-GPU run):
+  ```
+  init: the tokens of sequence 1 in the input batch have inconsistent
+  sequence positions:
+    - the last position stored in the memory module of the context
+      (i.e. the KV cache) for sequence 1 is X = 36
+    - the tokens for sequence 1 in the input batch have a starting
+      position of Y = 0
+  it is required that the sequence positions remain consecutive: Y = X + 1
+  decode: failed to initialize batch
+  llama_decode: failed to decode, ret = -1
+  srv  update_slots: Invalid input batch. i = 0, n_batch = 2048, ret = -1
+  ```
+- **Why discovered**: P4 ship-gate coherence checks on both 6-GPU and
+  8-GPU runs. First request on a fresh slot works; second request to
+  the same slot with `cache_prompt:false` fails because the slot's KV
+  cache wasn't fully cleared between requests.
+- **Severity**: Important. Not a ship blocker (each slot's first request
+  works, and `cache_prompt:true` works on subsequent requests by finding
+  the longest matching prefix), but a real bug when callers explicitly
+  want a clean cache reset.
+- **Workaround**: Pass `cache_prompt:true` (the default), OR cycle through
+  different `id_slot` values, OR send a tiny `n_predict:1` reset request
+  between real requests.
+- **Suggested sprint**: SPRINT-026 P0. The fix is in
+  `tools/server/server.cpp` slot reset path — when `cache_prompt:false`
+  the slot should call `memory_seq_rm(seq_id, 0, end)` before queueing
+  the new batch, not after.
+- **Files**: `tools/server/server.cpp` (`launch_slot_` / `update_slots`).
 
-## 5. 8-GPU 256e scaling sweep
+## 5. 2-GPU / 4-GPU scaling sweep points
 
-- **What**: SPRINT-025 P5 spec called for a 2/4/6/8 GPU scaling sweep.
-  Only 6 GPUs reservable on gpu-01 without disturbing `tcg-dev` and
-  `llamacpp-build` (each holding 1 GPU). 2/4-GPU sub-runs via
-  `CUDA_VISIBLE_DEVICES=0,1` / `0,1,2,3` on the existing pod are easy
-  (~1 hour total); 8-GPU requires either deleting one of the other pods
-  or waiting until they release.
-- **Why discovered**: P5 execution. The 6-GPU data point is already in
-  REPORT-19; 2/4 sub-runs would let us draw the scaling curve, and 8-GPU
-  would extend it to the original sprint target.
-- **Severity**: Important if scaling characterization is needed for
-  capacity planning, otherwise Nice-to-have. Decode TPS at M=1 should
-  not improve dramatically beyond what the per-GPU expert-traffic
-  bottleneck allows.
-- **Suggested sprint**: Whichever sprint asks "how much faster on N
-  GPUs?". Can be folded into REPORT-19 retroactively.
-- **Files**: No code change; a script + REPORT-19 amendment.
+- **What**: SPRINT-025 P5 spec called for 2/4/6/8 GPU sweep. 6-GPU and
+  8-GPU data points are captured in REPORT-19. 2/4-GPU sub-runs via
+  `CUDA_VISIBLE_DEVICES=0,1` / `0,1,2,3` on the existing 8-GPU pod would
+  complete the curve.
+- **Why discovered**: P5 execution captured the two largest-fit
+  configurations but not the lower end. 256e at 146 GiB needs ≥ 5 GPUs
+  to fit at all (≤ 4×32 = 128 GiB < 146 GiB), so 2/4-GPU sub-runs would
+  need a different smaller model (MIN-Ne) to draw a complete curve, or
+  would have to use the 256e with CPU layer offload (degraded).
+- **Severity**: Nice-to-have for capacity planning; not blocking. The
+  6-vs-8 comparison already in REPORT-19 captures the meaningful
+  trade-off (8 GPUs = headroom, 6 GPUs = slightly faster decode).
+- **Suggested sprint**: Whichever sprint asks "how does scaling shape
+  decode TPS at M=1?". Add 4-GPU + MIN-Ne data points.
+- **Files**: No code change; REPORT-19 amendment.
 
 ---
 
@@ -119,4 +131,4 @@ captures items explicitly scoped out during planning).
 | /models/dsv4-flash/ subdir convention | Nice-to-have | next manifest touch | manifests/*.yaml, SPRINT-025.md |
 | tar-pipe fragility for cross-pod copies | Nice-to-have | operational | none |
 | llama-server "Invalid input batch." 500 | Important | 026 P0 | tools/server/server.cpp, src/llama-batch.cpp |
-| 8-GPU 256e scaling sweep | Nice-to-have | when needed | REPORT-19 amendment |
+| 2/4-GPU scaling sweep points (MIN-Ne) | Nice-to-have | when needed | REPORT-19 amendment |
