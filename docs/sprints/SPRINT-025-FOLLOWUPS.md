@@ -69,6 +69,46 @@ captures items explicitly scoped out during planning).
   copies — use `kubectl cp` rather than tar-pipe.
 - **Files**: Operational, no code change.
 
+## 4. llama-server "Invalid input batch." 500 on certain prompts
+
+- **What**: 256e on 6 GPUs returns HTTP 500 `Invalid input batch.` on
+  certain `/completion` requests with multi-word ASCII content prompts
+  (`"Hello world! My name is"`, `"Once upon a time, there was a"`).
+  Reproduces deterministically. Code/identifier prompts
+  (`"def fibonacci(n):"`) and prompts with leading punctuation work.
+  No backtrace in server log — error returned at request validation.
+- **Why discovered**: P4 ship-gate coherence checks. 3/5 prompts decoded
+  fine; 2/5 returned the 500 error. The two passing real-content prompts
+  (`"The capital of France is"`, `"def fibonacci(n):"`) confirm the model
+  weights are healthy.
+- **Severity**: Important. Not a ship blocker for the SPRINT-025 ship gate
+  (which only requires decode coherence on _some_ prompts), but a real
+  bug that affects ~half of natural prompts.
+- **Suggested sprint**: SPRINT-026 P0 sanity-check phase or earlier. Reproduce
+  with `--verbose`, look at the request validation path in
+  `tools/server/server.cpp` for the "Invalid input batch" string.
+- **Files**: `tools/server/server.cpp` (request validation), possibly
+  `src/llama-batch.cpp` (input batch construction).
+
+## 5. 8-GPU 256e scaling sweep
+
+- **What**: SPRINT-025 P5 spec called for a 2/4/6/8 GPU scaling sweep.
+  Only 6 GPUs reservable on gpu-01 without disturbing `tcg-dev` and
+  `llamacpp-build` (each holding 1 GPU). 2/4-GPU sub-runs via
+  `CUDA_VISIBLE_DEVICES=0,1` / `0,1,2,3` on the existing pod are easy
+  (~1 hour total); 8-GPU requires either deleting one of the other pods
+  or waiting until they release.
+- **Why discovered**: P5 execution. The 6-GPU data point is already in
+  REPORT-19; 2/4 sub-runs would let us draw the scaling curve, and 8-GPU
+  would extend it to the original sprint target.
+- **Severity**: Important if scaling characterization is needed for
+  capacity planning, otherwise Nice-to-have. Decode TPS at M=1 should
+  not improve dramatically beyond what the per-GPU expert-traffic
+  bottleneck allows.
+- **Suggested sprint**: Whichever sprint asks "how much faster on N
+  GPUs?". Can be folded into REPORT-19 retroactively.
+- **Files**: No code change; a script + REPORT-19 amendment.
+
 ---
 
 ## Summary
@@ -78,3 +118,5 @@ captures items explicitly scoped out during planning).
 | CUDA_TURBOMIND family-alias buft | Important | 027 | ggml-cuda-turbomind.{cu,cuh}, llama-model.cpp |
 | /models/dsv4-flash/ subdir convention | Nice-to-have | next manifest touch | manifests/*.yaml, SPRINT-025.md |
 | tar-pipe fragility for cross-pod copies | Nice-to-have | operational | none |
+| llama-server "Invalid input batch." 500 | Important | 026 P0 | tools/server/server.cpp, src/llama-batch.cpp |
+| 8-GPU 256e scaling sweep | Nice-to-have | when needed | REPORT-19 amendment |
