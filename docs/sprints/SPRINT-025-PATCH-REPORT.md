@@ -298,6 +298,44 @@ To validate the FP16-drift hypothesis:
 
 The compare can happen offline (Python script reading the two dumps). Total instrumentation effort: ~half-day.
 
+## P9 — Extending `-ot` to leverage existing TURBOMIND on more paths
+
+Tested whether the existing libggml-turbomind.so (HMMA.884 tensor-core kernels on F8/MXFP4) can be applied to non-routed-expert bottlenecks by just extending the `-ot` regex. No code changes; pure launch-flag.
+
+### Targets
+
+| Pattern | Expected to match | Theoretical lift |
+|---|---|---|
+| `*_shexp.weight` (shared experts, every token) | F8 weights, 3 linears × 43 layers | +TC utilization on every-token critical path |
+| `output.weight` (LM head, 4096×129280) | FP16 in this GGUF | Likely none (turbomind FP16 path = cuBLAS fallback) |
+
+### Results
+
+| Config | Buffer delta confirms routing | Decode TPS | Coherent? |
+|---|---|---|---|
+| Baseline: `exps` only | — | 13.32 t/s | ✅ |
+| **P9**: `exps + shexp + output` | CUDA<N> shrank, CUDA_TURBOMIND<N> grew by F8 amounts for shexp; CUDA_TURBOMIND7 grew by ~986 MiB for FP16 LM head | 12.6 t/s | ❌ empty content (BOS/EOS tokens only) |
+| **P9b**: `exps + shexp` (no LM head) | shexp routed (+~145 MiB per CUDA_TURBOMIND, F8 sizes), LM head stayed on CUDA7 (1523 MiB) | 13.7 t/s | ❌ empty content |
+
+**Both `shexp` and `output` routing break coherence** — model outputs only BOS/EOS-class tokens that render as empty string.
+
+### Why (hypothesis)
+
+Routed experts are sparse (top-6 of 256). Their per-layer contribution is small in magnitude (gated by routing weights, only 6 active). Small numerical errors compound slowly across layers.
+
+Shared experts contribute to EVERY token in EVERY layer with no gating dampening. Same nominal F8 tensor-core kernel that works for routed experts, but with full per-token contribution magnitude. Either:
+
+1. The TURBOMIND pack path for `*_shexp.weight` produces subtly wrong packed bytes (different shape from routed exps, possibly different layout convention)
+2. The FP16 conversion at A/D boundaries introduces small drift that doesn't matter for sparse-weighted routed expert contributions but blows up in the always-on shexp critical path
+
+Without layer-by-layer activation comparison (the §5/§7 instrumentation we deferred), can't distinguish (1) from (2).
+
+### Outcome
+
+Operational config stays at **exps-only** routing (13.32 t/s coherent). Shexp + LM-head routing requires the same kind of investigation as the MXFP4 nibble bug — not safe to land as a flag change.
+
+The cheapest next-step probe: compare `blk.0.ffn_gate_exps.weight` (routed expert per-slice) vs `blk.0.ffn_gate_shexp.weight` (shared) tensor metadata. If shapes/strides differ in ways that affect the packing layout assumed by `ggml_turbomind_pack_weight_expert`, that's likely the root.
+
 ## 8. Cluster usage — pod management & deploy playbook
 
 The investigation uses an on-prem k8s cluster with a single node `gpu-01` hosting 8× V100-SXM2-32GB. All work happens in pods on that node.
