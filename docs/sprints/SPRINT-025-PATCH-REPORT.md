@@ -141,7 +141,72 @@ The 9-test elimination matrix above also gives the next investigator a tight sea
 
 ---
 
-## 7. Sprint disposition
+## 7. Critical files for the next investigator
+
+Listed in order from most-to-least-likely-relevant. All paths relative to repo root.
+
+### Tier 1 — the dispatch path the bug lives in
+
+| File | Why it matters | Key sites |
+|---|---|---|
+| `ggml/src/ggml-cuda/ggml-cuda-turbomind.cu` | Top-level dispatch wrapper into libggml-turbomind. Owns pool allocs for `A_fp16` / `D_fp16`, calls `get_rows_cuda` for gather/scatter, caches `extra->weight_ptrs_dev`. **The integration layer where the bug lives** per Phase C/D elimination. | `ggml_cuda_mul_mat_grouped_turbomind` (line 621+), `ggml_cuda_mul_mat_turbomind` (line 462+), `tm_ensure_grouped_ptr_tables` (line 564+) |
+| `ggml/src/ggml-cuda/ggml-cuda-turbomind.cuh` | Public predicates + `ggml_turbomind_tensor_extra` struct (per-tensor cached pointer tables, k_pack, scales) | `ggml_turbomind_tensor_extra` struct, `ggml_cuda_mul_mat_grouped_turbomind` prototype |
+| `ggml/vendor/turbomind/api.cc` | C ABI inside libggml-turbomind.so. Wraps `tmg::Gemm::Run`. Per-device `State[32]` (workspace + Gemm). | `ggml_turbomind_mul_mat` (line 441+), `ggml_turbomind_mul_mat_grouped` (line 596+), `ggml_turbomind_pack_weight_expert` (line 233+), `State` struct (line 68+) |
+
+### Tier 2 — the FP16 accumulator hypothesis target
+
+If the FP16-drift hypothesis is correct, the fix is here:
+
+| File | Why it matters | Key sites |
+|---|---|---|
+| `ggml/vendor/turbomind/api.cc` | `Ddesc.type = turbomind::kHalf` at line ~715 (grouped) and ~593 (single). Changing to `turbomind::kFloat` is the proposed FP32-output fix. | `Ddesc` setup in both `ggml_turbomind_mul_mat_grouped` and `ggml_turbomind_mul_mat` |
+| `ggml/src/ggml-cuda/ggml-cuda-turbomind.cu` | `ggml_cuda_pool_alloc<half> D_fp16(...)` at line 723. If kernel output becomes FP32, this allocator + the downstream `get_rows_cuda` scatter need to switch type. | `D_fp16` allocation, `get_rows_cuda` scatter at line 748 |
+
+### Tier 3 — kernel internals (only if hypothesis 2 is wrong)
+
+| File | Why it matters | Key sites |
+|---|---|---|
+| `research/lmdeploy/src/turbomind/kernels/gemm/gemm.cu` | `tmg::Gemm::Run` entry. Picks kernel spec via `impl_->Dispatch`. | `Gemm::Run` (line 247+) |
+| `research/lmdeploy/src/turbomind/kernels/gemm/kernel_impl.h` | The `Launch` template that wires (Adesc, Bdesc, ..., workspace) into `gemm_kernel<Gemm><<<grid, block>>>`. `EpilogueParam` setup. `GetWorkspaceSize`. | `Launch` (line 130+), `GetWorkspaceSize` (line 218+) |
+| `research/lmdeploy/src/turbomind/kernels/gemm/scheduler_sm70.cuh` | `SchedulerSm70` — `find_group`, `get_group_offset`, `linear_tile_id` math. **Already investigated**: per-expert tile_offset = `((offset/tile_m) + g) << log_unit` gives every expert a tile slot regardless of token count. | `find_group` (line 98), `get_group_offset` (line 85), tile/grid math in constructor (line 56+) |
+| `research/lmdeploy/src/turbomind/kernels/gemm/arch/config_sm70_s884.h` | `Config_E4M3<kColMajor, 0>` is the config our path uses. Defines CTA_M=8/16/32/64/128 variants. | `Config_E4M3` template, `Scheduler` typedef line 86 |
+| `research/lmdeploy/src/turbomind/kernels/gemm/kernel/sm70_884_8.cu` | Registry of CTA_M=8 kernel variants. The smallest CTA_M=8 kernel is what gets selected for M=1 decode. | `Registry::sm70_884_8()` |
+
+### Tier 4 — the ggml dispatch surrounding the bug
+
+| File | Why it matters | Key sites |
+|---|---|---|
+| `ggml/src/ggml-cuda/ggml-cuda.cu` | `ggml_cuda_mul_mat` (line 2543+) detects CUDA_TURBOMIND buft and forwards to `ggml_cuda_mul_mat_turbomind`. `ggml_cuda_mul_mat_id` (line 2638+) detects CUDA_TURBOMIND buft and forwards to `ggml_cuda_mul_mat_grouped_turbomind` at line 2665. `supports_buft` at line 5415 includes CUDA_TURBOMIND. Graph compute sets `cudaSetDevice(cuda_ctx->device)` at line 4445. | Lines 2543, 2638, 4445, 5099, 5415 |
+| `ggml/src/ggml-cuda/getrows.cu` | The gather/scatter used by `ggml_cuda_mul_mat_grouped_turbomind` for FP32→FP16 input gather and FP16→FP32 output scatter. Has type-conversion paths between FP32/FP16/BF16/quantized. | `get_rows_cuda` (line 213), `get_rows_cuda_float` (line 131) — the k_get_rows_float kernel is what runs |
+
+### Tier 5 — test + build infrastructure
+
+| File | Why it matters |
+|---|---|
+| `ggml/vendor/turbomind/test_multi_device_simultaneous.cpp` | Phase B/C/D bisection harness. <60s repro. Add Phase E for layer-by-layer FP16 drift simulation here. |
+| `ggml/vendor/turbomind/CMakeLists.txt` | Builds libggml-turbomind.so + tests. Add new test executables here. |
+| `ggml/CMakeLists.txt` | `GGML_TURBOMIND` option gating, `GGML_CUDA_NCCL` option |
+| `manifests/llamacpp-build-8gpu.yaml` | k8s pod spec for 8× V100-SXM2-32GB on gpu-01 |
+
+### Tier 6 — model / sprint context
+
+| File | Why it matters |
+|---|---|
+| `docs/sprints/SPRINT-024-REPORT-18.md` | The +13–22% TURBOMIND TPS measurements; the AVG-16e `"i++ i++"` baseline output is documented here. |
+| `docs/sprints/SPRINT-025-REPORT-19.md` | The 8-GPU 256e default-buft measurements (decode 11.35 t/s baseline to compare against). |
+| `docs/sprints/SPRINT-025-FOLLOWUPS.md` | §1 family-alias buft, §4 slot KV-position 500 bug (separate from this), §5 multi-GPU TURBOMIND correctness (this work). |
+
+### Where to put debug instrumentation
+
+To validate the FP16-drift hypothesis:
+
+1. In `ggml/src/ggml-cuda/ggml-cuda-turbomind.cu::ggml_cuda_mul_mat_grouped_turbomind` immediately after `g_tm().mul_mat_grouped(...)` succeeds, add a guarded `cudaMemcpyAsync(host_buffer, D_fp16.ptr, size, cudaMemcpyDeviceToHost, stream)` + `cudaStreamSynchronize` + `fprintf` to dump the first few rows × first few cols of `D_fp16` to a debug log keyed by layer index.
+2. In a parallel default-cuda run (same prompt), dump the corresponding `dst` values from `ggml_cuda_mul_mat_id`'s scatter at the equivalent site.
+3. Compare element-by-element. The first layer where TURBOMIND and default-cuda differ >FP16-ULP is the answer.
+
+The compare can happen offline (Python script reading the two dumps). Total instrumentation effort: ~half-day.
+
+## 8. Sprint disposition
 
 - **SPRINT-025 (8-GPU 256e default cuda)**: SHIPPED at `sprint-025-close`. Decode 11.35 t/s on production-quality output.
 - **SPRINT-025-PATCH (multi-GPU TURBOMIND fix)**: UNFIXED. 11 hypotheses eliminated. Hypothesis surface narrowed to FP16 numerical accumulation. Code reverted to pre-investigation state.
