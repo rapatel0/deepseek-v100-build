@@ -176,7 +176,12 @@ int main(int argc, char** argv) {
     if (in(1) != 0) { fprintf(stderr, "init(1) failed\n"); return 2; }
     fprintf(stderr, "[simul] init(0) + init(1) ok\n");
 
-    const int M = 8, N = 256, K = 256, GS = 128;
+    // SPRINT-025-PATCH P8: use the REAL DSv4-Flash-256e MoE-linear shape.
+    // M=1 token (decode), N=K=2048 (typical DSv4 attn/ffn dim), F8_E4M3_B128.
+    // If sequential Runs at this shape diverge, the kernel itself is shape-
+    // dependent broken; if they remain bit-identical, the bug is integration-
+    // level (gather/scatter, type conversion, or buft routing).
+    const int M = 1, N = 2048, K = 2048, GS = 128;
 
     // Prepare per-device fixtures with DIFFERENT seeds so a cross-device
     // contamination produces a clear divergence (not just an exact-match
