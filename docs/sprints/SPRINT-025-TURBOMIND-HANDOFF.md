@@ -20,6 +20,8 @@ Repo: `/Users/ravi/repos/deepseek`
 
 Relevant local changes:
 
+- `src/llama-memory-deepseek4.cpp`
+  - Fixes DeepSeek4 slot/KV full-sequence removal for nonzero server slots.
 - `ggml/vendor/turbomind/ggml-turbomind-deinterleave.cu`
   - Fixes MXFP4 deinterleave mapping.
 - `ggml/vendor/turbomind/test_correctness.cpp`
@@ -131,7 +133,13 @@ Current process was started with:
   -c 4096
 ```
 
-As of the final audit, health was OK and all four slots were idle.
+As of the latest audit, health was OK. The patched restart used:
+
+```bash
+export LD_LIBRARY_PATH=/workspace/llamacpp/build/bin:/workspace/llamacpp/ggml/vendor/turbomind/build_so:${LD_LIBRARY_PATH:-}
+```
+
+This matters: without the TurboMind build output on `LD_LIBRARY_PATH`, the server can log `dlopen(libggml-turbomind.so) failed` and fall back during tensor upload.
 
 ## Do Not Re-Chase
 
@@ -148,33 +156,41 @@ The following were tested and are not the root cause:
 
 The decisive clue was that both grouped and per-expert paths were wrong because both consumed the same incorrectly packed MXFP4 weights.
 
-## Remaining Separate Issue
+## Slot/KV Follow-Up
 
-There is still a DeepSeek4 server slot/KV reuse bug:
+The DeepSeek4 server slot/KV reuse bug has also been fixed.
 
-- Repeated identical `/completion` requests can return `Invalid input batch`.
-- Log mentions stale sequence positions and DeepSeek4 runtime state export not implemented.
-- This is independent of TurboMind packing. The first full all-layer TurboMind request after server start is correct.
+Root cause: `llama_memory_deepseek4::seq_rm()` only accepted `seq_id == 0` or `seq_id < 0`. Server slot ids are sequence ids, so slots 1, 2, and 3 could not be fully cleared. The server then submitted the next prompt for that slot at position 0 while DeepSeek4 memory still reported the previous final position, producing `Invalid input batch` with an `inconsistent sequence positions` diagnostic.
 
-Current server uses `--cache-ram 0 --slot-prompt-similarity 0.0` to reduce prompt-cache reuse, but this does not fully fix the underlying DeepSeek4 slot/recurrent-state issue. If another agent investigates it, treat it as a separate server/memory lifecycle bug.
+Patch: `src/llama-memory-deepseek4.cpp::seq_rm()` now normalizes `[p0,p1)`, supports empty/no-op removals, supports full-sequence removal for any valid nonnegative `seq_id`, and still rejects true partial removals.
+
+Verification after rebuilding `llama-server`:
+
+- Explicit `id_slot:3`, same prompt twice with `cache_prompt:false`: `HTTP 200` twice.
+- Explicit slots `0,1,2,3`, two passes each: all eight requests returned `HTTP 200`.
+- Default slot selection, four repeated requests: slots `0,1,2,3` returned `HTTP 200`.
+- Log scan: no `Invalid input batch`, no `inconsistent sequence positions`, no `failed to initialize batch`, no `failed to truncate tokens`.
 
 ## Suggested Next Steps
 
 1. Review the local diff for scope.
-2. Keep the MXFP4 deinterleave and host reference fixes.
-3. Keep `test_grouped_compare.cpp` or fold equivalent DSv4-shape coverage into an existing TurboMind test.
-4. Rebuild locally/pod-side after any cleanup:
+2. Keep the DeepSeek4 `seq_rm()` fix.
+3. Keep the MXFP4 deinterleave and host reference fixes.
+4. Keep `test_grouped_compare.cpp` or fold equivalent DSv4-shape coverage into an existing TurboMind test.
+5. Rebuild locally/pod-side after any cleanup:
 
 ```bash
 cd /workspace/llamacpp/ggml/vendor/turbomind/build_so
 cmake --build . -j 8
+cd /workspace/llamacpp
+cmake --build build --target llama-server -j 8
 ```
 
-5. Re-run:
+6. Re-run:
 
 ```bash
 ./test_ggml_turbomind_correctness ./libggml-turbomind.so
 ./test_ggml_turbomind_grouped_compare ./libggml-turbomind.so
 ```
 
-6. If testing the full server, restart it before each deterministic prompt unless the slot/KV bug has been fixed.
+7. If testing the full server, include the TurboMind build output in `LD_LIBRARY_PATH`, wait for `/health` to return `{"status":"ok"}`, and run repeated-slot probes before trusting multi-request behavior.

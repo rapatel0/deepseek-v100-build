@@ -41,6 +41,53 @@ Verification after rebuild in `llamacpp-build-8gpu`:
 
 Remaining separate issue: repeated identical `/completion` requests can still hit the DeepSeek4 server slot/KV reuse bug (`Invalid input batch`, stale sequence position). This is independent of TurboMind packing; the first all-layer TurboMind request after server start is now correct, and the bug reproduces through server slot reuse after a successful generation.
 
+### 2026-05-16 slot/KV follow-up resolution
+
+The remaining DeepSeek4 slot/KV reuse bug was isolated and patched in `src/llama-memory-deepseek4.cpp`.
+
+Root cause: `llama_memory_deepseek4::seq_rm()` only accepted `seq_id == 0` or `seq_id < 0`. The server uses slot ids as sequence ids (`0..3` in the current run), so full-sequence clears for slots 1, 2, and 3 returned `false` and left DeepSeek4 sequence-position metadata stale. On the next request to the same slot, the memory backend still reported the old `seq_pos_max`, while the server submitted the new prompt from position 0. That produced:
+
+```text
+init: the tokens of sequence 3 in the input batch have inconsistent sequence positions
+llama_decode: failed to decode, ret = -1
+Invalid input batch.
+```
+
+Patch behavior:
+
+- Normalize `p0 < 0` to 0 and `p1 < 0` to infinity, matching the public memory API contract.
+- Support no-op empty/non-intersecting removals.
+- Support whole-sequence removal for any valid nonnegative `seq_id`, not only sequence 0.
+- Continue returning `false` for true partial removals, because DeepSeek4 memory cannot preserve arbitrary prefixes.
+
+Verification in pod `llamacpp-build-8gpu`:
+
+```bash
+kubectl -n llm cp src/llama-memory-deepseek4.cpp \
+  llamacpp-build-8gpu:/workspace/llamacpp/src/llama-memory-deepseek4.cpp
+kubectl -n llm exec llamacpp-build-8gpu -- bash -lc \
+  'cd /workspace/llamacpp && cmake --build build --target llama-server -j 8'
+```
+
+The rebuilt full 43-layer TurboMind server was restarted with:
+
+```bash
+export LD_LIBRARY_PATH=/workspace/llamacpp/build/bin:/workspace/llamacpp/ggml/vendor/turbomind/build_so:${LD_LIBRARY_PATH:-}
+./llama-server \
+  -m /models/DSv4-Flash-256e-fixed.gguf \
+  -ngl 99 -sm layer \
+  -ot 'blk\.([0-5])\..*exps.*=CUDA_TURBOMIND0,blk\.([6-9]|10)\..*exps.*=CUDA_TURBOMIND1,blk\.(1[1-6])\..*exps.*=CUDA_TURBOMIND2,blk\.(1[7-9]|2[0-2])\..*exps.*=CUDA_TURBOMIND3,blk\.(2[3-7])\..*exps.*=CUDA_TURBOMIND4,blk\.(2[8-9]|3[0-2])\..*exps.*=CUDA_TURBOMIND5,blk\.(3[3-8])\..*exps.*=CUDA_TURBOMIND6,blk\.(39|4[0-2])\..*exps.*=CUDA_TURBOMIND7' \
+  -t 8 --port 12500 --no-warmup --cache-ram 0 --slot-prompt-similarity 0.0 -c 4096
+```
+
+Slot validation results:
+
+- Explicit `id_slot:3`, same prompt, same request body, two passes: `HTTP 200` twice. This was the direct failing repro before the patch.
+- Explicit `id_slot:0..3`, two passes each with `cache_prompt:false`: all eight requests returned `HTTP 200`.
+- Default slot selection, four repeated requests with `cache_prompt:false`: slots 0, 1, 2, and 3 each returned `HTTP 200`.
+- Log scan after restart found no `Invalid input batch`, no `inconsistent sequence positions`, no `failed to initialize batch`, and no `failed to truncate tokens`.
+- The restart used the TurboMind shared library through `LD_LIBRARY_PATH`; no `dlopen(libggml-turbomind.so)` failure or plain-upload fallback appeared in the patched run log.
+
 ### 2026-05-16 follow-up amendment
 
 Additional testing after this report narrows the bug further:
@@ -486,7 +533,7 @@ kubectl delete pod -n llm $POD --wait=false
 | `error: libcuda.so.1: cannot open shared object file` at build | Build container's libcuda stub vs runtime path | Ensure `LIBRARY_PATH=/usr/local/cuda/targets/x86_64-linux/lib/stubs` for build only |
 | `cmake error: held packages` on apt-install of libnccl | `nvidia/cuda:12.2.2-devel-ubuntu22.04` pins libnccl version | Use `--allow-change-held-packages` |
 | NCCL `ncclCommInitAll` fails at server startup | Stale peer mappings from prior crashed process | Wait 30s and retry; or recreate pod |
-| `Invalid input batch` HTTP 500 on multi-request testing | Slot KV-position desync (FOLLOWUPS §4 — separate bug) | Cycle `id_slot`, or restart server between probes, or pass `cache_prompt:true` |
+| `Invalid input batch` HTTP 500 on multi-request testing | Pre-fix DeepSeek4 slot KV-position desync for nonzero slot ids | Fixed by `src/llama-memory-deepseek4.cpp::seq_rm`; rebuild `llama-server` and restart |
 | `tar EOF` errors when copying source via `kubectl cp` | kubectl exec stdin/stdout pipes are fragile for >100 MB | Use local intermediate: `kubectl cp local:src/ pod:dst/` — proven reliable |
 | Server returns 503 `"Loading model"` indefinitely | Still mmap'ing 146 GiB from PVC | Check `cat /proc/<pid>/io` for `read_bytes` progress; 256e takes 9 min cold |
 | 8-GPU pod stuck `Pending` | Insufficient GPUs free on gpu-01 | `kubectl describe pod` shows reason. Delete one of YOUR build pods (not user's tcg-dev/llamacpp-build) to free slots |
@@ -517,7 +564,6 @@ Note that `curl -sf` fails on 503 (which is what /health returns during model lo
 ## 9. Sprint disposition
 
 - **SPRINT-025 (8-GPU 256e default cuda)**: SHIPPED at `sprint-025-close`. Decode 11.35 t/s on production-quality output.
-- **SPRINT-025-PATCH (multi-GPU TURBOMIND fix)**: UNFIXED. 11 hypotheses eliminated. Hypothesis surface narrowed to FP16 numerical accumulation. Code reverted to pre-investigation state.
-- **SPRINT-026 (speculative decoding)**: BLOCKED until PATCH resolves.
-
-Current branch state: `782df824f` on `sprint-022-dsv4-integration`. Code is clean — all speculative fixes reverted; only the test infrastructure and this report remain as additions.
+- **SPRINT-025-PATCH (multi-GPU TURBOMIND fix)**: FIXED. MXFP4 nibble-lane mapping patched and verified with correctness tests plus full 43-layer server decode.
+- **DeepSeek4 slot/KV follow-up**: FIXED. Nonzero slot full-sequence removal now works; repeated slot reuse no longer produces stale-position `Invalid input batch` failures in the full server validation.
+- **SPRINT-026 (speculative decoding)**: UNBLOCKED with respect to TurboMind packing and the identified slot/KV reset bug. DeepSeek4 runtime state export/import remains unimplemented and should be treated as a separate feature gap if prompt-state persistence is required.

@@ -4,6 +4,7 @@
 #include "llama-model.h"
 #include "llama-context.h"
 
+#include <algorithm>
 #include <cstring>
 #include <limits>
 #include <stdexcept>
@@ -237,12 +238,47 @@ void llama_memory_deepseek4::clear(bool data) {
 }
 
 bool llama_memory_deepseek4::seq_rm(llama_seq_id seq_id, llama_pos p0, llama_pos p1) {
-    GGML_UNUSED(p0);
-    GGML_UNUSED(p1);
-    if (seq_id == 0 || seq_id < 0) {
+    if (p0 < 0) {
+        p0 = 0;
+    }
+
+    if (p1 < 0) {
+        p1 = std::numeric_limits<llama_pos>::max();
+    }
+
+    const bool is_empty_range = p0 == p1;
+    const bool is_full_range  = p0 == 0 && p1 == std::numeric_limits<llama_pos>::max();
+
+    if (seq_id < 0) {
+        if (is_empty_range) {
+            return true;
+        }
+
+        if (!is_full_range) {
+            return false;
+        }
+
         clear(false);
         return true;
     }
+
+    if (seq_id >= (llama_seq_id) seq_pos_min_v.size()) {
+        return false;
+    }
+
+    llama_pos & pos_min = seq_pos_min_v[seq_id];
+    llama_pos & pos_max = seq_pos_max_v[seq_id];
+
+    if (is_empty_range || pos_min < 0 || pos_max < 0 || p1 <= pos_min || p0 > pos_max) {
+        return true;
+    }
+
+    if (p0 <= pos_min && p1 > pos_max) {
+        pos_min = -1;
+        pos_max = -1;
+        return true;
+    }
+
     return false;
 }
 
