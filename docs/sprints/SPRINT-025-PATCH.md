@@ -314,6 +314,27 @@ Replaced `ggml_cuda_pool_alloc<half>(...)` for A_fp16 and D_fp16 with fresh `cud
 3. `extra->weight_ptrs_dev` cache — pointers point to expert chunks that don't move
 4. **Cross-buft activation routing** — when src1 (CUDA<N>) is read by a kernel scheduled on CUDA_TURBOMIND<N> backend on the same device. ggml-backend may insert handling that's buggy when multiple such crossings happen per fwd. Most likely remaining cause.
 
+## Update: Sparse-routing topK probe — kernel behavior varies with M
+
+Tested 8-GPU 256e at different `n_expert_used` values:
+
+| top-K | total_tokens (M=1 decode) | Output character |
+|---|---|---|
+| 1 | 1 | random tokens — `" morphs4 as475211#_spanthiance..."` |
+| 6 (default) | 6 | pure-garbage repeat — `"\(n:? (# # # # # # #..."` |
+| 8 | 8 | real-word loop — `"\n#n fibonacci fibonacci fibonacci..."` |
+| 256 (full) | 256 | structured loop — `"f n fibonacci n: f n fibonacci n: ..."` |
+
+Different M values trip DIFFERENT broken outputs. Top-8 = exact match to CTA_M=8 in the sm70 packed kernel, suggesting tile-alignment is a factor.
+
+### Padding fix attempt (FAILED)
+
+Implemented pad-`total_tokens`-up-to-multiple-of-8 in `ggml_cuda_mul_mat_grouped_turbomind`: zero pad rows in A_fp16, extend last expert's offset by `padding_tokens`, kernel produces 8 output rows (padding rows = zero × W = zero), scatter only first total_routes=6 rows.
+
+**Result: still `\(n:? (# # # # #...` gibberish identical to pre-fix.**
+
+So CTA_M tile-alignment isn't the bug. The top-8 vs top-6 output difference reflects the model going off-distribution (routing K it wasn't trained for) rather than kernel correctness. Kernel is broken at ALL M values; the resulting model output just degenerates differently depending on routing.
+
 ## Update: Phase D + Single-GPU AVG-16e CONFIRM bug is multi-GPU 256e specific
 
 **Phase D** (real production shape kernel test): Updated `test_multi_device_simultaneous.cpp` to use M=1, N=K=2048, F8_E4M3_B128. Sequential 16 Runs at this real-model shape: **0/2048 elements differ.** Kernel correct at production shape.
