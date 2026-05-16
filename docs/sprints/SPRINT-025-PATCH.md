@@ -250,6 +250,25 @@ Two paths forward, neither feasible in a session:
 
 The user's hypothesis ("alignment bug at full activation") remains the most parsimonious *direction*: something about the 250-empty-experts pattern in the kernel scheduling. But the kernel doesn't read empty experts even with full activation — the bug must be in how the scheduler/launch math handles them. Whatever it is, it's invisible to single-layer execution and compounds across 5+ layers.
 
+### Update: Phase C PASS — bug is definitively in the ggml-cuda integration layer
+
+Extended `test_multi_device_simultaneous.cpp` with a new Phase C: **16 sequential Runs on GPU 0's State** (same input, fresh output buffer each time, full sync between Runs). Compares Run 1, Run 2, ..., Run 15 to Run 0.
+
+**Result: 0/2048 bytes differ across all 16 sequential Runs.** The libggml-turbomind.so kernels and `State[0]` infrastructure handle repeated invocation with zero drift.
+
+This means the bug is **NOT** in:
+- The packed sm70 kernel template (Phase C proves it's bit-stable across calls).
+- The State[N] workspace lifecycle across Runs.
+- Repeated dispatch into a shared Gemm object.
+
+The bug **IS** in the ggml-cuda integration layer (`ggml_cuda_mul_mat_turbomind` and `ggml_cuda_mul_mat_grouped_turbomind`). Specifically among:
+1. **`ggml_cuda_pool_alloc` reuse** — pool returns the same address for `A_fp16` / `D_fp16` across calls. If a previous Run's writes aren't synchronized properly before the next Run reads, stale data leaks.
+2. **`get_rows_cuda` gather/scatter** — stride math or type-conversion at the FP16↔FP32 boundary may be subtly wrong for the actual model shape (N=2048, K=2048, sparse).
+3. **`tm_ensure_grouped_ptr_tables` cache** — the per-tensor cache survives across forward passes. If a tensor moves or the cached pointer becomes stale, subsequent calls read garbage.
+4. **Cross-buft activation routing** — when src1 (activations on CUDA<N>) flows into a CUDA_TURBOMIND<N> mul_mat, ggml-backend may insert handling that's buggy.
+
+The narrowing eliminates the dense-CUTLASS-template-reading work as the next step — the bug is at the integration layer, much more accessible. The next session can target (1)–(4) above directly.
+
 ### What's left to investigate (revised priority)
 
 1. **Read `Gemm::Run` and inner kernel-impl for sparse-offsets handling** — focus on how `Adesc.offsets` is consumed to determine grid shape and partials allocation.

@@ -231,10 +231,39 @@ int main(int argc, char** argv) {
     int r0 = compare(base0, sim0, "GPU0 baseline vs simul");
     int r1 = compare(base1, sim1, "GPU1 baseline vs simul");
 
+    // -- Phase C: REPEATED sequential Runs on GPU 0's State. Tests whether
+    //    State[0] accumulates drift across calls. SPRINT-025-PATCH bisection:
+    //    P3.2 (6 sequential layers on one TURBOMIND device) produced gibberish
+    //    in the full llama-server pipeline. This is a kernel-test repro check.
+    fprintf(stderr, "[simul] Phase C: 16 sequential Runs on GPU 0\n");
+    CHECK(cudaSetDevice(0));
+    std::vector<__half> repeats[16];
+    for (int i = 0; i < 16; ++i) {
+        CHECK(cudaFree(f0.d_D));
+        CHECK(cudaMalloc(&f0.d_D, (size_t)M * N * sizeof(__half)));
+        CHECK(cudaMemset(f0.d_D, 0, (size_t)M * N * sizeof(__half)));
+        run_and_readback(f0, mm, repeats[i]);
+    }
+    int rc_drift = 0;
+    for (int i = 1; i < 16; ++i) {
+        int diff = 0;
+        for (size_t j = 0; j < base0.size(); ++j) {
+            if (memcmp(&repeats[0][j], &repeats[i][j], sizeof(__half)) != 0) diff++;
+        }
+        if (diff != 0) {
+            fprintf(stderr, "[simul] Phase C: Run %d differs from Run 0 in %d/%zu elements\n",
+                    i, diff, base0.size());
+            rc_drift = 1;
+        }
+    }
+    if (rc_drift == 0) {
+        fprintf(stderr, "[simul] Phase C: 16 sequential Runs all bit-identical (no State drift)\n");
+    }
+
     sh();
     dlclose(h);
 
-    if (r0 != 0 || r1 != 0) {
+    if (r0 != 0 || r1 != 0 || rc_drift != 0) {
         fprintf(stderr,
             "[simul] FAIL — simultaneous dispatch diverges from single-device baseline.\n"
             "[simul] This indicates the multi-GPU CUDA_TURBOMIND regression is below\n"
