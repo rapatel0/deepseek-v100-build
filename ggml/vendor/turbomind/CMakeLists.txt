@@ -202,6 +202,14 @@ if(GGML_TURBOMIND_TEST)
     target_link_libraries(test_ggml_turbomind_grouped PRIVATE CUDA::cudart ${CMAKE_DL_LIBS})
     add_dependencies(test_ggml_turbomind_grouped ggml-turbomind)
 
+    # DSv4-shape grouped-vs-single numeric compare.
+    add_executable(test_ggml_turbomind_grouped_compare test_grouped_compare.cpp)
+    target_include_directories(test_ggml_turbomind_grouped_compare PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}/include
+    )
+    target_link_libraries(test_ggml_turbomind_grouped_compare PRIVATE CUDA::cudart ${CMAKE_DL_LIBS})
+    add_dependencies(test_ggml_turbomind_grouped_compare ggml-turbomind)
+
     # SPRINT-025 P2 — multi-device init/dispatch smoke.
     add_executable(test_ggml_turbomind_multi_device test_multi_device.cpp)
     target_include_directories(test_ggml_turbomind_multi_device PRIVATE

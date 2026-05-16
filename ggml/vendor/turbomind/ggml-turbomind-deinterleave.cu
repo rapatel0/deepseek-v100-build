@@ -88,13 +88,13 @@ __global__ void k_deinterleave_mxfp4(
     const block_mxfp4& b = src[row * blocks_per_row + bk];
     const int t = threadIdx.x;
     if (t < 16) {
-        // Each byte holds 2 fp4 nibbles for k = bk*32 + 2t and bk*32 + 2t + 1.
+        // GGML stores the low nibble for k=t and the high nibble for k=t+16.
         uint8_t byte = b.qs[t];
         uint16_t lo = (uint16_t)(byte & 0x0F);
         uint16_t hi = (uint16_t)(byte >> 4);
-        const int k0 = bk * QK_MXFP4 + 2 * t;
-        weight_u16_out[k0       * N + row] = lo;
-        weight_u16_out[(k0 + 1) * N + row] = hi;
+        const int k0 = bk * QK_MXFP4 + t;
+        weight_u16_out[k0                  * N + row] = lo;
+        weight_u16_out[(k0 + QK_MXFP4 / 2) * N + row] = hi;
     }
     if (t == 0) {
         scale_u8_out[bk * N + row] = b.e;

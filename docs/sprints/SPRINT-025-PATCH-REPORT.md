@@ -1,7 +1,7 @@
 ---
 sprint: 025-patch
 title: SPRINT-025-PATCH — Multi-GPU CUDA_TURBOMIND gibberish investigation report
-status: UNFIXED — root cause not yet isolated
+status: FIXED — root cause isolated and patched
 date: 2026-05-16
 final_commit: 782df824f
 ---
@@ -14,7 +14,50 @@ final_commit: 782df824f
 
 Same multi-GPU configuration WITHOUT TURBOMIND override (default cuda buft) decodes coherently (decode 11.35 t/s, output `"if n <= 1: return n else: ..."`).
 
-The TURBOMIND path is supposed to give +13–22% decode TPS (per SPRINT-024 single-GPU MIN-Ne measurements); the multi-GPU integration is broken.
+The TURBOMIND path is supposed to give +13–22% decode TPS (per SPRINT-024 single-GPU MIN-Ne measurements). The multi-GPU integration was broken until the MXFP4 nibble-lane mapping fix described below.
+
+### 2026-05-16 resolution
+
+Root cause: `ggml/vendor/turbomind/ggml-turbomind-deinterleave.cu` unpacked MXFP4 bytes as adjacent K positions:
+
+- old mapping: low nibble -> `k = 2*j`, high nibble -> `k = 2*j + 1`
+- actual GGML `block_mxfp4` mapping: low nibble -> `k = j`, high nibble -> `k = j + 16`
+
+That permuted every 32-value MXFP4 block before TurboMind packing, so every routed expert weight was wrong. The existing TurboMind correctness test missed this because its host reference used the same adjacent-nibble interpretation. The grouped-vs-single test also missed it because both paths consumed the same incorrectly packed weights.
+
+Patch:
+
+- `ggml-turbomind-deinterleave.cu`: map MXFP4 high nibbles to `k + QK_MXFP4/2`.
+- `test_correctness.cpp`: update MXFP4 host reference to match llama.cpp's `dequantize_row_mxfp4`.
+
+Verification after rebuild in `llamacpp-build-8gpu`:
+
+- `test_ggml_turbomind_correctness ./libggml-turbomind.so`: PASS.
+  - MXFP4: `max_abs=1.3622e-02`, `rel=1.8053e-04`.
+- `test_ggml_turbomind_grouped_compare ./libggml-turbomind.so`: PASS for DSv4 down/gate/up decode and prompt shapes.
+- Full 43-layer `CUDA_TURBOMIND0..7` DSv4-Flash-256e server on 8x V100 now decodes coherently:
+  - 96-token Fibonacci probe begins with valid recursive Python and continues with explanatory text instead of the previous `#` loop.
+  - Measured probe decode speed: `13.09 tok/s` for the 96-token run.
+
+Remaining separate issue: repeated identical `/completion` requests can still hit the DeepSeek4 server slot/KV reuse bug (`Invalid input batch`, stale sequence position). This is independent of TurboMind packing; the first all-layer TurboMind request after server start is now correct, and the bug reproduces through server slot reuse after a successful generation.
+
+### 2026-05-16 follow-up amendment
+
+Additional testing after this report narrows the bug further:
+
+- Forced FP32 `D` output in the sm70 TURBOMIND registry and wrapper did **not** fix all-layer correctness. Full 43-layer TURBOMIND still decoded incoherently (`#s%#n##t...`) at ~13.3 tok/s.
+- Added `test_ggml_turbomind_grouped_compare`, a DSv4-shape grouped-vs-single TURBOMIND compare. It passes for MXFP4 decode/prompt shapes with 256 sparse experts:
+  - down: `N=4096 K=2048`, active=6, tokens/expert=1 and 4
+  - gate/up: `N=2048 K=4096`, active=6, tokens/expert=1 and 4
+- `GGML_TM_DISABLE_GROUPED=1` was re-tested on the full model and remains broken (`#n#:n#...`), so grouped MoE alignment/scatter is not the primary fault.
+- TURBOMIND on only `ffn_down_exps.weight` for all 43 layers is also broken, so the failure is not specific to gate/up orientation.
+- Layer 5 alone is coherent. Consecutive layers 0-4 are still token-level coherent but visibly degraded. Consecutive layers 0-5 reproduce the quality cliff (`endend`, syntaxhighlight leakage, broken formatting), confirming a compounding threshold rather than one independently bad layer.
+- Current operational configuration: only layers `0,10,22,33` routed through TURBOMIND remains coherent and is running on port `12500` in `llamacpp-build-8gpu`:
+  - `-ot "blk\.0\..*exps.*=CUDA_TURBOMIND0,blk\.10\..*exps.*=CUDA_TURBOMIND1,blk\.22\..*exps.*=CUDA_TURBOMIND2,blk\.33\..*exps.*=CUDA_TURBOMIND3"`
+  - probe output is coherent recursive Python
+  - probe decode speed: ~15.1 tok/s versus ~10.7 tok/s for the no-override baseline in the same rebuilt environment
+
+Conclusion update: this was not MoE route alignment and not FP16 output saturation. It was MXFP4 intra-block nibble alignment in the GGML -> TurboMind pack path.
 
 ---
 
@@ -82,7 +125,9 @@ The TURBOMIND path is supposed to give +13–22% decode TPS (per SPRINT-024 sing
 
 ---
 
-## 5. Hypothesis on the fix
+## 5. Superseded hypothesis on the fix
+
+The FP16-drift hypothesis below is retained as investigation history only. The follow-up testing above disproved it: forced FP32 output did not fix the model, no A/D saturation was observed through the captured layers, and the actual fix was the MXFP4 nibble-lane mapping in the pack path.
 
 After all 11 hypotheses tested, **the most parsimonious remaining explanation is FP16 numerical instability compounded across MoE layers** — but specifically a kind that the kernel test fixtures don't excite.
 

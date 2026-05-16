@@ -125,13 +125,14 @@ static void ref_matmul_mxfp4(
             for (int b = 0; b < blocks_per_row; ++b) {
                 const block_mxfp4& blk = B[n * blocks_per_row + b];
                 float scale = e8m0_to_f32(blk.e);
-                for (int i = 0; i < 32; ++i) {
-                    uint8_t byte = blk.qs[i / 2];
-                    uint8_t nib  = (i & 1) ? (byte >> 4) : (byte & 0xF);
-                    float bval   = fp4_e2m1_to_f32(nib) * scale;
-                    int k = b * 32 + i;
-                    float aval = __half2float(A[m * K + k]);
-                    acc += aval * bval;
+                for (int j = 0; j < 16; ++j) {
+                    uint8_t byte = blk.qs[j];
+                    uint8_t lo   = byte & 0x0F;
+                    uint8_t hi   = byte >> 4;
+                    int k0 = b * 32 + j;
+                    int k1 = k0 + 16;
+                    acc += __half2float(A[m * K + k0]) * fp4_e2m1_to_f32(lo) * scale;
+                    acc += __half2float(A[m * K + k1]) * fp4_e2m1_to_f32(hi) * scale;
                 }
             }
             D_rowmajor[(size_t)m * N + n] = acc;
