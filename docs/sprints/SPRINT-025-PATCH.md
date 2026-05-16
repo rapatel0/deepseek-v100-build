@@ -297,6 +297,23 @@ The 3x factor accounts for:
 
 ---
 
+## Update: Phase C PASS — bug definitively in ggml-cuda integration
+
+Extended `test_multi_device_simultaneous.cpp` with Phase C: 16 sequential Runs on GPU 0's State, fresh output buffer + full sync between each. Result: **0/2048 bytes differ across all 16 sequential Runs.** Kernel-side State is bit-stable.
+
+Bug is unambiguously in `ggml_cuda_mul_mat_(grouped_)turbomind` integration above the .so.
+
+## Suspect #1 (pool address reuse) ELIMINATED
+
+Replaced `ggml_cuda_pool_alloc<half>(...)` for A_fp16 and D_fp16 with fresh `cudaMallocAsync` + `cudaMemsetAsync` per call. Still gibberish, same `\(n:? (####...)` pattern. Pool reuse is NOT the cause.
+
+## Remaining suspects (none host-reachable in this session)
+
+1. ~~Pool address reuse~~ — eliminated above
+2. `get_rows_cuda` gather/scatter stride math — but default-buft uses the same function and works, so unlikely
+3. `extra->weight_ptrs_dev` cache — pointers point to expert chunks that don't move
+4. **Cross-buft activation routing** — when src1 (CUDA<N>) is read by a kernel scheduled on CUDA_TURBOMIND<N> backend on the same device. ggml-backend may insert handling that's buggy when multiple such crossings happen per fwd. Most likely remaining cause.
+
 ## Out of scope
 
 - The slot KV-position bug (FOLLOWUPS §4). Fixed independently.
