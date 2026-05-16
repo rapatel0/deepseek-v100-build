@@ -314,6 +314,22 @@ Replaced `ggml_cuda_pool_alloc<half>(...)` for A_fp16 and D_fp16 with fresh `cud
 3. `extra->weight_ptrs_dev` cache — pointers point to expert chunks that don't move
 4. **Cross-buft activation routing** — when src1 (CUDA<N>) is read by a kernel scheduled on CUDA_TURBOMIND<N> backend on the same device. ggml-backend may insert handling that's buggy when multiple such crossings happen per fwd. Most likely remaining cause.
 
+## Update: Phase D + Single-GPU AVG-16e CONFIRM bug is multi-GPU 256e specific
+
+**Phase D** (real production shape kernel test): Updated `test_multi_device_simultaneous.cpp` to use M=1, N=K=2048, F8_E4M3_B128. Sequential 16 Runs at this real-model shape: **0/2048 elements differ.** Kernel correct at production shape.
+
+**Single-GPU AVG-16e check**: Ran AVG-16e single-GPU with `-sm none -ot 'exps=CUDA_TURBOMIND0'` (full TURBOMIND override on all 43 layers).
+- Output: `"i++ i++ i++ i++ i++ ..."` — this is the **bit-identical baseline** SPRINT-024 REPORT-18 recorded for AVG-16e fibonacci. Working.
+
+**Conclusion**: TURBOMIND is fundamentally correct at single-GPU AVG-16e level. The bug is **specifically in multi-GPU 256e**. Multi-GPU TURBOMIND with the production-scale model breaks; single-GPU TURBOMIND with a smaller TURBOMIND-compatible model works.
+
+The differentiating factor is some combination of:
+- Cross-device activation transfer (NCCL peer copies between TURBOMIND-routed layers)
+- 256-expert vs 16-expert routing
+- Sparse-routing weight distribution interaction with cross-device float precision
+
+Without layer-by-layer instrumentation (TURBOMIND vs default-cuda activation comparison), the exact mechanism can't be isolated. This is the next-session probe.
+
 ## Out of scope
 
 - The slot KV-position bug (FOLLOWUPS §4). Fixed independently.
