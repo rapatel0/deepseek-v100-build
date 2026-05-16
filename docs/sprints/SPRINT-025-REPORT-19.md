@@ -220,13 +220,51 @@ top-6 routing across 256 experts ≈ 16× the expert-weight surface vs
 MIN-16e, plus pipeline-parallel disabled by virtue of `-sm layer` only
 benefiting prefill (we measured decode = M=1).
 
+## Post-close: TURBOMIND multi-GPU correctness check
+
+Followup investigation triggered by the question "wait, did you apply the
+new TURBOMIND kernels in any of these multi-GPU runs?". Answer: **no** —
+all of the 6-GPU and 8-GPU measurements above used the default cuda
+buft for expert tensors. The `libggml-turbomind.so` was loaded but
+never reached because no `-ot` override routed tensors to a
+`CUDA_TURBOMIND<N>` buft.
+
+Re-ran the 8-GPU 256e load with per-layer `-ot` regex routing each
+layer's expert tensors to the matching device's CUDA_TURBOMIND buft.
+Override took effect — load_tensors reported 8 CUDA_TURBOMIND
+buffer groups totaling 140 GiB of expert weights (versus default-buft
+which puts those same weights into regular CUDA<N>).
+
+**Result: gibberish output.** Decode TPS in the same ballpark (~11.7 t/s)
+but the model produced incoherent tokens — `# # # # # # ...` repetitions
+from `def fibonacci(n):`. This is a correctness regression that the
+existing SPRINT-024 / SPRINT-025-P2 tests do not catch:
+
+- `test_correctness.cpp` only tests single-device.
+- `test_grouped.cpp` only tests single-device.
+- `test_multi_device.cpp` (SPRINT-025 P2) tests sequential dispatch on
+  two devices but **NOT simultaneous** dispatch in a single forward
+  pass.
+
+The multi-GPU regression is captured as [FOLLOWUPS §5](SPRINT-025-FOLLOWUPS.md)
+**(CRITICAL)** with likely root-cause hypotheses (layer-device mismatch
+from manual `-ot`, TURBOMIND kernel cross-device contamination, or
+activation-buft mismatch on the device-crossing copy). Until this is
+fixed, the SPRINT-024 +13–22% TPS lift does not apply to multi-GPU 256e.
+
+**Net implication for the ship gate**: REPORT-19's headline numbers
+(decode 13.26 t/s on 6 GPUs, 11.35 t/s on 8 GPUs) are the **default
+cuda buft** path — coherent, but without the TURBOMIND speed lift. The
++13-22% from SPRINT-024 is a single-GPU MIN-Ne result that does not yet
+generalize.
+
 ## P5 / P6 / P7
 
 | Phase | Disposition |
 |---|---|
-| P5 — Measurement scaling sweep (2/4/6/8 GPUs) | **6-GPU + 8-GPU done.** 2/4-GPU sub-runs via `CUDA_VISIBLE_DEVICES` on the existing 8-GPU pod are still nice-to-have but the meaningful data points (the original sprint target plus the headroom comparison) are captured above. |
+| P5 — Measurement scaling sweep (2/4/6/8 GPUs) | **6-GPU + 8-GPU done** at default buft. TURBOMIND-enabled multi-GPU run blocked by FOLLOWUPS §5. |
 | P6 — Row-TP conditional | **Deferred**. The deepseek4 row-split throw at `src/llama-model.cpp:770-771` was not lifted; row-TP investigation gated on whether the deferred family-alias work lands first. |
-| P7 — Close-out + tag | **Done**. This report + commit + tag `sprint-025-close`. |
+| P7 — Close-out + tag | **Done** (default-buft path). The TURBOMIND multi-GPU correctness regression is documented but not fixed in this sprint. |
 
 ---
 

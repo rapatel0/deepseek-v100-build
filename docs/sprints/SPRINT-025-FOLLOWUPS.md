@@ -103,7 +103,65 @@ captures items explicitly scoped out during planning).
   the new batch, not after.
 - **Files**: `tools/server/server.cpp` (`launch_slot_` / `update_slots`).
 
-## 5. 2-GPU / 4-GPU scaling sweep points
+## 5. Multi-GPU CUDA_TURBOMIND correctness regression — **CRITICAL**
+
+- **What**: Routing expert tensors through `CUDA_TURBOMIND<N>` (N=0..7) on
+  an 8-GPU layer-split 256e load produces **gibberish output**. The
+  kernels run without error, decode TPS is in the same ballpark as the
+  default-buft baseline (~11.7 t/s), but the generated tokens are
+  incoherent — repeating single tokens like `# # # # # # ...` from a
+  Python `def fibonacci(n):` prompt.
+- **What was tested**: 8-GPU 256e launched with per-layer `-ot` regex
+  routing each layer's expert tensors to the matching device's
+  `CUDA_TURBOMIND<N>` buft. Load succeeded; 8 CUDA_TURBOMIND buffer
+  groups total 140 GiB of expert weights. Decode test produced broken
+  output on the one prompt that didn't hit the §4 batch bug.
+- **Why discovered**: Followup to a pointed question — none of the
+  multi-GPU numbers in REPORT-19 use TURBOMIND. SPRINT-024 verified
+  TURBOMIND correctness at single-GPU only (`test_correctness.cpp`,
+  `test_grouped.cpp`); SPRINT-025 P2 verified the per-device State
+  refactor (`test_multi_device.cpp`) doesn't corrupt the workspace
+  pointers, but did NOT verify that simultaneous CUDA_TURBOMIND<i> and
+  CUDA_TURBOMIND<j> dispatch in the same forward pass produce the
+  same output as the default-buft path.
+- **Severity**: **CRITICAL**. The architectural promise of CUDA_TURBOMIND
+  on multi-GPU 256e is broken. The +13–22% SPRINT-024 lift only applies
+  if/when this is fixed. Without it, multi-GPU 256e ships on the
+  default cuda buft baseline (which IS coherent — verified in REPORT-19).
+- **Likely root causes** (need investigation):
+  1. **Layer-device mismatch from manual `-ot`**: my override pinned
+     layer L's experts to `CUDA_TURBOMIND<k>` based on inferred buffer
+     sizes; if `-sm layer` actually placed layer L's attention on a
+     different GPU, cross-GPU activation transfers happen per token
+     and may be misrouted. The family-alias work ([[1]]) would
+     intrinsically avoid this by binding to the layer's actual device.
+  2. **TURBOMIND kernel cross-device contamination**: the per-device
+     `State[]` refactor was workspace-pointer-only. The Gemm object,
+     CUDA streams, or scratch buffers may have implicit assumptions
+     about single-device context that break when dispatched alternately
+     across devices in the same forward pass.
+  3. **Activation buft mismatch**: the input/output activations for a
+     CUDA_TURBOMIND kernel call may live in the regular cuda buft for
+     a different device. The dispatch helper in
+     `ggml-cuda-turbomind.cu` may not handle the device-crossing copy
+     correctly.
+- **Suggested sprint**: Before SPRINT-027 family-alias work. The
+  family-alias addresses cause (1) but not (2) or (3) — those need
+  independent fixes. **Minimum repro test**: extend `test_multi_device.cpp`
+  to verify that *simultaneous* dispatch on GPU 0 and GPU 1 produce
+  outputs matching independent single-device runs on the same input.
+- **Files**:
+  - `ggml/vendor/turbomind/test_multi_device.cpp` (extend to simultaneous-
+    dispatch correctness check)
+  - `ggml/src/ggml-cuda/ggml-cuda-turbomind.cu` (review
+    `ggml_cuda_mul_mat_grouped_turbomind` + the helper that handles
+    activation device-crossing)
+  - `ggml/vendor/turbomind/api.cc` (review whether
+    `ggml_turbomind_mul_mat_grouped`'s Gemm object handles streams /
+    scratch correctly when called from a different device in the same
+    forward pass)
+
+## 6. 2-GPU / 4-GPU scaling sweep points
 
 - **What**: SPRINT-025 P5 spec called for 2/4/6/8 GPU sweep. 6-GPU and
   8-GPU data points are captured in REPORT-19. 2/4-GPU sub-runs via
@@ -131,4 +189,5 @@ captures items explicitly scoped out during planning).
 | /models/dsv4-flash/ subdir convention | Nice-to-have | next manifest touch | manifests/*.yaml, SPRINT-025.md |
 | tar-pipe fragility for cross-pod copies | Nice-to-have | operational | none |
 | llama-server "Invalid input batch." 500 | Important | 026 P0 | tools/server/server.cpp, src/llama-batch.cpp |
+| **Multi-GPU CUDA_TURBOMIND correctness regression** | **CRITICAL** | before SPRINT-027 | ggml-cuda-turbomind.cu, api.cc, test_multi_device.cpp |
 | 2/4-GPU scaling sweep points (MIN-Ne) | Nice-to-have | when needed | REPORT-19 amendment |
