@@ -206,7 +206,270 @@ To validate the FP16-drift hypothesis:
 
 The compare can happen offline (Python script reading the two dumps). Total instrumentation effort: ~half-day.
 
-## 8. Sprint disposition
+## 8. Cluster usage — pod management & deploy playbook
+
+The investigation uses an on-prem k8s cluster with a single node `gpu-01` hosting 8× V100-SXM2-32GB. All work happens in pods on that node.
+
+### Node & namespace
+
+- Cluster context: default (whatever `kubectl` is set to)
+- Namespace: `llm`
+- Node selector: `kubernetes.io/hostname: gpu-01` (only node with the V100 GPUs)
+- PVC: `llm-models-local` mounted as `/models` (read-only). Contains DSv4-Flash GGUFs.
+
+### GPU inventory & reservation etiquette
+
+```bash
+# Who currently has GPUs on gpu-01?
+kubectl get pods -n llm -o json | python3 -c "
+import json, sys
+d = json.load(sys.stdin)
+for p in d['items']:
+    if p['spec'].get('nodeName') != 'gpu-01': continue
+    if p['status'].get('phase') != 'Running': continue
+    g = p['spec']['containers'][0].get('resources',{}).get('limits',{}).get('nvidia.com/gpu','0')
+    if int(g): print(f\"{p['metadata']['name']}: {g}\")"
+
+# Detailed VRAM per GPU
+kubectl exec -n llm <pod> -- nvidia-smi --query-gpu=index,memory.used,memory.free --format=csv,noheader
+```
+
+**Etiquette:** `tcg-dev` and `llamacpp-build` are long-running 1-GPU dev pods belonging to ongoing tc-grid / build work. **Don't delete them without explicit user authorization.** Your own pods (whatever you create) are fair game.
+
+For the 256e tests you need 8 GPUs. If less are available, you can:
+1. Negotiate with the user to delete one of the long-running pods (they've authorized this in past sessions when explicit).
+2. Test at 6 GPUs (delete only build pods you created); 256e fits at 24 GiB/GPU with `-c 4096` headroom.
+3. Use `CUDA_VISIBLE_DEVICES=0,1,2,3` inside an 8-GPU pod to simulate 4-GPU (cheaper than recreating pods).
+
+### Pod manifests (templated)
+
+Three variants in `manifests/`:
+
+- `manifests/llamacpp-build-4gpu.yaml` (deleted; recreate from 8gpu template if needed)
+- `manifests/llamacpp-build-6gpu.yaml`
+- `manifests/llamacpp-build-8gpu.yaml`
+
+Template structure (8-GPU example):
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: llamacpp-build-8gpu
+  namespace: llm
+  labels:
+    sprint: sprint-025
+    role: full-256e-target
+spec:
+  containers:
+  - command: ["sleep", "infinity"]
+    image: nvidia/cuda:12.2.2-devel-ubuntu22.04
+    name: build
+    resources:
+      limits:
+        nvidia.com/gpu: 8
+      requests:
+        nvidia.com/gpu: 8
+    volumeMounts:
+    - mountPath: /workspace
+      name: workspace
+    - mountPath: /models
+      name: models
+      readOnly: true
+  nodeSelector:
+    kubernetes.io/hostname: gpu-01
+  restartPolicy: Never
+  volumes:
+  - emptyDir:
+      sizeLimit: 50Gi
+    name: workspace
+  - name: models
+    persistentVolumeClaim:
+      claimName: llm-models-local
+```
+
+To create or update: `kubectl apply -f manifests/llamacpp-build-8gpu.yaml`
+To delete: `kubectl delete pod -n llm llamacpp-build-8gpu`
+
+### Bootstrap script for a fresh build pod
+
+After `kubectl apply`, the pod is bare Ubuntu+CUDA. Bootstrap:
+
+```bash
+POD=llamacpp-build-8gpu
+
+# 1. Install build deps + runtime libs
+kubectl exec -n llm $POD -- bash -c '
+  export DEBIAN_FRONTEND=noninteractive
+  apt-get update -qq
+  apt-get install -y -qq --no-install-recommends --allow-change-held-packages \
+    build-essential cmake git curl libssl-dev libcurl4-openssl-dev \
+    libnccl2 libnccl-dev pkg-config ca-certificates rsync
+'
+
+# 2. Copy source tree (git archive HEAD + manually-tar lmdeploy submodule)
+cd /Users/ravi/repos/deepseek
+git archive --format=tar HEAD -o /tmp/deepseek-src.tar
+tar cf /tmp/lmdeploy.tar -C research/ lmdeploy
+kubectl exec -n llm $POD -- mkdir -p /workspace/llamacpp /workspace/research
+kubectl cp /tmp/deepseek-src.tar -n llm $POD:/tmp/
+kubectl cp /tmp/lmdeploy.tar -n llm $POD:/tmp/
+kubectl exec -n llm $POD -- bash -c '
+  cd /workspace/llamacpp && tar xf /tmp/deepseek-src.tar
+  cd /workspace/research && tar xf /tmp/lmdeploy.tar
+  rm -f /tmp/deepseek-src.tar /tmp/lmdeploy.tar
+'
+
+# 3. Build llama-server + libggml-turbomind.so
+kubectl exec -n llm $POD -- bash -c '
+  cd /workspace/llamacpp
+  cmake -B build \
+    -DGGML_CUDA=ON \
+    -DCMAKE_CUDA_ARCHITECTURES=70 \
+    -DGGML_CUDA_NCCL=ON \
+    -DGGML_TURBOMIND=ON \
+    -DGGML_TURBOMIND_LMDEPLOY_SRC=/workspace/research/lmdeploy/src \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DLLAMA_CURL=ON \
+    -DLLAMA_BUILD_TESTS=OFF \
+    -DLLAMA_BUILD_EXAMPLES=OFF
+  nice -n 5 cmake --build build -j 32 --target llama-server
+
+  cd ggml/vendor/turbomind
+  cmake -B build_so \
+    -DLMDEPLOY_SRC=/workspace/research/lmdeploy/src \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_CUDA_ARCHITECTURES=70 \
+    -DGGML_TURBOMIND_TEST=ON
+  nice -n 5 cmake --build build_so -j 32 --target ggml-turbomind
+  nice -n 5 cmake --build build_so -j 32 --target test_ggml_turbomind_multi_device_simultaneous
+'
+```
+
+Total cold-start time on the 8-GPU pod: ~10 minutes (5 min apt + 5 min build).
+
+### Iterating fast — incremental rebuild
+
+After editing one file locally, push + rebuild:
+
+```bash
+# For api.cc edit:
+kubectl cp ggml/vendor/turbomind/api.cc -n llm $POD:/workspace/llamacpp/ggml/vendor/turbomind/api.cc
+kubectl exec -n llm $POD -- bash -c '
+  cd /workspace/llamacpp/ggml/vendor/turbomind
+  nice -n 5 cmake --build build_so -j 32 --target ggml-turbomind
+'
+
+# For ggml-cuda-turbomind.cu edit:
+kubectl cp ggml/src/ggml-cuda/ggml-cuda-turbomind.cu -n llm $POD:/workspace/llamacpp/ggml/src/ggml-cuda/ggml-cuda-turbomind.cu
+kubectl exec -n llm $POD -- bash -c '
+  cd /workspace/llamacpp
+  nice -n 5 cmake --build build -j 32 --target llama-server
+'
+```
+
+Incremental rebuild: <60 seconds for either change.
+
+### Launching llama-server
+
+```bash
+kubectl exec -n llm $POD -- bash -c '
+  export LD_LIBRARY_PATH=/workspace/llamacpp/ggml/vendor/turbomind/build_so:/workspace/llamacpp/build/bin:/usr/lib/x86_64-linux-gnu
+  cd /workspace/llamacpp/build/bin
+
+  # The TURBOMIND -ot regex distributes experts across 8 GPUs matching
+  # -sm layer natural placement (inferred from buffer sizes).
+  OT="blk\.([0-5])\..*exps.*=CUDA_TURBOMIND0,blk\.([6-9]|10)\..*exps.*=CUDA_TURBOMIND1,blk\.(1[1-6])\..*exps.*=CUDA_TURBOMIND2,blk\.(1[7-9]|2[0-2])\..*exps.*=CUDA_TURBOMIND3,blk\.(2[3-7])\..*exps.*=CUDA_TURBOMIND4,blk\.(2[8-9]|3[0-2])\..*exps.*=CUDA_TURBOMIND5,blk\.(3[3-8])\..*exps.*=CUDA_TURBOMIND6,blk\.(39|4[0-2])\..*exps.*=CUDA_TURBOMIND7"
+
+  nohup ./llama-server \
+    -m /models/DSv4-Flash-256e-fixed.gguf \
+    -ngl 99 -sm layer \
+    -ot "$OT" \
+    -t 8 --port 12500 \
+    --no-warmup \
+    -c 4096 \
+    > /tmp/server.log 2>&1 &
+  echo $! > /tmp/server.pid
+'
+```
+
+Load time for 256e (146 GiB) into 8× V100: **~9 minutes cold**, ~3 min if page cache hot from a prior load.
+
+### Probing the server
+
+```bash
+# 1. Wait for bind (server returns 503 "Loading model" until weights are uploaded)
+kubectl exec -n llm $POD -- bash -c '
+  while ! curl -sm 2 http://127.0.0.1:12500/health 2>/dev/null | grep -q "ok"; do
+    sleep 10
+  done
+  echo "ready"
+'
+
+# 2. Decode probe
+kubectl exec -n llm $POD -- bash -c '
+  curl -sm 60 http://127.0.0.1:12500/completion \
+    -H "Content-Type: application/json" \
+    -d "{\"prompt\":\"def fibonacci(n):\",\"n_predict\":64,\"temperature\":0,\"top_k\":1}" \
+    | grep -oE "\"content\":\"[^\"]*\"|\"timings\":\{[^}]*\}"
+'
+```
+
+**Known prompts and their expected outputs**:
+
+| Prompt | Default-cuda 256e (expected good) | TURBOMIND broken |
+|---|---|---|
+| `"def fibonacci(n):"` | `"\n    if n <= 1:\n        return n\n    else:\n        return fibonacci(n-1) + fibonacci(n-2"` | `"\\(n:? (# # # # # # # # # # ..."` |
+| `"The capital of France is"` | `" Paris.\nThe capital of France is Paris..."` | (often hits "Invalid input batch" — see FOLLOWUPS §4) |
+| AVG-16e single-GPU TURBOMIND `"def fibonacci(n):"` | — | `"i++ i++ i++ i++..."` (this IS the SPRINT-024 baseline; averaged-weights fixture degeneracy) |
+
+### Killing & cleanup
+
+```bash
+# Kill server (and any zombie llama-server processes from prior runs)
+kubectl exec -n llm $POD -- bash -c 'pkill -9 -f "llama-server -m" 2>&1; sleep 2; nvidia-smi --query-gpu=memory.used --format=csv,noheader'
+
+# Sometimes processes go zombie. They don't hold VRAM but show in pgrep. Safe to ignore.
+
+# Free GPUs entirely — delete the pod
+kubectl delete pod -n llm $POD --wait=false
+```
+
+### Common pitfalls
+
+| Symptom | Cause | Fix |
+|---|---|---|
+| `error: libcuda.so.1: cannot open shared object file` at build | Build container's libcuda stub vs runtime path | Ensure `LIBRARY_PATH=/usr/local/cuda/targets/x86_64-linux/lib/stubs` for build only |
+| `cmake error: held packages` on apt-install of libnccl | `nvidia/cuda:12.2.2-devel-ubuntu22.04` pins libnccl version | Use `--allow-change-held-packages` |
+| NCCL `ncclCommInitAll` fails at server startup | Stale peer mappings from prior crashed process | Wait 30s and retry; or recreate pod |
+| `Invalid input batch` HTTP 500 on multi-request testing | Slot KV-position desync (FOLLOWUPS §4 — separate bug) | Cycle `id_slot`, or restart server between probes, or pass `cache_prompt:true` |
+| `tar EOF` errors when copying source via `kubectl cp` | kubectl exec stdin/stdout pipes are fragile for >100 MB | Use local intermediate: `kubectl cp local:src/ pod:dst/` — proven reliable |
+| Server returns 503 `"Loading model"` indefinitely | Still mmap'ing 146 GiB from PVC | Check `cat /proc/<pid>/io` for `read_bytes` progress; 256e takes 9 min cold |
+| 8-GPU pod stuck `Pending` | Insufficient GPUs free on gpu-01 | `kubectl describe pod` shows reason. Delete one of YOUR build pods (not user's tcg-dev/llamacpp-build) to free slots |
+
+### Running the bisection test (fast, no model load needed)
+
+```bash
+kubectl exec -n llm $POD -- bash -c '
+  cd /workspace/llamacpp/ggml/vendor/turbomind/build_so
+  ./test_ggml_turbomind_multi_device_simultaneous
+'
+```
+
+Runtime: <60 seconds. Output ends with `[simul] PASS` or `[simul] FAIL`. Use this for fast hypothesis testing on changes to `api.cc` or kernel code, before committing to the 9-minute 256e load test.
+
+### Monitoring during a long load
+
+The harness uses `Monitor` (background polling) to detect bind + decode emit. Pattern:
+
+```bash
+# Poll until health is "ok", then issue decode
+until kubectl exec -n llm $POD -- bash -c 'curl -sm 2 http://127.0.0.1:12500/health 2>/dev/null | grep -q "ok"'; do sleep 20; done
+# decode probe here
+```
+
+Note that `curl -sf` fails on 503 (which is what /health returns during model load). Use `grep -q "ok"` against the response body instead.
+
+## 9. Sprint disposition
 
 - **SPRINT-025 (8-GPU 256e default cuda)**: SHIPPED at `sprint-025-close`. Decode 11.35 t/s on production-quality output.
 - **SPRINT-025-PATCH (multi-GPU TURBOMIND fix)**: UNFIXED. 11 hypotheses eliminated. Hypothesis surface narrowed to FP16 numerical accumulation. Code reverted to pre-investigation state.
