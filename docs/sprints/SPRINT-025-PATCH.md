@@ -1,7 +1,7 @@
 # SPRINT-025-PATCH — Multi-GPU CUDA_TURBOMIND correctness regression
 
 **Date opened:** 2026-05-15
-**Status:** EXECUTING
+**Status:** IN-PROGRESS — bug bisected to narrow scope, root cause not yet identified
 **Predecessor:** sprint-025-close (commit 6879cda35)
 **Successor:** SPRINT-026 (depends on this landing)
 
@@ -140,6 +140,57 @@ Effort depends on root cause:
   (extend to M=8 via batched-bench if time permits).
 - Update REPORT-19 with the real TURBOMIND-enabled numbers.
 - Tag `sprint-025-patch-close`. Update memory with the fix narrative.
+
+---
+
+## Findings to date (2026-05-16)
+
+### Hypotheses eliminated
+
+| ID | Hypothesis | How eliminated |
+|---|---|---|
+| H0 | libggml-turbomind.so kernels broken multi-device | P0 simultaneous-dispatch test PASS (0/2048 bytes differ on either GPU) |
+| H1 | Layer-device mismatch from manual `-ot` regex | P1 same regex routed to default cuda bufts → coherent (regex was a no-op vs natural placement) |
+| H4a | Workspace `barriers` / `flags` stale across Runs | Added `cudaMemsetAsync` before each Run → still gibberish |
+| H4b | Stream race on workspace despite same-stream submission | Added `cudaStreamSynchronize` after each Run → still gibberish |
+| H4c | cudaGraph capture not capturing memsets | `GGML_CUDA_DISABLE_GRAPHS=1` → still gibberish |
+| H?  | Grouped MoE dispatch path specifically | `GGML_TM_DISABLE_GROUPED=1` per-expert path → also gibberish |
+
+### Bug bisection matrix
+
+| Test | TURBOMIND devices | TURBOMIND layers | Result |
+|---|---|---|---|
+| P2 | 1 (CUDA_TURBOMIND0) | 1 (layer 0) | ✅ Coherent, 16.91 t/s |
+| P3 | 2 (0, 1) | 2 (layers 0, 10) | ✅ Coherent, 16.48 t/s |
+| P3.1 | 4 (0, 1, 3, 6) | 4 (layers 0, 10, 22, 33) | ✅ Coherent, 14.52 t/s |
+| P3.2 | 1 (CUDA_TURBOMIND0) | 6 (layers 0–5) | ❌ Gibberish |
+| Original | 8 (0–7) | 43 (all) | ❌ Gibberish |
+
+**Threshold**: bug appears when ≥6 layers route their experts through CUDA_TURBOMIND in the same forward pass, regardless of how those layers are distributed across TURBOMIND devices. SPRINT-024 MIN-Ne baseline (43 layers single-GPU TURBOMIND) does NOT exhibit this — distinguishing variable is unclear (256-expert routing? Multi-GPU layer-split context? Specific kernel selection?).
+
+### Symptom
+
+Output is degenerate token loops:
+- Grouped path on 256e: `\(n:? (# # # # # # # ...`
+- Per-expert path on 256e: `#n#:n# #n# #n# ...`
+
+First 3–5 generated tokens have some structure (suggesting first decode step partially succeeds), then activations collapse into a fixed value → argmax of fixed logits → token loop.
+
+### What's left to investigate
+
+1. **Test_multi_device_simultaneous extension**: add a "many sequential Runs on one device" variant to reproduce gibberish at the kernel-test level if possible. Currently the bug is only reproducible in the full llama-server pipeline.
+2. **Activation buft cross-copy**: when src0 is on CUDA_TURBOMIND<N> and downstream consumer is on CUDA<N> (different buft, same device), ggml-backend may insert a copy. With multiple such crossings per forward, something may accumulate.
+3. **Per-tensor `extra->weight_ptrs_dev` cache**: each tensor's extra carries a cached device-pointer table. The cache is allocated on first dispatch. If the FIRST dispatch is in a "wrong" context (device, stream), the cached pointers may be subtly wrong but only break later when multiple cached tables exist.
+4. **Compare 256e vs MIN-16e at single-GPU**: does single-GPU 256e with ALL TURBOMIND experts work? If yes → multi-GPU context is the issue. If no → 256-expert routing specifically.
+5. **Bypass packed kernels for 256e**: run with FP8 fallback to default cuda (no TURBOMIND) and confirm baseline is healthy. (Already done — REPORT-19 baseline path works.)
+
+The 256e vs MIN-Ne distinguishing variable (#4) is the cheapest next test — load single-GPU 256e with `-ot 'exps=CUDA_TURBOMIND0'`. But 256e doesn't fit on a single GPU (146 GiB > 32 GiB), so this requires a smaller test fixture with 256 experts.
+
+### Reverted experimental changes
+
+The two fix attempts (workspace memset, cudaStreamSynchronize) were REVERTED to keep
+`ggml/vendor/turbomind/api.cc` in its pre-investigation state. The bisection test
+(`test_multi_device_simultaneous.cpp`) stays — it's already validated infrastructure.
 
 ---
 
