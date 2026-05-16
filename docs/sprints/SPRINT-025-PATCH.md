@@ -189,14 +189,31 @@ The dense case shows the kernel produces **numerically valid** output that the m
 
 **Conclusion**: the bug is in how the dispatch path handles sparse routing — specifically the case where `expert_offsets[i+1] == expert_offsets[i]` for the majority of experts. With 6/256 active, 250 experts have zero-token offsets. With 16-expert MIN-Ne and top-6, only 10 experts are zero-token — far below whatever threshold trips at 250.
 
-### Likely fix surfaces
+### Likely fix surfaces (eliminated)
 
-1. **StridedPtr table for zero-token experts**: in `ggml_cuda_mul_mat_grouped_turbomind`, the per-expert pointer table is built for ALL `n_experts` (256) entries, including those that won't have tokens. If the kernel reads these unconditionally and dereferences expected-unused entries, it could touch invalid memory.
-2. **Kernel iteration over zero-grid experts**: the kernel may iterate over all 256 experts launching grids of size 0 for the empty ones. CUDA accepts grid-size-zero launches but a buggy host-side scheduler could over-allocate workspace partials based on `n_experts` rather than `total_routes`, causing buffer-overflow-like writes.
-3. **Activation gather/scatter via `get_rows_cuda`**: the gather of src1 by `ids_to_sorted` reads only `total_routes` positions; scatter to dst by `ids_from_sorted` writes only `total_routes` positions. The OTHER positions in dst (if any padding) are unwritten. Possibly OK for MUL_MAT_ID's downstream consumer, but worth checking. **However**, this should fail single-layer too — and P2 works. So scatter-fill isn't the primary suspect.
-4. **`s->gemm->Run` per-expert scheduler iterating num_experts**: most likely. The Run is called once per layer with `Adesc.num = 256`. The Gemm scheduler enumerates 256 experts to determine grid configuration. If sparse offsets confuse this enumeration, the kernel launches wrong-sized grids.
+1. ~~**StridedPtr table for zero-token experts**~~: tested via active-experts host-side filter (built tighter weight pointer array, offsets, with `num_active=6` instead of 256). Kernel sees no empty experts. **Still gibberish.** Bug ISN'T sparse-expert-handling at the kernel level.
+2. ~~**Workspace partials/barriers/flags stale across Runs**~~: tested by `cudaMemsetAsync` of all three buffers before each Run. **Still gibberish.**
+3. ~~**Stream race**~~: `cudaStreamSynchronize` after each Run. **Still gibberish.**
+4. ~~**cudaGraph capture eating memsets**~~: `GGML_CUDA_DISABLE_GRAPHS=1`. **Still gibberish.**
 
-The fact that 1 sparse layer (P2) works but 6 sparse layers (P3.2) fails suggests the per-call bug is small but COMPOUNDING — each layer's sparse output has small drift, accumulating across 43 layers until activations explode.
+### Updated narrowing
+
+The active-experts filter test is **especially significant** — it sends only 6 active experts (no empty ones) to the kernel via the grouped path, yet still produces gibberish. This means:
+
+- The bug is NOT in the kernel's handling of empty experts (since we eliminated them).
+- The bug is NOT in the host-side dispatch helper's offset computation (since the filter rebuilt them cleanly).
+- The bug IS triggered by **repeated TURBOMIND dispatch into the same per-device `State` across multiple layers in one forward pass**.
+
+Threshold: 5–6+ TURBOMIND-routed dispatches per device per fwd is enough to corrupt. P2 (1 layer) works; P3.1 (4 layers, 1 layer per device) works; P3.2 (6 layers on 1 device) and original (43 layers / 8 devices ≈ 5–6/device) fail. The full-activation test (forced `n_expert_used=256`) producing structured output suggests the bug is sparse-activation-related at SOME layer in the stack — but ruling out kernel-side empty-expert handling and host-side workspace state leaves the cause unidentified.
+
+### Reverted experimental changes
+
+All four speculative fixes were REVERTED to keep the code clean:
+- Workspace memset (barriers, flags, partials) — didn't help
+- `cudaStreamSynchronize` after Run — didn't help
+- Active-experts host-side filter — didn't help
+
+`ggml/vendor/turbomind/api.cc` and `ggml/src/ggml-cuda/ggml-cuda-turbomind.cu` are at their pre-investigation state. The bisection test `test_multi_device_simultaneous.cpp` stays — it's validated infrastructure that proved the kernel side works correctly in isolation.
 
 ### What's left to investigate (revised priority)
 
