@@ -208,12 +208,47 @@ Threshold: 5–6+ TURBOMIND-routed dispatches per device per fwd is enough to co
 
 ### Reverted experimental changes
 
-All four speculative fixes were REVERTED to keep the code clean:
+All speculative fixes were REVERTED to keep the code clean:
 - Workspace memset (barriers, flags, partials) — didn't help
 - `cudaStreamSynchronize` after Run — didn't help
 - Active-experts host-side filter — didn't help
+- Gemm-per-call rebuild — didn't help (and 10× perf regression)
 
 `ggml/vendor/turbomind/api.cc` and `ggml/src/ggml-cuda/ggml-cuda-turbomind.cu` are at their pre-investigation state. The bisection test `test_multi_device_simultaneous.cpp` stays — it's validated infrastructure that proved the kernel side works correctly in isolation.
+
+### Bug location, by elimination
+
+The bug is NOT in any of these places (now proven):
+
+| Area | Eliminated by |
+|---|---|
+| libggml-turbomind.so kernels (multi-device) | P0 simultaneous-dispatch test PASS |
+| `-ot` regex / layer-device placement | P1 same regex to default cuda → coherent |
+| Workspace barriers/flags state | memset before each Run — no effect |
+| Workspace partials state | memset partials before each Run — no effect |
+| Run-to-Run race despite same stream | cudaStreamSynchronize after each Run — no effect |
+| cudaGraph capture eating fix-ups | GGML_CUDA_DISABLE_GRAPHS=1 — no effect |
+| Grouped-path-specific | GGML_TM_DISABLE_GROUPED=1 → same gibberish |
+| Empty-expert handling (`offsets[i+1]==offsets[i]`) | Active-experts filter (num=6 dense) → still gibberish |
+| Shared Gemm-instance state across Runs | delete+new Gemm per call → still gibberish |
+
+That leaves only these possible loci (none I've reached from host code):
+
+1. **The packed sm70 kernel template instantiation** for the specific (M=1, N=2048, K=2048, num_experts=256) shape. The kernel may have a code path that's incorrect for this shape but happens to pass MIN-16e (smaller shapes).
+2. **NCCL peer-mapping / multi-GPU interaction** with TURBOMIND buffer types. The graph compute sets `cudaSetDevice(N)`, but peer mappings between GPUs N and M may affect how device-N pointers from device-M's buft contexts are interpreted.
+3. **Something in the model graph downstream of MUL_MAT_ID** that consumes TURBOMIND output differently than default-cuda output — but this can't be it, because P2 (one TURBOMIND layer) works while P3.2 (six TURBOMIND layers on one device) doesn't, and the downstream graph is the same in both.
+4. **A subtle activation-flow bug** when 5+ TURBOMIND-routed layers feed into each other through the regular cuda activation buft. Each layer's TURBOMIND output has FP16 numerical characteristics slightly different from default cuda's output; accumulated through 5+ layers, the differences may push activations off-distribution into NaN territory.
+
+The full-activation test (n_expert_used=256 → structured looping output instead of garbage) is the **only thing about the failure pattern that depends on routing density**. The active-experts filter eliminated empty-expert kernel handling, leaving "the kernel produces wrong output for repeated calls into shared State across many layers" as the only remaining explanation — but no host-side workaround makes it correct.
+
+### What it would take to fix
+
+Two paths forward, neither feasible in a session:
+
+1. **Instrument and trace**: dump `D_fp16` per layer and compare to a default-cuda-buft reference. Find the first layer where the kernel output diverges from "what it should be". This requires a reference path (default-cuda) and TURBOMIND running side-by-side, which means model duplication — needs more memory than 8 V100s have.
+2. **Read the gemm.cu / kernel_impl.h / cta_map.h template code** to identify the shape-dependent codepath that 256-experts × 5+ layers triggers. This is dense CUTLASS-style template metaprogramming and would take days of focused reading.
+
+The user's hypothesis ("alignment bug at full activation") remains the most parsimonious *direction*: something about the 250-empty-experts pattern in the kernel scheduling. But the kernel doesn't read empty experts even with full activation — the bug must be in how the scheduler/launch math handles them. Whatever it is, it's invisible to single-layer execution and compounds across 5+ layers.
 
 ### What's left to investigate (revised priority)
 
