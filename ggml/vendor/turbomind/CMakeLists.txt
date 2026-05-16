@@ -209,4 +209,12 @@ if(GGML_TURBOMIND_TEST)
     )
     target_link_libraries(test_ggml_turbomind_multi_device PRIVATE CUDA::cudart ${CMAKE_DL_LIBS})
     add_dependencies(test_ggml_turbomind_multi_device ggml-turbomind)
+
+    # SPRINT-025-PATCH P0 — simultaneous multi-device dispatch correctness.
+    add_executable(test_ggml_turbomind_multi_device_simultaneous test_multi_device_simultaneous.cpp)
+    target_include_directories(test_ggml_turbomind_multi_device_simultaneous PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}/include
+    )
+    target_link_libraries(test_ggml_turbomind_multi_device_simultaneous PRIVATE CUDA::cudart ${CMAKE_DL_LIBS})
+    add_dependencies(test_ggml_turbomind_multi_device_simultaneous ggml-turbomind)
 endif()
