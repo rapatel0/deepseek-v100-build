@@ -176,15 +176,33 @@ Output is degenerate token loops:
 
 First 3–5 generated tokens have some structure (suggesting first decode step partially succeeds), then activations collapse into a fixed value → argmax of fixed logits → token loop.
 
-### What's left to investigate
+### Update: bug is sparse-activation-specific (user hypothesis confirmed)
 
-1. **Test_multi_device_simultaneous extension**: add a "many sequential Runs on one device" variant to reproduce gibberish at the kernel-test level if possible. Currently the bug is only reproducible in the full llama-server pipeline.
-2. **Activation buft cross-copy**: when src0 is on CUDA_TURBOMIND<N> and downstream consumer is on CUDA<N> (different buft, same device), ggml-backend may insert a copy. With multiple such crossings per forward, something may accumulate.
-3. **Per-tensor `extra->weight_ptrs_dev` cache**: each tensor's extra carries a cached device-pointer table. The cache is allocated on first dispatch. If the FIRST dispatch is in a "wrong" context (device, stream), the cached pointers may be subtly wrong but only break later when multiple cached tables exist.
-4. **Compare 256e vs MIN-16e at single-GPU**: does single-GPU 256e with ALL TURBOMIND experts work? If yes → multi-GPU context is the issue. If no → 256-expert routing specifically.
-5. **Bypass packed kernels for 256e**: run with FP8 fallback to default cuda (no TURBOMIND) and confirm baseline is healthy. (Already done — REPORT-19 baseline path works.)
+Forced `--override-kv 'deepseek4.expert_used_count=int:256'` to make EVERY token activate ALL 256 experts (dense routing). Re-ran the original 8-GPU full-TURBOMIND failing case:
 
-The 256e vs MIN-Ne distinguishing variable (#4) is the cheapest next test — load single-GPU 256e with `-ot 'exps=CUDA_TURBOMIND0'`. But 256e doesn't fit on a single GPU (146 GiB > 32 GiB), so this requires a smaller test fixture with 256 experts.
+| Mode | n_expert_used | Output character | Decode TPS |
+|---|---|---|---|
+| Sparse (production default) | 6 / 256 | `\(n:? (# # # # # # ...` — degenerate garbage | 13 t/s |
+| **Dense (forced override)** | **256 / 256** | **`f n fibonacci n: f n fibonacci n: ...` — actual prompt words looping** | **3.4 t/s** |
+
+The dense case shows the kernel produces **numerically valid** output that the model interprets (badly, since untrained for this config — but the TOKENS are real words from the prompt). The sparse case produces garbage.
+
+**Conclusion**: the bug is in how the dispatch path handles sparse routing — specifically the case where `expert_offsets[i+1] == expert_offsets[i]` for the majority of experts. With 6/256 active, 250 experts have zero-token offsets. With 16-expert MIN-Ne and top-6, only 10 experts are zero-token — far below whatever threshold trips at 250.
+
+### Likely fix surfaces
+
+1. **StridedPtr table for zero-token experts**: in `ggml_cuda_mul_mat_grouped_turbomind`, the per-expert pointer table is built for ALL `n_experts` (256) entries, including those that won't have tokens. If the kernel reads these unconditionally and dereferences expected-unused entries, it could touch invalid memory.
+2. **Kernel iteration over zero-grid experts**: the kernel may iterate over all 256 experts launching grids of size 0 for the empty ones. CUDA accepts grid-size-zero launches but a buggy host-side scheduler could over-allocate workspace partials based on `n_experts` rather than `total_routes`, causing buffer-overflow-like writes.
+3. **Activation gather/scatter via `get_rows_cuda`**: the gather of src1 by `ids_to_sorted` reads only `total_routes` positions; scatter to dst by `ids_from_sorted` writes only `total_routes` positions. The OTHER positions in dst (if any padding) are unwritten. Possibly OK for MUL_MAT_ID's downstream consumer, but worth checking. **However**, this should fail single-layer too — and P2 works. So scatter-fill isn't the primary suspect.
+4. **`s->gemm->Run` per-expert scheduler iterating num_experts**: most likely. The Run is called once per layer with `Adesc.num = 256`. The Gemm scheduler enumerates 256 experts to determine grid configuration. If sparse offsets confuse this enumeration, the kernel launches wrong-sized grids.
+
+The fact that 1 sparse layer (P2) works but 6 sparse layers (P3.2) fails suggests the per-call bug is small but COMPOUNDING — each layer's sparse output has small drift, accumulating across 43 layers until activations explode.
+
+### What's left to investigate (revised priority)
+
+1. **Read `Gemm::Run` and inner kernel-impl for sparse-offsets handling** — focus on how `Adesc.offsets` is consumed to determine grid shape and partials allocation.
+2. **Instrument: dump `D_fp16` output after a sparse vs dense call**, compare element-by-element. Find where sparse output diverges from "what it should be".
+3. **Test single-layer at 256 experts with FORCED ZERO offsets for some experts** — minimal repro to compare working-sparse-1-layer behavior vs broken-sparse-many-layer behavior.
 
 ### Reverted experimental changes
 
