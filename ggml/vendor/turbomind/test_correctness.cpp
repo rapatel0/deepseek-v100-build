@@ -20,6 +20,8 @@
 #include <vector>
 #include <algorithm>
 #include <cstdint>
+#include <cerrno>
+#include <string>
 
 #include "ggml-turbomind-api.h"
 
@@ -143,14 +145,14 @@ static void ref_matmul_mxfp4(
 // ---- Stats helper ----------------------------------------------------------
 struct DiffStats { float max_abs; float p99_abs; float rel; };
 
-static DiffStats compare(const std::vector<__half>& D_actual,
+static DiffStats compare(const std::vector<float>&  D_actual,
                          const std::vector<float>&  D_ref,
                          int M, int N)
 {
     std::vector<float> abs_diff(M * N);
     float max_abs = 0.0f, max_ref = 0.0f, sum_abs = 0.0f, sum_ref = 0.0f;
     for (int i = 0; i < M * N; ++i) {
-        float a = __half2float(D_actual[i]);
+        float a = D_actual[i];
         float r = D_ref[i];
         float d = std::fabs(a - r);
         abs_diff[i] = d;
@@ -204,6 +206,57 @@ static void make_mxfp4_fixture(std::vector<block_mxfp4>& blocks, int N, int K,
     }
 }
 
+template <typename BlockT>
+static bool load_blocks_at(const char * path, long long offset, std::vector<BlockT>& blocks) {
+    FILE * f = fopen(path, "rb");
+    if (!f) {
+        fprintf(stderr, "fopen(%s): %s\n", path, strerror(errno));
+        return false;
+    }
+    if (fseeko(f, (off_t) offset, SEEK_SET) != 0) {
+        fprintf(stderr, "fseeko(%s, %lld): %s\n", path, offset, strerror(errno));
+        fclose(f);
+        return false;
+    }
+    const size_t want = blocks.size() * sizeof(BlockT);
+    const size_t got  = fread(blocks.data(), 1, want, f);
+    fclose(f);
+    if (got != want) {
+        fprintf(stderr, "short read from %s at %lld: got %zu want %zu\n", path, offset, got, want);
+        return false;
+    }
+    return true;
+}
+
+static void scan_fp8_blocks(const std::vector<block_f8_e4m3_b128>& blocks, const char * tag) {
+    size_t e_zero = 0, e_inf = 0, q_nan = 0;
+    uint8_t e_min = 255, e_max = 0;
+    for (const block_f8_e4m3_b128& blk : blocks) {
+        e_zero += (blk.e == 0);
+        e_inf  += (blk.e == 255);
+        e_min = std::min(e_min, blk.e);
+        e_max = std::max(e_max, blk.e);
+        for (uint8_t q : blk.qs) {
+            q_nan += (q == 0x7F || q == 0xFF);
+        }
+    }
+    fprintf(stderr, "[%s] raw fp8 scan: blocks=%zu e_min=%u e_max=%u e_zero=%zu e_255=%zu q_nan=%zu\n",
+            tag, blocks.size(), (unsigned)e_min, (unsigned)e_max, e_zero, e_inf, q_nan);
+}
+
+static void scan_mxfp4_blocks(const std::vector<block_mxfp4>& blocks, const char * tag) {
+    size_t e_zero = 0, e_inf = 0;
+    uint8_t e_min = 255, e_max = 0;
+    for (const block_mxfp4& blk : blocks) {
+        e_zero += (blk.e == 0);
+        e_inf  += (blk.e == 255);
+        e_min = std::min(e_min, blk.e);
+        e_max = std::max(e_max, blk.e);
+    }
+    fprintf(stderr, "[%s] raw mxfp4 scan: blocks=%zu e_min=%u e_max=%u e_zero=%zu e_255=%zu\n",
+            tag, blocks.size(), (unsigned)e_min, (unsigned)e_max, e_zero, e_inf);
+}
+
 // ---- Per-type test ----------------------------------------------------------
 template <typename BlockT>
 static int run_one_case(
@@ -247,11 +300,17 @@ static int run_one_case(
     fprintf(stderr,"[%s] pack OK, k_pack=0x%x (b=0x%x, v=0x%x)\n",
             tag, k_pack, k_pack & 0xFFF, (k_pack >> 12) & 0xFFF);
 
+    const int M_run = (M + 7) & ~7;
+
     // ---- generate FP16 activation ----
     std::mt19937 rng(0xDEADBEEF);
     std::uniform_real_distribution<float> ad(-0.1f, 0.1f);
-    std::vector<__half> hA((size_t)M * K);
-    for (auto& v : hA) v = __float2half(ad(rng));
+    std::vector<__half> hA((size_t)M_run * K, __float2half(0.0f));
+    for (int m = 0; m < M; ++m) {
+        for (int k = 0; k < K; ++k) {
+            hA[(size_t)m * K + k] = __float2half(ad(rng));
+        }
+    }
 
     __half* dA = nullptr;
     CHECK(cudaMalloc(&dA, hA.size() * sizeof(__half)));
@@ -259,15 +318,19 @@ static int run_one_case(
 
     // ---- output ----
     __half* dD = nullptr;
-    CHECK(cudaMalloc(&dD, (size_t)M * N * sizeof(__half)));
+    CHECK(cudaMalloc(&dD, (size_t)M_run * N * sizeof(__half)));
 
     // ---- run turbomind mul_mat ----
-    rc = mm(dA, d_wb, d_sb, ggml_type, M, N, K, group_size, k_pack, dD, nullptr);
+    rc = mm(dA, d_wb, d_sb, ggml_type, M_run, N, K, group_size, k_pack, dD, nullptr);
     if (rc) { fprintf(stderr,"[%s] mul_mat rc=%d\n", tag, rc); return 5; }
 
     // ---- copy result back ----
-    std::vector<__half> hD((size_t)M * N);
-    CHECK(cudaMemcpy(hD.data(), dD, hD.size() * sizeof(__half), cudaMemcpyDeviceToHost));
+    std::vector<__half> hD_half((size_t)M * N);
+    CHECK(cudaMemcpy(hD_half.data(), dD, hD_half.size() * sizeof(__half), cudaMemcpyDeviceToHost));
+    std::vector<float> hD((size_t)M * N);
+    for (size_t i = 0; i < hD.size(); ++i) {
+        hD[i] = __half2float(hD_half[i]);
+    }
 
     // ---- compute host reference ----
     std::vector<float> hD_ref((size_t)M * N, 0.0f);
@@ -283,8 +346,8 @@ static int run_one_case(
 
     // ---- compare ----
     DiffStats s = compare(hD, hD_ref, M, N);
-    fprintf(stderr,"[%s] M=%d N=%d K=%d: max_abs=%.4e p99=%.4e rel=%.4e | gates max=%.0e p99=%.0e\n",
-            tag, M, N, K, s.max_abs, s.p99_abs, s.rel, gate_max_abs, gate_p99);
+    fprintf(stderr,"[%s] M=%d M_run=%d N=%d K=%d output=f16: max_abs=%.4e p99=%.4e rel=%.4e | gates max=%.0e p99=%.0e\n",
+            tag, M, M_run, N, K, s.max_abs, s.p99_abs, s.rel, gate_max_abs, gate_p99);
 
     cudaFree(dA); cudaFree(dD); cudaFree(d_wb);
     if (d_sb) cudaFree(d_sb);
@@ -314,6 +377,46 @@ int main(int argc, char** argv) {
     void* h = dlopen(lib_path, RTLD_LAZY | RTLD_LOCAL);
     if (!h) { fprintf(stderr,"dlopen failed: %s\n", dlerror()); return 1; }
 
+    if (argc == 9 && std::string(argv[2]) == "--raw-f8") {
+        const char * model_path = argv[3];
+        const long long offset  = strtoll(argv[4], nullptr, 0);
+        const int M             = atoi(argv[5]);
+        const int N             = atoi(argv[6]);
+        const int K             = atoi(argv[7]);
+        const char * tag        = argv[8];
+        std::vector<block_f8_e4m3_b128> blocks((size_t) N * (K / 128));
+        if (!load_blocks_at(model_path, offset, blocks)) {
+            dlclose(h);
+            return 1;
+        }
+        scan_fp8_blocks(blocks, tag);
+        const int rc = run_one_case<block_f8_e4m3_b128>(
+            h, GGML_TM_DTYPE_F8_E4M3_B128, M, N, K, 128, blocks,
+            /*max=*/2e-2f, /*p99=*/1e-2f, tag);
+        dlclose(h);
+        return rc;
+    }
+
+    if (argc == 9 && std::string(argv[2]) == "--raw-mxfp4") {
+        const char * model_path = argv[3];
+        const long long offset  = strtoll(argv[4], nullptr, 0);
+        const int M             = atoi(argv[5]);
+        const int N             = atoi(argv[6]);
+        const int K             = atoi(argv[7]);
+        const char * tag        = argv[8];
+        std::vector<block_mxfp4> blocks((size_t) N * (K / 32));
+        if (!load_blocks_at(model_path, offset, blocks)) {
+            dlclose(h);
+            return 1;
+        }
+        scan_mxfp4_blocks(blocks, tag);
+        const int rc = run_one_case<block_mxfp4>(
+            h, GGML_TM_DTYPE_MXFP4, M, N, K, 32, blocks,
+            /*max=*/2e-2f, /*p99=*/1e-2f, tag);
+        dlclose(h);
+        return rc;
+    }
+
     // Sized to engage smallest sm70_884 CTA tile (M=8, N=128, K=64+).
     const int M = 8, N = 256, K = 256;
     std::vector<block_f8_e4m3_b128> f8_blocks;
@@ -329,6 +432,35 @@ int main(int argc, char** argv) {
         h, GGML_TM_DTYPE_MXFP4, M, N, K, 32, fp4_blocks,
         /*max=*/2e-2f, /*p99=*/1e-2f, "MXFP4");
 
+    // Decode-time DSv4 shared-expert shapes. These exercise the single-tensor
+    // path at M=1, which is not covered by the routed MoE grouped tests.
+    std::vector<block_f8_e4m3_b128> f8_shexp_up;
+    make_fp8_fixture(f8_shexp_up, 2048, 4096, 0x51EAD001);
+    int rc3 = run_one_case<block_f8_e4m3_b128>(
+        h, GGML_TM_DTYPE_F8_E4M3_B128, 1, 2048, 4096, 128, f8_shexp_up,
+        /*max=*/2e-2f, /*p99=*/1e-2f, "F8_E4M3_B128_M1_SHEXP_UP");
+    int rc3b = run_one_case<block_f8_e4m3_b128>(
+        h, GGML_TM_DTYPE_F8_E4M3_B128, 4, 2048, 4096, 128, f8_shexp_up,
+        /*max=*/2e-2f, /*p99=*/1e-2f, "F8_E4M3_B128_M4_SHEXP_UP");
+
+    std::vector<block_f8_e4m3_b128> f8_shexp_down;
+    make_fp8_fixture(f8_shexp_down, 4096, 2048, 0x51EAD002);
+    int rc4 = run_one_case<block_f8_e4m3_b128>(
+        h, GGML_TM_DTYPE_F8_E4M3_B128, 1, 4096, 2048, 128, f8_shexp_down,
+        /*max=*/2e-2f, /*p99=*/1e-2f, "F8_E4M3_B128_M1_SHEXP_DOWN");
+    int rc4b = run_one_case<block_f8_e4m3_b128>(
+        h, GGML_TM_DTYPE_F8_E4M3_B128, 4, 4096, 2048, 128, f8_shexp_down,
+        /*max=*/2e-2f, /*p99=*/1e-2f, "F8_E4M3_B128_M4_SHEXP_DOWN");
+
+    std::vector<block_mxfp4> fp4_shexp_up;
+    make_mxfp4_fixture(fp4_shexp_up, 2048, 4096, 0x51EAD003);
+    int rc5 = run_one_case<block_mxfp4>(
+        h, GGML_TM_DTYPE_MXFP4, 1, 2048, 4096, 32, fp4_shexp_up,
+        /*max=*/2e-2f, /*p99=*/1e-2f, "MXFP4_M1_SHEXP_UP");
+    int rc5b = run_one_case<block_mxfp4>(
+        h, GGML_TM_DTYPE_MXFP4, 4, 2048, 4096, 32, fp4_shexp_up,
+        /*max=*/2e-2f, /*p99=*/1e-2f, "MXFP4_M4_SHEXP_UP");
+
     dlclose(h);
-    return (rc1 || rc2) ? 1 : 0;
+    return (rc1 || rc2 || rc3 || rc3b || rc4 || rc4b || rc5 || rc5b) ? 1 : 0;
 }

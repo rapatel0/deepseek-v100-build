@@ -2543,11 +2543,18 @@ static bool ggml_cuda_should_fuse_split_mul_mat_vec_q(const ggml_tensor * tensor
 static void ggml_cuda_mul_mat(ggml_backend_cuda_context & ctx, const ggml_tensor * src0, const ggml_tensor * src1, ggml_tensor * dst) {
     // SPRINT-023 P4: if src0 is on the CUDA_TURBOMIND buft and is one of the
     // packed quant types we own, dispatch through libggml-turbomind.so.
-    if (ggml_backend_buft_is_cuda_turbomind(src0->buffer->buft)
-        && (src0->type == GGML_TYPE_F8_E4M3_B128 || src0->type == GGML_TYPE_MXFP4)
-        && src1->type == GGML_TYPE_F32 && dst->type == GGML_TYPE_F32) {
-        ggml_cuda_mul_mat_turbomind(ctx, src0, src1, dst);
-        return;
+    const ggml_tensor * src0_orig = src0->view_src ? src0->view_src : src0;
+    const bool is_turbomind_packed =
+        ggml_backend_buft_is_cuda_turbomind(src0->buffer->buft)
+        && src0_orig->extra != nullptr
+        && (src0->type == GGML_TYPE_F8_E4M3_B128 || src0->type == GGML_TYPE_MXFP4);
+    if (is_turbomind_packed) {
+        if (src1->type == GGML_TYPE_F32 && dst->type == GGML_TYPE_F32
+            && ggml_is_contiguous(src1) && ggml_is_contiguous(dst)) {
+            ggml_cuda_mul_mat_turbomind(ctx, src0, src1, dst);
+            return;
+        }
+        GGML_ABORT("CUDA_TURBOMIND packed tensor cannot fall back to native CUDA layout");
     }
 
     const bool split = ggml_backend_buft_is_cuda_split(src0->buffer->buft);
@@ -2658,6 +2665,7 @@ static void ggml_cuda_mul_mat_id(ggml_backend_cuda_context & ctx, ggml_tensor * 
     // MoE linear (instead of N_active_experts per-expert calls in the
     // fallback below). Bisection fallback via GGML_TM_DISABLE_GROUPED=1.
     if (is_turbomind
+        && src0->extra != nullptr
         && (src0->type == GGML_TYPE_F8_E4M3_B128 || src0->type == GGML_TYPE_MXFP4)
         && src1->type == GGML_TYPE_F32 && dst->type == GGML_TYPE_F32) {
         const char * disable = getenv("GGML_TM_DISABLE_GROUPED");

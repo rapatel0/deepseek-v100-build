@@ -18,6 +18,8 @@
 #include <cstdio>
 #include <cstdint>
 #include <cstring>
+#include <climits>
+#include <cstdlib>
 #include <mutex>
 #include <string>
 #include <vector>
@@ -209,9 +211,28 @@ static void ggml_backend_cuda_tm_buffer_set_tensor(
         return;
     }
 
+    const int N          = (int) tensor->ne[1];   // output channels per expert
+    const int K          = (int) tensor->ne[0];   // input dim
+    const int n_experts  = (int) tensor->ne[2];   // 1 for non-MoE
+    GGML_ASSERT(tensor->ne[3] == 1);
+
+    // Single dense/shared-expert tensors currently have a different numerical
+    // contract from llama.cpp's native F8 path: TurboMind consumes FP16 A/D,
+    // while the native path uses the ggml quantized-activation kernels. That
+    // small per-layer drift breaks DSv4-Flash shared experts. Keep dense
+    // tensor packing behind an explicit experiment flag; routed stacked
+    // experts remain the production path.
+    const char * enable_single = getenv("GGML_TM_ENABLE_SINGLE");
+    if (n_experts <= 1 && (!enable_single || enable_single[0] != '1')) {
+        CUDA_CHECK(cudaMemcpyAsync(tensor->data, data, size,
+                                   cudaMemcpyHostToDevice, cudaStreamPerThread));
+        CUDA_CHECK(cudaStreamSynchronize(cudaStreamPerThread));
+        return;
+    }
+
     if (!tm_ensure_loaded(ctx->device)) {
-        // Fall back to plain upload if the .so can't load — kernel won't run
-        // through us, but at least the tensor is on the device.
+        // Fall back to plain upload if the .so can't load. Since we leave
+        // tensor->extra unset, the normal CUDA path will consume this tensor.
         GGML_LOG_WARN("%s: turbomind .so unavailable, falling back to plain upload\n", __func__);
         CUDA_CHECK(cudaMemcpyAsync(tensor->data, data, size,
                                    cudaMemcpyHostToDevice, cudaStreamPerThread));
@@ -221,10 +242,6 @@ static void ggml_backend_cuda_tm_buffer_set_tensor(
 
     const int tm_type    = ggml_type_to_tm_dtype(tensor->type);
     const int group_size = tm_group_size_for(tensor->type);
-    const int N          = (int) tensor->ne[1];   // output channels per expert
-    const int K          = (int) tensor->ne[0];   // input dim
-    const int n_experts  = (int) tensor->ne[2];   // 1 for non-MoE
-    GGML_ASSERT(tensor->ne[3] == 1);
 
     size_t weight_bytes = 0, scale_bytes = 0;
     if (g_tm().packed_bytes(tm_type, N, K, group_size, &weight_bytes, &scale_bytes) != 0) {
@@ -452,9 +469,9 @@ bool ggml_backend_buft_is_cuda_turbomind(ggml_backend_buffer_type_t buft) {
 // Layout (matches our P2.3 contract):
 //   K = src0->ne[0]  (input dim)
 //   N = src0->ne[1]  (output dim)
-//   M = src1->ne[1]  (number of tokens)
-//   src1: [K, M] row-major contiguous FP32
-//   dst:  [N, M] row-major contiguous FP32
+//   M = ggml_nrows(src1) (all logical rows after K, flattened)
+//   src1: [K, rows...] row-major contiguous FP32
+//   dst:  [N, rows...] row-major contiguous FP32
 //
 // For mul_mat_id, the caller (ggml_cuda_mul_mat_id fallback path) slices
 // per-expert and calls ggml_cuda_mul_mat once per expert with the sorted
@@ -479,11 +496,13 @@ void ggml_cuda_mul_mat_turbomind(ggml_backend_cuda_context & ctx,
 
     const int K = (int) src0->ne[0];
     const int N = (int) src0->ne[1];
-    const int M = (int) src1->ne[1];
+    const int64_t M64 = ggml_nrows(src1);
+    GGML_ASSERT(M64 <= INT_MAX);
+    const int M = (int) M64;
     GGML_ASSERT(src0->ne[2] == 1 && src0->ne[3] == 1);
     GGML_ASSERT(src1->ne[0] == src0->ne[0]);
     GGML_ASSERT(dst->ne[0]  == src0->ne[1]);
-    GGML_ASSERT(dst->ne[1]  == src1->ne[1]);
+    GGML_ASSERT(ggml_nelements(dst) == (int64_t) N * M);
 
     const ptrdiff_t data_offset = (const char *) src0->data - (const char *) src0_orig->data;
     GGML_ASSERT(data_offset % src0_orig->nb[2] == 0);
@@ -498,24 +517,34 @@ void ggml_cuda_mul_mat_turbomind(ggml_backend_cuda_context & ctx,
 
     cudaStream_t stream = ctx.stream();
 
+    // sm70 HMMA.884 kernels are tiled in M. The grouped MoE path naturally
+    // runs several routed rows at once, but decode-time shared experts and the
+    // LM head can call the single path with M=1. Pad the scratch rows so the
+    // kernel cannot write past the end of D when it rounds up internally.
+    const int M_padded = (M + 7) & ~7;
+
     // FP32 -> FP16 for A.
-    ggml_cuda_pool_alloc<half> A_fp16(ctx.pool(), (size_t) M * K);
+    ggml_cuda_pool_alloc<half> A_fp16(ctx.pool(), (size_t) M_padded * K);
+    if (M_padded != M) {
+        CUDA_CHECK(cudaMemsetAsync(A_fp16.ptr, 0, (size_t) M_padded * K * sizeof(half), stream));
+    }
     auto fp32_to_fp16 = ggml_get_to_fp16_cuda(GGML_TYPE_F32);
     fp32_to_fp16(src1->data, A_fp16.ptr, (int64_t) M * K, stream);
-
-    // Output FP16 buffer.
-    ggml_cuda_pool_alloc<half> D_fp16(ctx.pool(), (size_t) M * N);
 
     if (!g_tm().mul_mat) {
         GGML_LOG_ERROR("%s: libggml-turbomind.so::ggml_turbomind_mul_mat not loaded\n", __func__);
         return;
     }
     const int tm_type = ggml_type_to_tm_dtype(src0->type);
+
+    // Output FP16 buffer.
+    ggml_cuda_pool_alloc<half> D_fp16(ctx.pool(), (size_t) M_padded * N);
+
     const int rc = g_tm().mul_mat(
         A_fp16.ptr,
         src0->data,
         scales_dev,
-        tm_type, M, N, K, group_size, k_pack,
+        tm_type, M_padded, N, K, group_size, k_pack,
         D_fp16.ptr,
         stream);
     if (rc != 0) {
