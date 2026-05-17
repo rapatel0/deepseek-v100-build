@@ -67,7 +67,85 @@ Two-model spec decode and ngram-cache become **fallback / comparison data points
 | P4 | Acceptance + TPS sweep on real prompts. Bench against the operational `exps`-only TURBOMIND baseline (13.32 t/s) and the two-model spec decode fallback. |
 | P5 | REPORT-20 with: per-prompt accept rate distribution, single-stream and multi-slot TPS, VRAM peak with MTP block loaded, fallback comparison. |
 | P6 | (Stretch) Probe recursive K=2 — run the K=1 head twice, feeding back its own output. Measure α_2 vs α_1. Ship if α_2 > 0.4. |
-| P7 | (Stretch) Probe Medusa-style tree decoding: top-2 candidates at each speculative depth, tree-attention verify at M=4–8 (which is exactly the tc-grid INT8 LUT kernel sweet spot). |
+| P7 | (Stretch) Probe Medusa-style tree decoding (see §0.1 below) — top-K candidates at each speculative depth, tree-attention verify at M=4–16 (the tc-grid INT8 LUT kernel sweet spot). |
+
+### §0.1 Tree-structured decoding — why it matters for THIS stack
+
+The K=1 architectural ceiling caps a *linear* speculative chain at 1 candidate token per main-trunk forward. **Tree-structured speculation breaks that ceiling without needing additional trained heads.**
+
+#### The idea
+
+Instead of taking only the argmax of the MTP head, sample its **top-N** candidates per speculative position. Build a small tree:
+
+```
+                  [trunk hidden h_n]
+                         │
+                  [MTP head, top-3]
+                  /      |      \
+                c_1a    c_1b    c_1c     (3 candidate tokens for position n+1)
+                 │        │      │
+              (recurse: re-invoke MTP head on each branch)
+                 │
+              top-2 each
+              /     \
+           c_2aa   c_2ab                  (depth-2 nodes under c_1a only)
+```
+
+Total nodes = `1 + Σ_d (branching_factor^d)`. With branching 3 at depth 1 and 2 at depth 2: 1 + 3 + 6 = 10 nodes.
+
+#### Verification
+
+Run **one** main-trunk forward at `M = tree_nodes` (with a custom **tree-attention mask** so each node only attends to its own root-to-node path, not its tree siblings). For each path in the tree, walk from root to leaf accepting candidates while they match the trunk's predicted next token; on first mismatch, take the trunk's prediction and stop. **Accept the longest validated path.**
+
+The output token sequence is *identical* to greedy-from-trunk because of rejection sampling — no quality loss.
+
+#### Why this matters specifically for our V100 setup
+
+1. **M=tree_nodes lands in the tensor-core sweet spot.** Per `tools/tc-grid/docs/full_M*.csv`:
+   - M=1 decode: 2.7 TFLOPS (current operating point — tensor cores nearly idle)
+   - M=8 tree verify: 10.8 TFLOPS (4× per-flop efficiency)
+   - M=16 tree verify: 10.8+ TFLOPS still climbing
+   - M=64 verify: 22 TFLOPS (cuBLAS reference)
+   - The tc-grid INT8 LUT kernels were measured precisely at these M ranges. Tree decoding moves the operating point onto the tc-grid curve where the kernel work actually pays off.
+
+2. **Compounds with multi-slot `--parallel`.** N concurrent slots, each issuing a tree of size T, batches into `M = N × T` on the verify pass. With `--parallel 8` and a 10-node tree → M=80 main-trunk verify. Single-stream and aggregate throughput both rise.
+
+3. **No additional trained model needed.** Unlike a separately-trained Medusa or EAGLE head, we synthesize the tree from recursive invocation of the existing K=1 MTP head. The cost is that recursive invocation has lower accept rate per depth (the head was trained on trunk-fed input, not self-fed) — but TOP-N branching covers more of the probability mass and partially compensates.
+
+#### Expected lift (back-of-envelope)
+
+From Sequoia / Medusa-2 literature on Llama-class targets:
+
+| Tree shape | Accept-rate budget | Expected single-stream lift |
+|---|---|---|
+| Linear K=1 (just MTP, no tree) | α₁ ≈ 0.85 | 1.6–2.1× (LordNeel measurement) |
+| Top-3 × depth 1 (3 nodes) | covers more first-token candidates | 1.8–2.3× |
+| Top-2 × depth 2 (7 nodes) | depth + breadth | 2.2–2.8× |
+| Top-3 × depth 2 (13 nodes) | broader probability mass | 2.5–3.0× |
+| Top-4 × depth 3 (~30 nodes) | diminishing returns; verify cost dominates | 2.7–3.2× |
+
+The sweet spot for our V100 hardware + K=1 head + tc-grid kernels is **~10-node tree** (top-2 or top-3 at depth 2). Verify M=10 hits the tc-grid kernel saturation curve; tree depth 2 is shallow enough that the recursive K=1 head still gives decent accept probability.
+
+#### Implementation cost
+
+| Component | Effort |
+|---|---|
+| Tree builder (host-side): given top-N at each MTP node, enumerate paths + assign positions | ~1 day |
+| Tree-attention mask construction (one diag block of size M=nodes, with 1s on root-to-node paths only) | ~1 day |
+| Verify-pass dispatch: extended main-trunk fwd with masked attention at M=tree_nodes | ~2 days (depending on how invasive into llama-graph.cpp) |
+| Accept-longest-path logic + KV cache truncation back to accepted prefix | ~1 day |
+| Integration tests + accept-rate measurement harness | ~1 day |
+
+Total: ~1 week of focused work, building **on top of** the MTP K=1 baseline from P0-P5. Recommended as a follow-up sprint (SPRINT-027 candidate) only if the linear K=1 lift in REPORT-20 is insufficient.
+
+#### References
+
+- **Medusa** (Cai et al., 2024) — original paper introducing tree-structured speculation with separate Medusa heads. Most of the tree-attention plumbing is described here.
+- **Sequoia** (Chen et al., 2024) — optimal-tree-shape search; gives the data on lift-vs-tree-size that informed the table above.
+- **EAGLE-2** (Li et al., 2024) — recursive invocation of a single trained head, similar to what we'd be doing on top of MTP K=1.
+- **PR plumbing already in llama.cpp**: `llama_set_causal_attn`, batch positions with custom masks — the mechanism for tree attention exists upstream, just needs to be wired into the speculative path.
+
+---
 
 The original §3 architecture material below remains relevant for the two-model fallback path; keep it as the alternative SHIP path if MTP integration runs longer than the 4-day budget.
 
