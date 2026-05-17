@@ -1,16 +1,83 @@
 # SPRINT-026 — Speculative decoding for DSv4-Flash-256e on multi-GPU V100
 
-**Status:** PLANNED 2026-05-15
-**Predecessor:** SPRINT-025 (multi-GPU 256e landing — **hard dependency**)
-**Successor:** SPRINT-027 (CUDA-side spec sampler? multi-slot continuous batching? row-TP if SPRINT-025 P6 punted?)
+**Status:** PLANNED 2026-05-15 — **UPDATED 2026-05-16** with MTP findings (see §0)
+**Predecessor:** SPRINT-025-PATCH (multi-GPU TURBOMIND coherent at 13.32 t/s — **CLOSED**)
+**Successor:** SPRINT-027 (single-tensor F8 quantized-activation kernel? CUDA-side spec sampler? row-TP if SPRINT-025 P6 punted?)
 
 ---
 
-## 1. Overview
+## 0. UPDATED 2026-05-16 — MTP self-speculation is the right primary path
+
+### Architectural finding (from today's research)
+
+DSv4-Flash ships with a **native MTP (Multi-Token Prediction) head** — `num_nextn_predict_layers=1`. This is the same K=1 NextN module DeepSeek-V3 trained, included in V4-Flash as a separate `blk.43.*` module sharing the LM head with the main trunk. It is "self-speculative": the main model has the proposer head trained into it, so no draft model is needed.
+
+**However**, the HuggingFace `_keys_to_ignore_on_load_unexpected` mechanism strips the MTP head silently at GGUF-conversion time. Our `DSv4-Flash-256e-fixed.gguf` does NOT contain the MTP module — kv-dump shows only 43 main blocks, no MTP keys, no `blk.43.*`.
+
+### Concrete public measurements
+
+Most rigorous public benchmark (LordNeel/DeepSeek-V4-Flash-Acti-MTP-W4A16-FP8 model card; retrofitted MTP onto pasta-paul's W4A16+FP8 quant, ran on 2× RTX PRO 6000 Blackwell Max-Q):
+
+| Config | Decode TPS | Δ vs baseline |
+|---|---|---|
+| Base (no MTP), 524k ctx, 1-stream | 52.85 t/s | reference |
+| **MTP K=1, 524k ctx, 2-stream** | **85.52 t/s** | **+62% (1.62×)** |
+| MTP K=1, 128k ctx, 1-stream | ~111 t/s | +110% (2.10×) |
+
+That's on Blackwell sm_120. V100 sm_70 expected scaling is similar (1.6–2.1×) since the win comes from amortizing target-model launches, not from kernel TFLOPS.
+
+### Architectural ceiling
+
+> "**`num_speculative_tokens`: capped at 1 because DSV4-Flash ships exactly one MTP head (`num_nextn_predict_layers=1`). Higher values would not produce more draft tokens.**"
+> — LordNeel model card
+
+DSv4-Flash trained K=1 only. Hard architectural ceiling. Higher K is not on the table without:
+- Recursive invocation of the same K=1 head (EAGLE-style — degrades accept rate fast because the head wasn't trained on self-fed input)
+- Tree-attention (Medusa/Sequoia-style — needs top-K calibrated MTP head, would work but is implementation work)
+- Training a new K>1 model from scratch (infeasible for us)
+
+### Revised path comparison
+
+| Path | K achievable | Engine | Implementation cost | Expected single-stream lift |
+|---|---|---|---|---|
+| **MTP K=1 (native)** | 1 | Needs DSv4-MTP support in our llama.cpp fork | Days (port from antirez/ds4 OR re-implement, well-understood architecture) | 1.6–2.1× |
+| Two-model spec decode (256e + AVG-16e draft) | "K=∞ in principle" but draft accept rate dominates | Already in upstream llama.cpp | Hours (just CLI flags) | Likely 1.2–1.4× given draft model quality; uses target GPU memory for the draft |
+| ngram-cache (draftless) | n/a | Already in upstream llama.cpp | Hours | 1.1–1.3× — code-pattern-heavy prompts only |
+| MTP K=1 + recursive K=2 | 2 (synthesized) | Build on top of K=1 implementation | +1 day on top of MTP | Speculative; α decays fast on self-fed input |
+| MTP K=1 + Medusa tree | 4–8 effective | Build on top of K=1 implementation | Real work (~week+); needs head calibration | Up to 3× per Sequoia/Medusa literature |
+
+### Recommended primary path for this sprint
+
+**Implement MTP K=1 in our llama.cpp fork.** Higher expected lift than two-model spec decode, no draft model VRAM cost, no quality drift (rejection sampling preserves output exactly). All architectural pieces are documented and a reference implementation exists in antirez/ds4.
+
+Two-model spec decode and ngram-cache become **fallback / comparison data points** in REPORT-20, not the primary deliverable.
+
+### Required artifact
+
+`DeepSeek-V4-Flash-MTP-Q4K-Q8_0-F32.gguf` (3.6 GiB companion file) — available at `antirez/deepseek-v4-gguf` on HuggingFace. This contains the trained MTP block stripped from our current `-fixed.gguf`. Alternatively re-convert from the HF source checkpoint with the NextN keys retained.
+
+### New phases for this sprint
+
+| Phase | What |
+|---|---|
+| P0 | Download `DeepSeek-V4-Flash-MTP-Q4K-Q8_0-F32.gguf`. Inspect tensor layout — what shape is the MTP block? What's its interface to the main-trunk hidden state? |
+| P1 | Add DSv4-MTP loading path: parse the companion GGUF (or merged main+MTP GGUF), wire `blk.43.*` tensors into the model graph alongside the main trunk. Reference: antirez/ds4 implementation, the DeepSeek-V3 technical report §2.2 "Multi-Token Prediction". |
+| P2 | Implement MTP forward: take main-trunk final hidden state `h_n` + `embed(t_{n+1})`, run through single MTP block (attn + FFN), project via shared LM head, argmax to get speculative `c_2`. |
+| P3 | Implement draft-and-verify loop. Each iteration: (a) main-trunk fwd → `t_{n+1}` + `h_n`; (b) MTP fwd → `c_2`; (c) verify by running main-trunk fwd on `[..., t_{n+1}, c_2]` at M=2; (d) accept-or-reject `c_2`. Hidden state from verify becomes input to next iteration's MTP. |
+| P4 | Acceptance + TPS sweep on real prompts. Bench against the operational `exps`-only TURBOMIND baseline (13.32 t/s) and the two-model spec decode fallback. |
+| P5 | REPORT-20 with: per-prompt accept rate distribution, single-stream and multi-slot TPS, VRAM peak with MTP block loaded, fallback comparison. |
+| P6 | (Stretch) Probe recursive K=2 — run the K=1 head twice, feeding back its own output. Measure α_2 vs α_1. Ship if α_2 > 0.4. |
+| P7 | (Stretch) Probe Medusa-style tree decoding: top-2 candidates at each speculative depth, tree-attention verify at M=4–8 (which is exactly the tc-grid INT8 LUT kernel sweet spot). |
+
+The original §3 architecture material below remains relevant for the two-model fallback path; keep it as the alternative SHIP path if MTP integration runs longer than the 4-day budget.
+
+---
+
+## 1. Overview (original — kept for fallback context)
 
 The M=1 launch-bound regime SPRINT-023 measured (16.6 t/s flat across model sizes on V100 turbomind) is the textbook target for speculative decoding: amortize per-token target-model launches across K drafted tokens that are verified in one target forward pass. Each accepted draft token effectively comes for "free" in launch cost.
 
-llama.cpp ships full speculative-decoding plumbing already (`common/speculative.{h,cpp}`, `tools/server/server-context.cpp:661-794`). The sprint wires it through the CUDA_TURBOMIND path for **DSv4-Flash-256e (target) + DSv4-Flash-AVG-16e (draft)** on the 8-GPU pod from SPRINT-025.
+llama.cpp ships full speculative-decoding plumbing already (`common/speculative.{h,cpp}`, `tools/server/server-context.cpp:661-794`). **The original plan wired this through CUDA_TURBOMIND for DSv4-Flash-256e (target) + DSv4-Flash-AVG-16e (draft) on the 8-GPU pod from SPRINT-025.** This becomes the fallback in light of §0's MTP path.
 
 ### Primary path (per user interview)
 

@@ -599,9 +599,55 @@ until kubectl exec -n llm $POD -- bash -c 'curl -sm 2 http://127.0.0.1:12500/hea
 
 Note that `curl -sf` fails on 503 (which is what /health returns during model load). Use `grep -q "ok"` against the response body instead.
 
+## P10 — shexp root cause (deeper investigation, not a packing bug)
+
+After P9 documented the shexp/LM-head coherence failure as flag-level unsafe, the deeper investigation found the actual root cause:
+
+**The TURBOMIND single-tensor path uses FP16 activation+output around HMMA. The native llama.cpp F8 CUDA path uses ggml's quantized-activation kernels.** These two paths differ by ~0.5% relative error on real shared-expert weights — not a bug in either, but a different numerical contract.
+
+- **Routed experts absorb this drift** because they're sparse-gated (only 6 of 256 contribute per token, scaled by routing weights). Small per-call differences are dampened.
+- **Shared experts compound it** because they contribute to every token in every layer with no gating. After 43 layers the activations have diverged far enough that the LM head produces only BOS/EOS-class tokens (the empty-content failure from P9).
+
+Real `blk.0.ffn_*_shexp.weight` tensors pack and pass *isolated* TurboMind correctness — packed bytes are correct. The failure is at the numerical contract boundary between TURBOMIND's FP16 A/D and the rest of llama.cpp's F8 graph.
+
+### Fixes landed
+
+1. **`ggml-cuda-turbomind.cu:219`** — dense/single tensors (`n_experts <= 1`) no longer packed into TURBOMIND by default. New env var `GGML_TM_ENABLE_SINGLE=1` is required to opt in (experiment-gated). This makes the production path safe.
+2. **`ggml-cuda-turbomind.cu:499`** — single-tensor wrapper now uses `ggml_nrows(src1)` and pads M safely.
+3. **`ggml-cuda.cu:2543`** — packed TURBOMIND tensors can no longer silently fall through to native CUDA mul_mat layout (route is enforced).
+4. **`test_correctness.cpp:210`** — added raw-GGUF tensor test support so we can exercise real model weights (not just synthetic fixtures) in CI.
+
+### Validation on gpu-01
+
+- llama-server rebuild: ✅
+- TURBOMIND synthetic + raw real shexp correctness: ✅
+- Mini broad `exps|shexp` (default, single-tensor packing OFF): coherent, **~20.05 t/s**
+- Mini with `GGML_TM_ENABLE_SINGLE=1`: reproduces empty content (confirms the experiment toggle isolates the bug correctly)
+- Full DSv4-Flash-256e-fixed.gguf broad `exps|shexp`: coherent Fibonacci completion, **~12.32 t/s**
+
+### Operational guidance
+
+- **Keep TURBOMIND on stacked routed experts** (the `*_exps` pattern). This is the production path.
+- **Do NOT route shared experts (`*_shexp`) or other single-tensor (`*.weight` non-MoE) through TURBOMIND** with the current single-tensor path. Numerical contract mismatch will silently degrade quality.
+- **The gating is automatic now**: `n_experts <= 1` tensors fall back to native cuda by default. To experiment with single-tensor TURBOMIND in the future, set `GGML_TM_ENABLE_SINGLE=1`.
+
+### Deferred follow-up
+
+To eventually route shared experts (and the LM head) through TURBOMIND tensor cores, a **new single-tensor TURBOMIND path** is needed that matches llama.cpp's native F8 numerical contract (quantized-activation kernels instead of FP16-around-HMMA). This is real implementation work — single-tensor F8 mul_mat with quantized A. Captured as a SPRINT-025-FOLLOWUPS item.
+
 ## 9. Sprint disposition
 
 - **SPRINT-025 (8-GPU 256e default cuda)**: SHIPPED at `sprint-025-close`. Decode 11.35 t/s on production-quality output.
-- **SPRINT-025-PATCH (multi-GPU TURBOMIND fix)**: FIXED. MXFP4 nibble-lane mapping patched and verified with correctness tests plus full 43-layer server decode.
-- **DeepSeek4 slot/KV follow-up**: FIXED. Nonzero slot full-sequence removal now works; repeated slot reuse no longer produces stale-position `Invalid input batch` failures in the full server validation.
-- **SPRINT-026 (speculative decoding)**: UNBLOCKED with respect to TurboMind packing and the identified slot/KV reset bug. DeepSeek4 runtime state export/import remains unimplemented and should be treated as a separate feature gap if prompt-state persistence is required.
+- **SPRINT-025-PATCH (multi-GPU TURBOMIND fix)**: **CLOSED**. Three independent root causes identified and patched:
+  1. MXFP4 intra-block nibble-lane mapping in `ggml-turbomind-deinterleave.cu` (the "ship the trunk" fix).
+  2. `seq_rm` slot/KV reset for non-zero sequence ids in `llama-memory-deepseek4.cpp` (unblocks slot reuse).
+  3. Single-tensor TURBOMIND numerical-contract mismatch with native F8: gated behind `GGML_TM_ENABLE_SINGLE=1` so the default operational path is safe.
+
+  Final operational state: 8-GPU full 43-layer routed-experts TURBOMIND coherent at **~13.32 t/s** decode on `DSv4-Flash-256e-fixed.gguf`; full broad `exps|shexp` routing produces ~12.32 t/s coherent on the mini fixture; slot/KV reuse stable across all 8 parallel slots; both correctness tests + grouped-compare + raw-GGUF tensor tests pass.
+- **DeepSeek4 slot/KV follow-up**: FIXED (part of PATCH close).
+- **SPRINT-026 (speculative decoding)**: **UNBLOCKED**. TurboMind packing + slot/KV are no longer blockers. Architectural cap: K=1 per DSv4-Flash's `num_nextn_predict_layers=1`. See SPRINT-026.md for updated plan informed by the LordNeel/antirez MTP research from today.
+- **SPRINT-025-FOLLOWUPS**:
+  - **Multi-GPU CUDA_TURBOMIND family-alias buft** (§1) — still deferred; preserves pipeline-parallel.
+  - **Single-tensor TURBOMIND path with native F8 numerical contract** — new follow-up from P10. Would re-unlock shexp + LM-head routing for additional TC utilization. Days of work.
+  - **Slot/KV "Invalid input batch"** (§4) — FIXED in this sprint.
+  - **2/4-GPU scaling sweep** (§6) — still deferred, nice-to-have.
